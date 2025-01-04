@@ -69,3 +69,6 @@ firebase-debug.log
 **/config.json
 **/credentials.json
 **/service-account*.json
+
+# Google Cloud credentials
+assets/config/google_tts_credentials.json
