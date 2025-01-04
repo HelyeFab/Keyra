@@ -1,0 +1,158 @@
+import '../domain/models/book.dart';
+import '../domain/models/book_language.dart';
+import '../domain/models/book_page.dart';
+
+final List<Book> sampleBooks = [
+  Book(
+    id: 'book-001',
+    title: const {
+      BookLanguage.english: 'The Magic Forest',
+      BookLanguage.french: 'La Forêt Magique',
+      BookLanguage.spanish: 'El Bosque Mágico',
+      BookLanguage.italian: 'La Foresta Magica',
+      BookLanguage.german: 'Der Zauberwald',
+      BookLanguage.japanese: '魔法の森',
+    },
+    coverImage: 'assets/images/books/magic_forest/cover.png',
+    pages: const [
+      BookPage(
+        text: {
+          BookLanguage.english: 'Deep in the heart of an ancient forest, where sunbeams danced through emerald leaves, lived a young fairy named Luna.',
+          BookLanguage.french: 'Au cœur d\'une forêt ancestrale, où les rayons du soleil dansaient à travers les feuilles émeraude, vivait une jeune fée nommée Luna.',
+          BookLanguage.spanish: 'En lo profundo de un bosque antiguo, donde los rayos del sol bailaban a través de hojas esmeralda, vivía una joven hada llamada Luna.',
+          BookLanguage.italian: 'Nel profondo di un\'antica foresta, dove i raggi del sole danzavano attraverso foglie smeraldo, viveva una giovane fata di nome Luna.',
+          BookLanguage.german: 'Tief im Herzen eines uralten Waldes, wo Sonnenstrahlen durch smaragdgrüne Blätter tanzten, lebte eine junge Fee namens Luna.',
+          BookLanguage.japanese: '太古の森の奥深く、エメラルドの葉を通して日差しが踊る場所に、ルナという名の若い妖精が住んでいました。',
+        },
+        audioPath: {
+          BookLanguage.english: 'assets/audio/books/magic_forest/en/placeholder.mp3',
+          BookLanguage.french: 'assets/audio/books/magic_forest/fr/placeholder.mp3',
+          BookLanguage.spanish: 'assets/audio/books/magic_forest/es/placeholder.mp3',
+          BookLanguage.italian: 'assets/audio/books/magic_forest/it/placeholder.mp3',
+          BookLanguage.german: 'assets/audio/books/magic_forest/de/placeholder.mp3',
+          BookLanguage.japanese: 'assets/audio/books/magic_forest/ja/placeholder.mp3',
+        },
+        imagePath: 'assets/images/books/magic_forest/page_1.png',
+      ),
+      BookPage(
+        text: {
+          BookLanguage.english: 'Luna had a special gift - she could speak to the trees and hear their ancient stories.',
+          BookLanguage.french: 'Luna avait un don spécial - elle pouvait parler aux arbres et entendre leurs histoires anciennes.',
+          BookLanguage.spanish: 'Luna tenía un don especial: podía hablar con los árboles y escuchar sus antiguas historias.',
+          BookLanguage.italian: 'Luna aveva un dono speciale: poteva parlare con gli alberi e ascoltare le loro antiche storie.',
+          BookLanguage.german: 'Luna hatte eine besondere Gabe - sie konnte mit den Bäumen sprechen und ihre uralten Geschichten hören.',
+          BookLanguage.japanese: 'ルナには特別な贈り物がありました - 木々と話し、その古い物語を聞くことができたのです。',
+        },
+        audioPath: {
+          BookLanguage.english: 'assets/audio/books/magic_forest/en/placeholder.mp3',
+          BookLanguage.french: 'assets/audio/books/magic_forest/fr/placeholder.mp3',
+          BookLanguage.spanish: 'assets/audio/books/magic_forest/es/placeholder.mp3',
+          BookLanguage.italian: 'assets/audio/books/magic_forest/it/placeholder.mp3',
+          BookLanguage.german: 'assets/audio/books/magic_forest/de/placeholder.mp3',
+          BookLanguage.japanese: 'assets/audio/books/magic_forest/ja/placeholder.mp3',
+        },
+        imagePath: 'assets/images/books/magic_forest/page_2.png',
+      ),
+      BookPage(
+        text: {
+          BookLanguage.english: 'One day, she discovered a mysterious glowing flower that would change her life forever.',
+          BookLanguage.french: 'Un jour, elle découvrit une mystérieuse fleur brillante qui allait changer sa vie à jamais.',
+          BookLanguage.spanish: 'Un día, descubrió una misteriosa flor brillante que cambiaría su vida para siempre.',
+          BookLanguage.italian: 'Un giorno, scoprì un misterioso fiore luminoso che avrebbe cambiato la sua vita per sempre.',
+          BookLanguage.german: 'Eines Tages entdeckte sie eine mysteriös leuchtende Blume, die ihr Leben für immer verändern sollte.',
+          BookLanguage.japanese: 'ある日、彼女は人生を永遠に変えることになる不思議に光る花を見つけました。',
+        },
+        audioPath: {
+          BookLanguage.english: 'assets/audio/books/magic_forest/en/placeholder.mp3',
+          BookLanguage.french: 'assets/audio/books/magic_forest/fr/placeholder.mp3',
+          BookLanguage.spanish: 'assets/audio/books/magic_forest/es/placeholder.mp3',
+          BookLanguage.italian: 'assets/audio/books/magic_forest/it/placeholder.mp3',
+          BookLanguage.german: 'assets/audio/books/magic_forest/de/placeholder.mp3',
+          BookLanguage.japanese: 'assets/audio/books/magic_forest/ja/placeholder.mp3',
+        },
+        imagePath: 'assets/images/books/magic_forest/page_3.png',
+      ),
+    ],
+    defaultLanguage: BookLanguage.english,
+    createdAt: DateTime(2024, 12, 15),
+    author: 'Elena Silverleaf',
+    description: 'Join Luna, a young fairy with a magical gift, as she discovers the secrets of the ancient forest and embarks on an enchanting adventure that will change her life forever.',
+    categories: const ['Fantasy', 'Adventure', 'Children'],
+  ),
+  Book(
+    id: 'book-002',
+    title: const {
+      BookLanguage.english: 'Keyra\'s Adventure',
+      BookLanguage.french: 'L\'Aventure de Keyra',
+      BookLanguage.spanish: 'La Aventura de Keyra',
+      BookLanguage.italian: 'L\'Avventura di Keyra',
+      BookLanguage.german: 'Keyras Abenteuer',
+      BookLanguage.japanese: 'ケイラの冒険',
+    },
+    coverImage: 'assets/images/onboarding/keyra01.png',
+    pages: const [
+      BookPage(
+        text: {
+          BookLanguage.english: 'Meet Keyra, a curious young explorer who loves to learn about different languages and cultures.',
+          BookLanguage.french: 'Voici Keyra, une jeune exploratrice curieuse qui aime apprendre différentes langues et cultures.',
+          BookLanguage.spanish: 'Conoce a Keyra, una joven exploradora curiosa que ama aprender sobre diferentes idiomas y culturas.',
+          BookLanguage.italian: 'Incontra Keyra, una giovane esploratrice curiosa che ama imparare diverse lingue e culture.',
+          BookLanguage.german: 'Lerne Keyra kennen, eine neugierige junge Entdeckerin, die gerne verschiedene Sprachen und Kulturen kennenlernt.',
+          BookLanguage.japanese: '色々な言語と文化を学ぶことが大好きな好奇心旺盛な若い探検家、ケイラを紹介します。',
+        },
+        audioPath: {
+          BookLanguage.english: 'assets/audio/books/magic_forest/en/placeholder.mp3',
+          BookLanguage.french: 'assets/audio/books/magic_forest/fr/placeholder.mp3',
+          BookLanguage.spanish: 'assets/audio/books/magic_forest/es/placeholder.mp3',
+          BookLanguage.italian: 'assets/audio/books/magic_forest/it/placeholder.mp3',
+          BookLanguage.german: 'assets/audio/books/magic_forest/de/placeholder.mp3',
+          BookLanguage.japanese: 'assets/audio/books/magic_forest/ja/placeholder.mp3',
+        },
+        imagePath: 'assets/images/onboarding/keyra01.png',
+      ),
+      BookPage(
+        text: {
+          BookLanguage.english: 'With her magical book, she can travel anywhere and make friends from all around the world.',
+          BookLanguage.french: 'Avec son livre magique, elle peut voyager n\'importe où et se faire des amis du monde entier.',
+          BookLanguage.spanish: 'Con su libro mágico, puede viajar a cualquier lugar y hacer amigos de todo el mundo.',
+          BookLanguage.italian: 'Con il suo libro magico, può viaggiare ovunque e fare amicizia con persone da tutto il mondo.',
+          BookLanguage.german: 'Mit ihrem magischen Buch kann sie überall hinreisen und Freunde aus der ganzen Welt finden.',
+          BookLanguage.japanese: '魔法の本を使って、世界中どこへでも行き、世界中の友達を作ることができます。',
+        },
+        audioPath: {
+          BookLanguage.english: 'assets/audio/books/magic_forest/en/placeholder.mp3',
+          BookLanguage.french: 'assets/audio/books/magic_forest/fr/placeholder.mp3',
+          BookLanguage.spanish: 'assets/audio/books/magic_forest/es/placeholder.mp3',
+          BookLanguage.italian: 'assets/audio/books/magic_forest/it/placeholder.mp3',
+          BookLanguage.german: 'assets/audio/books/magic_forest/de/placeholder.mp3',
+          BookLanguage.japanese: 'assets/audio/books/magic_forest/ja/placeholder.mp3',
+        },
+        imagePath: 'assets/images/onboarding/keyra02.png',
+      ),
+      BookPage(
+        text: {
+          BookLanguage.english: 'Join Keyra on her exciting journey to discover new words, stories, and adventures!',
+          BookLanguage.french: 'Rejoignez Keyra dans son passionnant voyage pour découvrir de nouveaux mots, histoires et aventures !',
+          BookLanguage.spanish: '¡Únete a Keyra en su emocionante viaje para descubrir nuevas palabras, historias y aventuras!',
+          BookLanguage.italian: 'Unisciti a Keyra nel suo emozionante viaggio alla scoperta di nuove parole, storie e avventure!',
+          BookLanguage.german: 'Begleite Keyra auf ihrer aufregenden Reise, um neue Wörter, Geschichten und Abenteuer zu entdecken!',
+          BookLanguage.japanese: 'ケイラと一緒に、新しい言葉、物語、冒険を発見する楽しい旅に出かけましょう！',
+        },
+        audioPath: {
+          BookLanguage.english: 'assets/audio/books/magic_forest/en/placeholder.mp3',
+          BookLanguage.french: 'assets/audio/books/magic_forest/fr/placeholder.mp3',
+          BookLanguage.spanish: 'assets/audio/books/magic_forest/es/placeholder.mp3',
+          BookLanguage.italian: 'assets/audio/books/magic_forest/it/placeholder.mp3',
+          BookLanguage.german: 'assets/audio/books/magic_forest/de/placeholder.mp3',
+          BookLanguage.japanese: 'assets/audio/books/magic_forest/ja/placeholder.mp3',
+        },
+        imagePath: 'assets/images/onboarding/keyra03.png',
+      ),
+    ],
+    defaultLanguage: BookLanguage.english,
+    createdAt: DateTime(2024, 12, 15),
+    author: 'Keyra Team',
+    description: 'Join Keyra on her magical journey to learn languages and make friends around the world.',
+    categories: const ['Adventure', 'Educational'],
+  ),
+];

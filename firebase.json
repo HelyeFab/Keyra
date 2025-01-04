@@ -1,0 +1,26 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "keyra-93667",
+          "appId": "1:683024343520:android:75f549c3744c8df16acb85",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "keyra-93667",
+          "configurations": {
+            "android": "1:683024343520:android:75f549c3744c8df16acb85",
+            "ios": "1:683024343520:ios:a1468ec731f3a8fa6acb85"
+          }
+        }
+      }
+    }
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  }
+}

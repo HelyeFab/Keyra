@@ -1,0 +1,4 @@
+firebase-admin>=6.2.0
+python-dotenv>=1.0.0
+Pillow>=10.1.0  # for image processing
+tqdm>=4.66.1    # for progress bars
