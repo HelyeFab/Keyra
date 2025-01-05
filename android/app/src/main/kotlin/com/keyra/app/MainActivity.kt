@@ -1,4 +1,4 @@
-package com.example.keyra_app
+package com.keyra.app
 
 import io.flutter.embedding.android.FlutterActivity
 

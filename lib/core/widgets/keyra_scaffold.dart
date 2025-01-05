@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../core/theme/bloc/theme_bloc.dart';
@@ -75,21 +74,9 @@ class KeyraScaffold extends StatelessWidget {
                         right: 16,
                         bottom: 8,
                       ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(32),
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(32),
-                              color: Theme.of(context).colorScheme.surface.withOpacity(0.3),
-                            ),
-                            child: KeyraBottomNavBar(
-                              currentIndex: currentIndex,
-                              onTap: onNavigationChanged,
-                            ),
-                          ),
-                        ),
+                      child: KeyraBottomNavBar(
+                        currentIndex: currentIndex,
+                        onTap: onNavigationChanged,
                       ),
                     ),
                   ),

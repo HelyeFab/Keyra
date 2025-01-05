@@ -51,10 +51,12 @@ class _NavigationPageState extends State<NavigationPage> {
       listener: (context, state) {
         state.maybeWhen(
           unauthenticated: () {
-            Navigator.of(context).pushReplacement(
+            // Silently navigate to auth page without showing error message
+            Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                 builder: (context) => const AuthPage(),
               ),
+              (route) => false, // Remove all previous routes from the stack
             );
           },
           orElse: () {},

@@ -132,10 +132,34 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   const SizedBox(height: 24),
                   
                   // Navigation buttons
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      if (_currentPage < onboardingPages.length - 1)
+                  if (_currentPage == onboardingPages.length - 1)
+                    // Center the Get Started button when on last page
+                    SizedBox(
+                      width: double.infinity,
+                      child: Center(
+                        child: Semantics(
+                          button: true,
+                          label: 'Complete onboarding and get started',
+                          child: ElevatedButton(
+                            onPressed: _onGetStarted,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: theme.colorScheme.primary,
+                              foregroundColor: theme.colorScheme.onPrimary,
+                              minimumSize: const Size(200, 48),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                            ),
+                            child: const Text('Get Started'),
+                          ),
+                        ),
+                      ),
+                    )
+                  else
+                    // Show Skip and Next buttons on other pages
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
                         Semantics(
                           button: true,
                           label: 'Skip onboarding',
@@ -148,30 +172,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             ),
                             child: const Text('Skip'),
                           ),
-                        )
-                      else
-                        const SizedBox(width: 88), // Placeholder for layout balance
-                        
-                      if (_currentPage == onboardingPages.length - 1)
-                        Expanded(
-                          child: Semantics(
-                            button: true,
-                            label: 'Complete onboarding and get started',
-                            child: ElevatedButton(
-                              onPressed: _onGetStarted,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: theme.colorScheme.primary,
-                                foregroundColor: theme.colorScheme.onPrimary,
-                                minimumSize: const Size(double.infinity, 48),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                              ),
-                              child: const Text('Get Started'),
-                            ),
-                          ),
-                        )
-                      else
+                        ),
                         Semantics(
                           button: true,
                           label: 'Next page',
@@ -191,8 +192,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             child: const Text('Next'),
                           ),
                         ),
-                    ],
-                  ),
+                      ],
+                    ),
                 ],
               ),
             ),

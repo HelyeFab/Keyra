@@ -274,7 +274,7 @@ class _LibraryPageState extends State<LibraryPage> {
 
   Widget _buildBookGrid(List<Book> books) {
     return GridView.builder(
-      padding: const EdgeInsets.all(AppSpacing.lg),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.lg, AppSpacing.lg, 120),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         childAspectRatio: 0.65,

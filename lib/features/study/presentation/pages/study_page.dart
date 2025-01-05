@@ -137,7 +137,7 @@ class _StudyPageState extends State<StudyPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 80.0),
+                      padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 120.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

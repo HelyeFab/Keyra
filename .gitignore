@@ -72,3 +72,5 @@ firebase-debug.log
 
 # Google Cloud credentials
 assets/config/google_tts_credentials.json
+.aider*
+.env

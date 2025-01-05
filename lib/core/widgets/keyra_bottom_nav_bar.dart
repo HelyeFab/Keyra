@@ -116,23 +116,20 @@ class KeyraBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface.withOpacity(0.3),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Theme.of(context).colorScheme.shadow.withOpacity(0.05),
-            blurRadius: 12,
-            offset: const Offset(0, 2),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(32),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
+            borderRadius: BorderRadius.circular(32),
+            border: Border.all(
+              color: Colors.white.withOpacity(0.2),
+              width: 1,
+            ),
           ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
