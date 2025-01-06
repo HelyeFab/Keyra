@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:Keyra/core/widgets/gradient_background.dart';
+import 'package:Keyra/features/common/presentation/utils/connectivity_utils.dart';
 import 'package:Keyra/core/theme/color_schemes.dart';
 import 'package:Keyra/features/books/domain/models/book_language.dart';
 import 'package:Keyra/core/ui_language/service/ui_translation_service.dart';
@@ -276,11 +277,13 @@ class _DashboardPageContentState extends State<_DashboardPageContent> with Autom
   void initState() {
     super.initState();
     // Load stats when page is mounted
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (mounted) {
         final auth = FirebaseAuth.instance;
         if (auth.currentUser != null) {
-          context.read<DashboardBloc>().loadDashboardStats();
+          if (await ConnectivityUtils.checkConnectivity(context)) {
+            context.read<DashboardBloc>().loadDashboardStats();
+          }
         }
       }
     });
@@ -301,23 +304,15 @@ class _DashboardPageContentState extends State<_DashboardPageContent> with Autom
         pageIndex: 3,
         child: Column(
           children: [
-            AppBar(
-              centerTitle: false,
-              automaticallyImplyLeading: false,
-              elevation: 0,
-              scrolledUnderElevation: 0,
-              leading: const SizedBox(width: 16),
-              actions: const [
-                SizedBox(width: 16),
-              ],
-            ),
             Expanded(
               child: BlocConsumer<DashboardBloc, DashboardState>(
                 listener: _dashboardStateListener,
                 builder: (context, state) {
                   return RefreshIndicator(
                     onRefresh: () async {
-                      context.read<DashboardBloc>().loadDashboardStats();
+                      if (await ConnectivityUtils.checkConnectivity(context)) {
+                        context.read<DashboardBloc>().loadDashboardStats();
+                      }
                     },
                     child: state.when(
                       initial: () => const Center(child: SizedBox()),
@@ -349,8 +344,10 @@ class _DashboardPageContentState extends State<_DashboardPageContent> with Autom
                               ),
                               const SizedBox(height: 16),
                               ElevatedButton.icon(
-                                onPressed: () {
-                                  context.read<DashboardBloc>().loadDashboardStats();
+                                onPressed: () async {
+                                  if (await ConnectivityUtils.checkConnectivity(context)) {
+                                    context.read<DashboardBloc>().loadDashboardStats();
+                                  }
                                 },
                                 icon: const Icon(Icons.refresh),
                                 label: Text(UiTranslationService.translate(context, 'ok')),

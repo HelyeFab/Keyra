@@ -1,7 +1,8 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 class ApiKeys {
-  // Add your API keys here
-  static const String dictionaryApiKey = '';  // Will be loaded from .env
-  static const String translationApiKey = ''; // Will be loaded from .env
-  static const String googleApiKey = '';      // Will be loaded from .env
-  static const String gooLabsApiKey = '';     // Will be loaded from .env
+  static String get dictionaryApiKey => dotenv.env['DICTIONARY_API_KEY'] ?? '';
+  static String get translationApiKey => dotenv.env['TRANSLATION_API_KEY'] ?? '';
+  static String get googleApiKey => dotenv.env['GOOGLE_TRANSLATE_API_KEY'] ?? '';
+  static String get gooLabsApiKey => dotenv.env['GO_API_KEY'] ?? '';
 }

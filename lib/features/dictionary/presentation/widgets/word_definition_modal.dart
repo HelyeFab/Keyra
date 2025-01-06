@@ -152,6 +152,7 @@ class _WordDefinitionModalState extends State<WordDefinitionModal> {
       final definition = await _dictionaryService.getDefinition(
         widget.word,
         widget.language,
+        context,
       );
       if (mounted) {
         setState(() {
@@ -211,6 +212,22 @@ class _WordDefinitionModalState extends State<WordDefinitionModal> {
     );
   }
 
+  Widget _buildCloseButton(ThemeData theme) {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 8.0, right: 8.0),
+        child: IconButton(
+          icon: Icon(
+            Icons.close,
+            color: theme.colorScheme.onSurface,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+    );
+  }
+
   Widget _buildHeader(ThemeData theme) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -225,46 +242,39 @@ class _WordDefinitionModalState extends State<WordDefinitionModal> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        Text(
-                          widget.word,
-                          style: theme.textTheme.headlineMedium?.copyWith(
-                            color: theme.colorScheme.onSurface,
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Flexible(
+                            child: Text(
+                              widget.word,
+                              style: theme.textTheme.headlineMedium?.copyWith(
+                                color: theme.colorScheme.onSurface,
+                              ),
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 8),
-                        IconButton(
-                          icon: HugeIcon(
-                            icon: HugeIcons.strokeRoundedVolumeMute01,
-                            color: theme.brightness == Brightness.dark
-                                ? theme.colorScheme.onSurface
-                                : Colors.black,
-                            size: 24.0,
+                          const SizedBox(width: 8),
+                          IconButton(
+                            icon: HugeIcon(
+                              icon: HugeIcons.strokeRoundedVolumeMute01,
+                              color: theme.brightness == Brightness.dark
+                                  ? theme.colorScheme.onSurface
+                                  : Colors.black,
+                              size: 24.0,
+                            ),
+                            onPressed: () {
+                              DictionaryService().speakWord(widget.word, widget.language.code, context);
+                            },
                           ),
-                          onPressed: () {
-                            DictionaryService().speakWord(widget.word, widget.language.code);
-                          },
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: Icon(
-                            _isSaved ? Icons.bookmark : Icons.bookmark_border,
-                            color: theme.colorScheme.primary,
-                          ),
-                          onPressed: _toggleSaveWord,
-                        ),
-                        IconButton(
-                          icon: Icon(
-                            Icons.close,
-                            color: theme.colorScheme.onSurface,
-                          ),
-                          onPressed: () => Navigator.of(context).pop(),
-                        ),
-                      ],
+                    IconButton(
+                      icon: Icon(
+                        _isSaved ? Icons.bookmark : Icons.bookmark_border,
+                        color: theme.colorScheme.primary,
+                      ),
+                      onPressed: _toggleSaveWord,
                     ),
                   ],
                 ),
@@ -380,15 +390,24 @@ class _WordDefinitionModalState extends State<WordDefinitionModal> {
   Widget _buildContent() {
     final theme = Theme.of(context);
     
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildHeader(theme),
-          _buildMeaningsSection(theme),
-          _buildEtymologySection(theme),
-        ],
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildCloseButton(theme),
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildHeader(theme),
+                _buildMeaningsSection(theme),
+                _buildEtymologySection(theme),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 

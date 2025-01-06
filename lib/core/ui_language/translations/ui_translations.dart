@@ -30,6 +30,10 @@ class UiTranslations extends InheritedWidget {
       'select_language': 'Select Language',
       'settings': 'Settings',
       'dark_mode': 'Dark Mode',
+      'theme_mode': 'Theme Mode',
+      'system_theme': 'System Theme',
+      'light_theme': 'Light Theme',
+      'dark_theme': 'Dark Theme',
       'dark_mode_disabled': 'Dark mode is disabled when app colors are enabled',
       'app_colors': 'App Colors',
       'gradient_theme_enabled': 'Using gradient theme colors',
@@ -40,15 +44,20 @@ class UiTranslations extends InheritedWidget {
       'acknowledgments': 'Acknowledgments',
       'special_thanks': 'Special Thanks',
       'icons_section': 'Icons',
-      'icons_description': 'HugeIcons - Beautiful and consistent icon set\nFlatIcon - High quality icons and graphics',
+      'icons_description':
+          'HugeIcons - Beautiful and consistent icon set\nFlatIcon - High quality icons and graphics',
       'animations_section': 'Animations',
-      'animations_description': 'Lottie Animation - "Free fox greetings Animation" by Solitudinem',
+      'animations_description':
+          'Lottie Animation - "Free fox greetings Animation" by Solitudinem',
       'fonts_section': 'Fonts',
-      'fonts_description': 'FascinateInline - Unique and stylish font for our branding',
+      'fonts_description':
+          'FascinateInline - Unique and stylish font for our branding',
       'libraries_section': 'Open Source Libraries',
-      'libraries_description': 'Flutter and Dart communities for their amazing work',
+      'libraries_description':
+          'Flutter and Dart communities for their amazing work',
       'contributors_section': 'Contributors',
-      'contributors_description': 'All the developers who have contributed to this project',
+      'contributors_description':
+          'All the developers who have contributed to this project',
       'privacy_policy': 'Privacy Policy',
       'terms_of_service': 'Terms of Service',
       'developer': 'Developer',
@@ -121,7 +130,7 @@ We may update these terms with notice.
 7. Disclaimer
 Service provided "as is" without warranties.
 ''',
-      
+
       // Navigation
       'nav_home': 'Home',
       'nav_library': 'Library',
@@ -134,7 +143,8 @@ Service provided "as is" without warranties.
       'home_recently_added_stories': 'Recently Added Stories',
       'home_continue_reading': 'Continue Reading',
       'home_page_progress': 'Progress',
-      'home_no_in_progress_books': 'No books in progress yet. Start reading a story to see it here!',
+      'home_no_in_progress_books':
+          'No books in progress yet. Start reading a story to see it here!',
 
       // Library
       'library_search_books': 'Search books',
@@ -150,7 +160,7 @@ Service provided "as is" without warranties.
       'reading_streak': 'Reading Streak',
       'saved_words': 'Saved Words',
       'achievements': 'Achievements',
-      
+
       // Badges
       'badge_beginner': 'Beginner',
       'badge_intermediate': 'Intermediate',
@@ -199,11 +209,14 @@ Service provided "as is" without warranties.
       'language_japanese': 'Japanese',
       'study_tips': 'Study Tips',
       'regular_practice': 'Regular Practice',
-      'regular_practice_desc': 'Practice regularly to maintain and improve your vocabulary',
+      'regular_practice_desc':
+          'Practice regularly to maintain and improve your vocabulary',
       'spaced_repetition': 'Spaced Repetition',
-      'spaced_repetition_desc': 'Review words at increasing intervals to enhance retention',
+      'spaced_repetition_desc':
+          'Review words at increasing intervals to enhance retention',
       'context_learning': 'Context Learning',
-      'context_learning_desc': 'Learn words in context to better understand their usage',
+      'context_learning_desc':
+          'Learn words in context to better understand their usage',
       'tap_to_see_definition': 'Tap to see definition',
       'tap_to_see_word': 'Tap to see word',
       'definition': 'Definition',
@@ -223,13 +236,18 @@ Service provided "as is" without warranties.
       // Settings & Profile
       'settings': 'Paramètres',
       'app_colors': 'Couleurs de l\'App',
+      'theme_mode': 'Mode du Thème',
+      'system_theme': 'Thème Système',
+      'light_theme': 'Thème Clair',
+      'dark_theme': 'Thème Sombre',
       'information': 'Informations',
       'version': 'Version',
       'notifications': 'Notifications',
       'app_language': 'Langue de l\'App',
       'gradient_theme_enabled': 'Utilisation des couleurs de thème dégradé',
       'dark_mode': 'Mode Sombre',
-      'dark_mode_disabled': 'Le mode sombre est désactivé lorsque les couleurs de l\'app sont activées',
+      'dark_mode_disabled':
+          'Le mode sombre est désactivé lorsque les couleurs de l\'app sont activées',
       'privacy_policy': 'Politique de Confidentialité',
       'terms_of_service': 'Conditions d\'Utilisation',
       'developer': 'Développeur',
@@ -257,8 +275,9 @@ Service provided "as is" without warranties.
       'home_error_favorite': 'Erreur lors de la mise à jour des favoris',
       'home_recently_added_stories': 'Histoires Récemment Ajoutées',
       'home_continue_reading': 'Continuer la Lecture',
-      'home_page_progress': 'Progression',
-      'home_no_in_progress_books': 'Aucun livre en cours. Commencez à lire une histoire pour la voir ici !',
+      'home_page_progress': 'Continuer...',
+      'home_no_in_progress_books':
+          'Aucun livre en cours. Commencez à lire une histoire pour la voir ici !',
 
       // Library
       'library_search_books': 'Rechercher des livres',
@@ -293,11 +312,14 @@ Service provided "as is" without warranties.
       'language_japanese': 'Japonais',
       'study_tips': 'Conseils d\'Étude',
       'regular_practice': 'Pratique Régulière',
-      'regular_practice_desc': 'Pratiquez régulièrement pour maintenir et améliorer votre vocabulaire',
+      'regular_practice_desc':
+          'Pratiquez régulièrement pour maintenir et améliorer votre vocabulaire',
       'spaced_repetition': 'Répétition Espacée',
-      'spaced_repetition_desc': 'Révisez les mots à intervalles croissants pour améliorer la rétention',
+      'spaced_repetition_desc':
+          'Révisez les mots à intervalles croissants pour améliorer la rétention',
       'context_learning': 'Apprentissage en Contexte',
-      'context_learning_desc': 'Apprenez les mots en contexte pour mieux comprendre leur utilisation',
+      'context_learning_desc':
+          'Apprenez les mots en contexte pour mieux comprendre leur utilisation',
       'tap_to_see_definition': 'Appuyez pour voir la définition',
       'tap_to_see_word': 'Appuyez pour voir le mot',
       'definition': 'Définition',
@@ -307,7 +329,8 @@ Service provided "as is" without warranties.
       'flashcard_difficulty_hard': 'Difficile',
       'flashcard_difficulty_good': 'Bien',
       'flashcard_difficulty_easy': 'Facile',
-      'no_saved_words_language_message': 'Pas encore de mots sauvegardés dans cette langue',
+      'no_saved_words_language_message':
+          'Pas encore de mots sauvegardés dans cette langue',
       'no_saved_words_message': 'Pas encore de mots sauvegardés',
       'saved_words_title': 'Mots Sauvegardés',
       'meanings': 'Significations :',
@@ -404,13 +427,18 @@ Service fourni "tel quel" sans garanties.
       // Settings & Profile
       'settings': 'Ajustes',
       'app_colors': 'Colores de la App',
+      'theme_mode': 'Modo de Tema',
+      'system_theme': 'Tema del Sistema',
+      'light_theme': 'Tema Claro',
+      'dark_theme': 'Tema Oscuro',
       'information': 'Información',
       'version': 'Versión',
       'notifications': 'Notificaciones',
       'app_language': 'Idioma de la App',
       'gradient_theme_enabled': 'Usando colores de tema degradado',
       'dark_mode': 'Modo Oscuro',
-      'dark_mode_disabled': 'El modo oscuro está desactivado cuando los colores de la app están habilitados',
+      'dark_mode_disabled':
+          'El modo oscuro está desactivado cuando los colores de la app están habilitados',
       'privacy_policy': 'Política de Privacidad',
       'terms_of_service': 'Términos de Servicio',
       'developer': 'Desarrollador',
@@ -438,8 +466,9 @@ Service fourni "tel quel" sans garanties.
       'home_error_favorite': 'Error al actualizar el estado de favorito',
       'home_recently_added_stories': 'Historias Recién Añadidas',
       'home_continue_reading': 'Continuar Leyendo',
-      'home_page_progress': 'Progreso',
-      'home_no_in_progress_books': '¡No hay libros en progreso todavía. ¡Empieza a leer una historia para verla aquí!',
+      'home_page_progress': 'Continuar...',
+      'home_no_in_progress_books':
+          '¡No hay libros en progreso todavía. ¡Empieza a leer una historia para verla aquí!',
 
       // Library
       'library_search_books': 'Buscar libros',
@@ -474,11 +503,14 @@ Service fourni "tel quel" sans garanties.
       'language_japanese': 'Japonés',
       'study_tips': 'Consejos de Estudio',
       'regular_practice': 'Práctica Regular',
-      'regular_practice_desc': 'Practica regularmente para mantener y mejorar tu vocabulario',
+      'regular_practice_desc':
+          'Practica regularmente para mantener y mejorar tu vocabulario',
       'spaced_repetition': 'Repetición Espaciada',
-      'spaced_repetition_desc': 'Revisa palabras en intervalos crecientes para mejorar la retención',
+      'spaced_repetition_desc':
+          'Revisa palabras en intervalos crecientes para mejorar la retención',
       'context_learning': 'Aprendizaje en Contexto',
-      'context_learning_desc': 'Aprende palabras en contexto para entender mejor su uso',
+      'context_learning_desc':
+          'Aprende palabras en contexto para entender mejor su uso',
       'tap_to_see_definition': 'Toca para ver la definición',
       'tap_to_see_word': 'Toca para ver la palabra',
       'definition': 'Definición',
@@ -488,7 +520,8 @@ Service fourni "tel quel" sans garanties.
       'flashcard_difficulty_hard': 'Difícil',
       'flashcard_difficulty_good': 'Bien',
       'flashcard_difficulty_easy': 'Fácil',
-      'no_saved_words_language_message': 'Aún no hay palabras guardadas en este idioma',
+      'no_saved_words_language_message':
+          'Aún no hay palabras guardadas en este idioma',
       'no_saved_words_message': 'Aún no hay palabras guardadas',
       'saved_words_title': 'Palabras Guardadas',
       'meanings': 'Significados:',
@@ -585,13 +618,18 @@ Servicio proporcionado "tal cual".
       // Settings & Profile
       'settings': 'Impostazioni',
       'app_colors': 'Colori App',
+      'theme_mode': 'Modalità Tema',
+      'system_theme': 'Tema di Sistema',
+      'light_theme': 'Tema Chiaro',
+      'dark_theme': 'Tema Scuro',
       'information': 'Informazioni',
       'version': 'Versione',
       'notifications': 'Notifiche',
       'app_language': 'Lingua App',
       'gradient_theme_enabled': 'Usando i colori del tema sfumato',
       'dark_mode': 'Modalità Scura',
-      'dark_mode_disabled': 'La modalità scura è disabilitata quando i colori dell\'app sono attivi',
+      'dark_mode_disabled':
+          'La modalità scura è disabilitata quando i colori dell\'app sono attivi',
       'privacy_policy': 'Informativa sulla Privacy',
       'terms_of_service': 'Termini di Servizio',
       'developer': 'Sviluppatore',
@@ -619,8 +657,9 @@ Servicio proporcionado "tal cual".
       'home_error_favorite': 'Errore durante l\'aggiornamento dei preferiti',
       'home_recently_added_stories': 'Storie Aggiunte di Recente',
       'home_continue_reading': 'Continua a Leggere',
-      'home_page_progress': 'Progresso',
-      'home_no_in_progress_books': 'Nessun libro in corso. Inizia a leggere una storia per vederla qui!',
+      'home_page_progress': 'continua...',
+      'home_no_in_progress_books':
+          'Nessun libro in corso. Inizia a leggere una storia per vederla qui!',
 
       // Library
       'library_search_books': 'Cerca libri',
@@ -655,11 +694,14 @@ Servicio proporcionado "tal cual".
       'language_japanese': 'Giapponese',
       'study_tips': 'Consigli di Studio',
       'regular_practice': 'Pratica Regolare',
-      'regular_practice_desc': 'Pratica regolarmente per mantenere e migliorare il tuo vocabolario',
+      'regular_practice_desc':
+          'Pratica regolarmente per mantenere e migliorare il tuo vocabolario',
       'spaced_repetition': 'Ripetizione Spaziata',
-      'spaced_repetition_desc': 'Rivedi le parole a intervalli crescenti per migliorare la memorizzazione',
+      'spaced_repetition_desc':
+          'Rivedi le parole a intervalli crescenti per migliorare la memorizzazione',
       'context_learning': 'Apprendimento Contestuale',
-      'context_learning_desc': 'Impara le parole nel contesto per capire meglio il loro uso',
+      'context_learning_desc':
+          'Impara le parole nel contesto per capire meglio il loro uso',
       'tap_to_see_definition': 'Tocca per vedere la definizione',
       'tap_to_see_word': 'Tocca per vedere la parola',
       'definition': 'Definizione',
@@ -669,7 +711,8 @@ Servicio proporcionado "tal cual".
       'flashcard_difficulty_hard': 'Difficile',
       'flashcard_difficulty_good': 'Buono',
       'flashcard_difficulty_easy': 'Facile',
-      'no_saved_words_language_message': 'Nessuna parola salvata in questa lingua',
+      'no_saved_words_language_message':
+          'Nessuna parola salvata in questa lingua',
       'no_saved_words_message': 'Nessuna parola salvata',
       'saved_words_title': 'Parole Salvate',
       'meanings': 'Significati:',
@@ -703,7 +746,8 @@ Servicio proporcionado "tal cual".
       'requirements': 'Requisiti',
       'books_read_requirement': '{0} libri letti richiesti',
       'favorite_books_requirement': '{0} libri preferiti richiesti',
-      'reading_streak_requirement': '{0} giorni di lettura consecutivi richiesti',
+      'reading_streak_requirement':
+          '{0} giorni di lettura consecutivi richiesti',
       'privacy_policy_content': '''
 Benvenuto su Keyra! Questa Informativa sulla Privacy spiega come raccogliamo, utilizziamo e proteggiamo le tue informazioni personali.
 
@@ -766,13 +810,18 @@ Servizio fornito "così com'è".
       // Settings & Profile
       'settings': 'Einstellungen',
       'app_colors': 'App-Farben',
+      'theme_mode': 'Theme-Modus',
+      'system_theme': 'System-Theme',
+      'light_theme': 'Helles Theme',
+      'dark_theme': 'Dunkles Theme',
       'information': 'Informationen',
       'version': 'Version',
       'notifications': 'Benachrichtigungen',
       'app_language': 'App-Sprache',
       'gradient_theme_enabled': 'Verwendung von Farbverlaufsthema',
       'dark_mode': 'Dunkelmodus',
-      'dark_mode_disabled': 'Der Dunkelmodus ist deaktiviert, wenn App-Farben aktiviert sind',
+      'dark_mode_disabled':
+          'Der Dunkelmodus ist deaktiviert, wenn App-Farben aktiviert sind',
       'privacy_policy': 'Datenschutzerklärung',
       'terms_of_service': 'Nutzungsbedingungen',
       'developer': 'Entwickler',
@@ -801,7 +850,8 @@ Servizio fornito "così com'è".
       'home_recently_added_stories': 'Kürzlich hinzugefügte Geschichten',
       'home_continue_reading': 'Weiterlesen',
       'home_page_progress': 'Fortschritt',
-      'home_no_in_progress_books': 'Noch keine Bücher in Bearbeitung. Beginne eine Geschichte zu lesen, um sie hier zu sehen!',
+      'home_no_in_progress_books':
+          'Noch keine Bücher in Bearbeitung. Beginne eine Geschichte zu lesen, um sie hier zu sehen!',
 
       // Library
       'library_search_books': 'Bücher suchen',
@@ -836,11 +886,14 @@ Servizio fornito "così com'è".
       'language_japanese': 'Japanisch',
       'study_tips': 'Lerntipps',
       'regular_practice': 'Regelmäßiges Üben',
-      'regular_practice_desc': 'Übe regelmäßig, um deinen Wortschatz zu erhalten und zu verbessern',
+      'regular_practice_desc':
+          'Übe regelmäßig, um deinen Wortschatz zu erhalten und zu verbessern',
       'spaced_repetition': 'Verteiltes Lernen',
-      'spaced_repetition_desc': 'Wiederhole Wörter in zunehmenden Abständen für bessere Merkfähigkeit',
+      'spaced_repetition_desc':
+          'Wiederhole Wörter in zunehmenden Abständen für bessere Merkfähigkeit',
       'context_learning': 'Kontextlernen',
-      'context_learning_desc': 'Lerne Wörter im Kontext, um ihre Verwendung besser zu verstehen',
+      'context_learning_desc':
+          'Lerne Wörter im Kontext, um ihre Verwendung besser zu verstehen',
       'tap_to_see_definition': 'Tippen für Definition',
       'tap_to_see_word': 'Tippen für Wort',
       'definition': 'Definition',
@@ -850,7 +903,8 @@ Servizio fornito "così com'è".
       'flashcard_difficulty_hard': 'Schwer',
       'flashcard_difficulty_good': 'Gut',
       'flashcard_difficulty_easy': 'Einfach',
-      'no_saved_words_language_message': 'Noch keine gespeicherten Wörter in dieser Sprache',
+      'no_saved_words_language_message':
+          'Noch keine gespeicherten Wörter in dieser Sprache',
       'no_saved_words_message': 'Noch keine gespeicherten Wörter',
       'saved_words_title': 'Gespeicherte Wörter',
       'meanings': 'Bedeutungen:',
@@ -947,6 +1001,10 @@ Dienst "wie besehen" ohne Garantien.
       // Settings & Profile
       'settings': '設定',
       'app_colors': 'アプリの色',
+      'theme_mode': 'テーマモード',
+      'system_theme': 'システムテーマ',
+      'light_theme': 'ライトテーマ',
+      'dark_theme': 'ダークテーマ',
       'information': '情報',
       'version': 'バージョン',
       'notifications': '通知',

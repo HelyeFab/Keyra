@@ -15,6 +15,11 @@ abstract class AppSpacing {
   static const double xxl = 48;
   static const double xxxl = 64;
 
+  /// Line height values
+  static const double lineHeightSmall = 1.2;
+  static const double lineHeightMedium = 1.5;
+  static const double lineHeightLarge = 1.8;
+
   /// Border radius values
   static const double radiusNone = 0;
   static const double radiusXs = 4;

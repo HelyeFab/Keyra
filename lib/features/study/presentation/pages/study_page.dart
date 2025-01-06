@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/ui_language/translations/ui_translations.dart';
 import '../../../../core/widgets/keyra_scaffold.dart';
+import '../../../common/presentation/utils/connectivity_utils.dart';
 import '../../../../core/theme/color_schemes.dart';
 import '../../../../core/theme/bloc/theme_bloc.dart';
 import '../../../../features/books/domain/models/book_language.dart';
@@ -20,6 +21,11 @@ class StudyPage extends StatefulWidget {
 
 class _StudyPageState extends State<StudyPage> {
   void _startStudySession(BuildContext context, BookLanguage? language) async {
+    // Check for internet connectivity first
+    if (!await ConnectivityUtils.checkConnectivity(context)) {
+      return;
+    }
+
     final savedWordsRepo = context.read<SavedWordsRepository>();
     final words = await savedWordsRepo.getSavedWordsList(
       language: language?.code.toLowerCase(),
@@ -49,7 +55,8 @@ class _StudyPageState extends State<StudyPage> {
     }
   }
 
-  Widget _buildTipCard(BuildContext context, IconData icon, String title, String description, Color color) {
+  Widget _buildTipCard(BuildContext context, IconData icon, String title,
+      String description, Color color) {
     final theme = Theme.of(context);
     return Card(
       elevation: 0,
@@ -109,14 +116,6 @@ class _StudyPageState extends State<StudyPage> {
       },
       child: Column(
         children: [
-          AppBar(
-            centerTitle: false,
-            automaticallyImplyLeading: false,
-            leading: const SizedBox(width: 16),
-            actions: const [
-              SizedBox(width: 16),
-            ],
-          ),
           Expanded(
             child: SingleChildScrollView(
               child: Column(
@@ -128,15 +127,17 @@ class _StudyPageState extends State<StudyPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         StudyProgressCard(
-                          onLanguageSelected: (language) => _startStudySession(context, language),
+                          onLanguageSelected: (language) =>
+                              _startStudySession(context, language),
                         ),
                         const SizedBox(height: 24),
                         Text(
                           UiTranslations.of(context).translate('study_tips'),
                           style: theme.textTheme.titleLarge?.copyWith(
-                            color: context.read<ThemeBloc>().state.useGradientTheme 
-                              ? Colors.white 
-                              : AppColors.sectionTitle,
+                            color:
+                                context.read<ThemeBloc>().state.useGradientTheme
+                                    ? Colors.white
+                                    : AppColors.sectionTitle,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -144,24 +145,30 @@ class _StudyPageState extends State<StudyPage> {
                         _buildTipCard(
                           context,
                           Icons.timer,
-                          UiTranslations.of(context).translate('regular_practice'),
-                          UiTranslations.of(context).translate('regular_practice_desc'),
+                          UiTranslations.of(context)
+                              .translate('regular_practice'),
+                          UiTranslations.of(context)
+                              .translate('regular_practice_desc'),
                           Colors.blue,
                         ),
                         const SizedBox(height: 12),
                         _buildTipCard(
                           context,
                           Icons.psychology,
-                          UiTranslations.of(context).translate('spaced_repetition'),
-                          UiTranslations.of(context).translate('spaced_repetition_desc'),
+                          UiTranslations.of(context)
+                              .translate('spaced_repetition'),
+                          UiTranslations.of(context)
+                              .translate('spaced_repetition_desc'),
                           Colors.blue,
                         ),
                         const SizedBox(height: 12),
                         _buildTipCard(
                           context,
                           Icons.auto_stories,
-                          UiTranslations.of(context).translate('context_learning'),
-                          UiTranslations.of(context).translate('context_learning_desc'),
+                          UiTranslations.of(context)
+                              .translate('context_learning'),
+                          UiTranslations.of(context)
+                              .translate('context_learning_desc'),
                           Colors.blue,
                         ),
                       ],

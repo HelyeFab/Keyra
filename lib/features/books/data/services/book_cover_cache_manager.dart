@@ -23,7 +23,17 @@ class BookCoverCacheManager extends CacheManager {
   /// Pre-caches a list of book cover images.
   Future<void> preCacheBookCovers(List<String> urls) async {
     for (final url in urls) {
-      await downloadFile(url);
+      try {
+        final file = await getSingleFile(url);
+        if (file.existsSync()) {
+          // File is now cached and ready for CachedNetworkImage to use
+          print('Successfully cached cover: $url');
+        }
+      } catch (e) {
+        print('Error caching cover $url: $e');
+        // Continue with next URL even if one fails
+        continue;
+      }
     }
   }
 }

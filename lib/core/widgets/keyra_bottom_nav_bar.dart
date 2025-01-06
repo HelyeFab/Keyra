@@ -9,9 +9,9 @@ class NavBarClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     final path = Path();
     final centerX = size.width / 2;
-    final curveWidth = 85.0;
-    final curveHeight = 8.0;
-    final cornerRadius = 10.0;
+    const curveWidth = 85.0;
+    const curveHeight = 8.0;
+    const cornerRadius = 10.0;
     
     path.moveTo(0, cornerRadius);
     
@@ -74,11 +74,11 @@ class KeyraBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = [
-      _NavItem(icon: HugeIcons.strokeRoundedHome13, index: 0),
-      _NavItem(icon: HugeIcons.strokeRoundedLibrary, index: 1),
-      _NavItem(icon: HugeIcons.strokeRoundedMortarboard02, index: 2),
-      _NavItem(icon: HugeIcons.strokeRoundedAnalyticsUp, index: 3),
-      _NavItem(icon: HugeIcons.strokeRoundedUserList, index: 4, isMenuButton: true),
+      const _NavItem(icon: HugeIcons.strokeRoundedHome13, index: 0),
+      const _NavItem(icon: HugeIcons.strokeRoundedLibrary, index: 1),
+      const _NavItem(icon: HugeIcons.strokeRoundedMortarboard02, index: 2),
+      const _NavItem(icon: HugeIcons.strokeRoundedAnalyticsUp, index: 3),
+      const _NavItem(icon: HugeIcons.strokeRoundedUserList, index: 4, isMenuButton: true),
     ];
 
     return ClipPath(

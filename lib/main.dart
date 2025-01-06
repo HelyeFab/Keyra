@@ -24,6 +24,8 @@ import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/data/repositories/firebase_auth_repository.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/bloc/theme_bloc.dart';
+import 'core/presentation/bloc/connectivity_bloc.dart';
+import 'core/presentation/widgets/connectivity_monitor.dart';
 import 'features/books/data/repositories/firestore_populator.dart';
 import 'features/library/presentation/pages/library_page.dart';
 import 'features/study/presentation/pages/study_page.dart';
@@ -88,6 +90,10 @@ void main() async {
     final uiLanguageBloc = UiLanguageBloc(prefs);
     uiLanguageBloc.add(LoadSavedUiLanguageEvent());
 
+    // Initialize connectivity monitoring
+    final connectivityBloc = ConnectivityBloc();
+    connectivityBloc.add(ConnectivityStartMonitoring());
+
     // Initialize Firebase
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -109,6 +115,10 @@ void main() async {
         print('Signed in anonymously');
       } catch (e) {
         print('Error signing in anonymously: $e');
+        // Mark initialization as complete even if auth fails
+        _booksInitController.add(true);
+        _userStatsInitController.add(true);
+        _dictionaryInitController.add(true);
       }
     }
 
@@ -220,6 +230,7 @@ void main() async {
                 userStatsRepository: context.read<UserStatsRepository>(),
               ),
             ),
+            BlocProvider<ConnectivityBloc>.value(value: connectivityBloc),
           ],
           child: BlocBuilder<UiLanguageBloc, UiLanguageState>(
             builder: (context, uiLanguageState) {
@@ -227,71 +238,73 @@ void main() async {
                 currentLanguage: uiLanguageState.languageCode,
                 child: BlocBuilder<ThemeBloc, ThemeState>(
                   builder: (context, themeState) {
-                    return MaterialApp(
-                      debugShowCheckedModeBanner: false,
-                      title: 'Keyra',
-                      theme: AppTheme.lightTheme,
-                      darkTheme: AppTheme.darkTheme,
-                      themeMode: themeState.themeMode,
-                      home: StreamBuilder<List<bool>>(
-                        stream: Rx.combineLatest3(
-                          _dictionaryInitController.stream,
-                          _booksInitController.stream,
-                          _userStatsInitController.stream,
-                          (a, b, c) => [a, b, c],
+                    return ConnectivityMonitor(
+                      child: MaterialApp(
+                        debugShowCheckedModeBanner: false,
+                        title: 'Keyra',
+                        theme: AppTheme.lightTheme,
+                        darkTheme: AppTheme.darkTheme,
+                        themeMode: themeState.themeMode,
+                        home: StreamBuilder<List<bool>>(
+                          stream: Rx.combineLatest3(
+                            _dictionaryInitController.stream,
+                            _booksInitController.stream,
+                            _userStatsInitController.stream,
+                            (a, b, c) => [a, b, c],
+                          ),
+                          initialData: [!isFirstLaunch, false, false],
+                          builder: (context, snapshot) {
+                            final isInitialized = snapshot.data?.every((init) => init) ?? false;
+                            return SplashScreen(
+                              isInitialized: isInitialized,
+                              isFirstLaunch: isFirstLaunch,
+                              preferencesService: preferencesService,
+                            );
+                          },
                         ),
-                        initialData: [!isFirstLaunch, false, false],
-                        builder: (context, snapshot) {
-                          final isInitialized = snapshot.data?.every((init) => init) ?? false;
-                          return SplashScreen(
-                            isInitialized: isInitialized,
-                            isFirstLaunch: isFirstLaunch,
-                            preferencesService: preferencesService,
-                          );
+                        routes: {
+                          '/home': (context) => BlocProvider.value(
+                            value: context.read<AuthBloc>(),
+                            child: const HomePage(),
+                          ),
+                          '/library': (context) => MultiBlocProvider(
+                            providers: [
+                              BlocProvider.value(
+                                value: context.read<AuthBloc>(),
+                              ),
+                              BlocProvider(
+                                create: (context) => DashboardBloc(
+                                  userStatsRepository: context.read<UserStatsRepository>(),
+                                ),
+                              ),
+                              BlocProvider.value(
+                                value: context.read<BadgeBloc>(),
+                              ),
+                            ],
+                            child: const LibraryPage(),
+                          ),
+                          '/study': (context) => BlocProvider.value(
+                            value: context.read<AuthBloc>(),
+                            child: const StudyPage(),
+                          ),
+                          '/dashboard': (context) => BlocProvider.value(
+                            value: context.read<AuthBloc>(),
+                            child: const DashboardPage(),
+                          ),
+                          '/profile': (context) => BlocProvider.value(
+                            value: context.read<AuthBloc>(),
+                            child: const ProfilePage(),
+                          ),
+                          '/onboarding': (context) => BlocProvider.value(
+                            value: context.read<AuthBloc>(),
+                            child: OnboardingPage(preferencesService: preferencesService),
+                          ),
+                          '/navigation': (context) => BlocProvider.value(
+                            value: context.read<AuthBloc>(),
+                            child: const NavigationPage(),
+                          ),
                         },
                       ),
-                      routes: {
-                        '/home': (context) => BlocProvider.value(
-                          value: context.read<AuthBloc>(),
-                          child: const HomePage(),
-                        ),
-                        '/library': (context) => MultiBlocProvider(
-                          providers: [
-                            BlocProvider.value(
-                              value: context.read<AuthBloc>(),
-                            ),
-                            BlocProvider(
-                              create: (context) => DashboardBloc(
-                                userStatsRepository: context.read<UserStatsRepository>(),
-                              ),
-                            ),
-                            BlocProvider.value(
-                              value: context.read<BadgeBloc>(),
-                            ),
-                          ],
-                          child: const LibraryPage(),
-                        ),
-                        '/study': (context) => BlocProvider.value(
-                          value: context.read<AuthBloc>(),
-                          child: const StudyPage(),
-                        ),
-                        '/dashboard': (context) => BlocProvider.value(
-                          value: context.read<AuthBloc>(),
-                          child: const DashboardPage(),
-                        ),
-                        '/profile': (context) => BlocProvider.value(
-                          value: context.read<AuthBloc>(),
-                          child: const ProfilePage(),
-                        ),
-                        '/onboarding': (context) => BlocProvider.value(
-                          value: context.read<AuthBloc>(),
-                          child: OnboardingPage(preferencesService: preferencesService),
-                        ),
-                        '/navigation': (context) => BlocProvider.value(
-                          value: context.read<AuthBloc>(),
-                          child: const NavigationPage(),
-                        ),
-                      },
                     );
                   },
                 ),

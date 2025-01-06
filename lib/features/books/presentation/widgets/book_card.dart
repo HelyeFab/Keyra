@@ -47,9 +47,15 @@ class BookCard extends StatelessWidget {
                     height: 160,
                     width: double.infinity,
                     fit: BoxFit.cover,
-                    placeholder: (context, url) => const Center(
-                      child: LoadingIndicator(size: 30),
+                    placeholder: (context, url) => Container(
+                      height: 160,
+                      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                      child: const Center(
+                        child: LoadingIndicator(size: 30),
+                      ),
                     ),
+                    memCacheWidth: 360, // 2x the display width for quality
+                    memCacheHeight: 320, // 2x the display height for quality
                     errorWidget: (context, url, error) {
                       print('Error loading cover image: $error');
                       return Container(

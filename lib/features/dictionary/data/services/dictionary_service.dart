@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:Keyra/core/config/api_keys.dart';
 import 'package:Keyra/features/books/domain/models/book_language.dart';
 import 'package:Keyra/features/dictionary/data/services/local_dictionary_service.dart';
 import 'package:Keyra/features/dictionary/data/services/japanese_dictionary_service.dart';
+import 'package:Keyra/features/common/presentation/utils/connectivity_utils.dart';
 
 class _CacheEntry<T> {
   final T value;
@@ -93,8 +94,12 @@ class DictionaryService {
     }
   }
 
-  Future<Map<String, String>?> _translateWithSourceLanguage(String text, String sourceLanguage, String targetLanguage) async {
+  Future<Map<String, String>?> _translateWithSourceLanguage(String text, String sourceLanguage, String targetLanguage, BuildContext context) async {
     try {
+      if (!await ConnectivityUtils.checkConnectivity(context)) {
+        return null;
+      }
+
       if (text.isEmpty || sourceLanguage.isEmpty || targetLanguage.isEmpty) {
         debugPrint('Invalid translation parameters: text=$text, source=$sourceLanguage, target=$targetLanguage');
         throw DictionaryException('Invalid translation parameters');
@@ -138,13 +143,17 @@ class DictionaryService {
     }
   }
 
-  Future<Map<String, dynamic>> getDefinition(String word, BookLanguage language) async {
+  Future<Map<String, dynamic>> getDefinition(String word, BookLanguage language, BuildContext context) async {
     try {
       // Check cache first
       final cacheKey = '${language.code}:$word';
       final cached = _definitionCache[cacheKey];
       if (cached != null && !cached.isExpired) {
         return cached.value;
+      }
+
+      if (!await ConnectivityUtils.checkConnectivity(context)) {
+        return {'word': word};
       }
 
       Map<String, dynamic>? definition;
@@ -173,8 +182,12 @@ class DictionaryService {
     await _audioPlayer.pause();
   }
 
-  Future<void> speakWord(String word, String language) async {
+  Future<void> speakWord(String word, String language, BuildContext context) async {
     try {
+      if (!await ConnectivityUtils.checkConnectivity(context)) {
+        return;
+      }
+
       final url = Uri.parse(
         'https://translate.google.com/translate_tts'
         '?ie=UTF-8'

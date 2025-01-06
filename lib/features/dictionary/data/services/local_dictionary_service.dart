@@ -80,7 +80,7 @@ class LocalDictionaryService {
   }
 
   Future<Map<String, dynamic>> _getTranslation(String text, String targetLang) async {
-    const apiKey = ApiKeys.googleApiKey;
+    final apiKey = ApiKeys.googleApiKey;
 
     // First translate from target language to English
     final response = await http.post(

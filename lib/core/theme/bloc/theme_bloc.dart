@@ -12,14 +12,27 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
   static const String _gradientThemePreferenceKey = 'use_gradient_theme';
   final SharedPreferences _prefs;
 
-  ThemeBloc(this._prefs) : super(const ThemeState(themeMode: ThemeMode.system, useGradientTheme: false)) {
+  ThemeBloc(this._prefs)
+      : super(const ThemeState(
+            themeMode: ThemeMode.system, useGradientTheme: false)) {
     on<ThemeEvent>((event, emit) {
       event.when(
         toggleTheme: () {
           if (!state.useGradientTheme) {
-            final newMode = state.themeMode == ThemeMode.light
-                ? ThemeMode.dark
-                : ThemeMode.light;
+            final ThemeMode newMode;
+            switch (state.themeMode) {
+              case ThemeMode.system:
+                // When in system mode, switch to explicit light/dark based on current system preference
+                final brightness = WidgetsBinding.instance.window.platformBrightness;
+                newMode = brightness == Brightness.dark ? ThemeMode.light : ThemeMode.dark;
+                break;
+              case ThemeMode.light:
+                newMode = ThemeMode.dark;
+                break;
+              case ThemeMode.dark:
+                newMode = ThemeMode.system;
+                break;
+            }
             _saveThemeMode(newMode);
             emit(state.copyWith(themeMode: newMode));
           }
@@ -41,7 +54,7 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
         },
       );
     });
-    
+
     // Load saved theme immediately
     _loadSavedTheme();
     _loadSavedGradientTheme();
@@ -56,8 +69,24 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
     try {
       final savedMode = _prefs.getString(_themePreferenceKey);
       if (savedMode != null) {
-        final themeMode = savedMode == 'dark' ? ThemeMode.dark : ThemeMode.light;
+        ThemeMode themeMode;
+        switch (savedMode) {
+          case 'dark':
+            themeMode = ThemeMode.dark;
+            break;
+          case 'light':
+            themeMode = ThemeMode.light;
+            break;
+          case 'system':
+            themeMode = ThemeMode.system;
+            break;
+          default:
+            themeMode = ThemeMode.system;
+        }
         add(ThemeEvent.setTheme(themeMode));
+      } else {
+        // If no saved preference, default to system theme
+        add(const ThemeEvent.setTheme(ThemeMode.system));
       }
     } catch (e) {
       debugPrint('Error loading theme: $e');
@@ -75,7 +104,19 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
 
   void _saveThemeMode(ThemeMode mode) {
     try {
-      _prefs.setString(_themePreferenceKey, mode == ThemeMode.dark ? 'dark' : 'light');
+      String themeString;
+      switch (mode) {
+        case ThemeMode.light:
+          themeString = 'light';
+          break;
+        case ThemeMode.dark:
+          themeString = 'dark';
+          break;
+        case ThemeMode.system:
+          themeString = 'system';
+          break;
+      }
+      _prefs.setString(_themePreferenceKey, themeString);
     } catch (e) {
       debugPrint('Error saving theme: $e');
     }

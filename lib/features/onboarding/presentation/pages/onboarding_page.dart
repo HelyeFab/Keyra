@@ -45,7 +45,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   Future<void> _onGetStarted() async {
     // Mark onboarding as seen
-    await widget.preferencesService.setHasSeenOnboarding();
+    await widget.preferencesService.setHasSeenOnboarding(true);
 
     if (!mounted) return;
 

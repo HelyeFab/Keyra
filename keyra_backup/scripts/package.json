@@ -1,0 +1,9 @@
+{
+  "name": "keyra-scripts",
+  "version": "1.0.0",
+  "description": "Admin scripts for Keyra",
+  "main": "init_user_stats.js",
+  "dependencies": {
+    "firebase-admin": "^11.11.0"
+  }
+}

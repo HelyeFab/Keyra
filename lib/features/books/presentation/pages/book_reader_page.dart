@@ -14,6 +14,7 @@ import 'package:japanese_word_tokenizer/japanese_word_tokenizer.dart' show token
 import 'package:Keyra/core/widgets/loading_animation.dart';
 import 'package:Keyra/features/books/presentation/bloc/tts_bloc.dart';
 import 'package:Keyra/features/books/data/repositories/book_repository.dart';
+import 'package:Keyra/features/common/presentation/utils/connectivity_utils.dart';
 
 class BookReaderPage extends StatefulWidget {
   final Book book;
@@ -56,6 +57,10 @@ class _BookReaderPageState extends State<BookReaderPage> {
 
   Future<void> _startReadingSession() async {
     try {
+      if (!await ConnectivityUtils.checkConnectivity(context)) {
+        return;
+      }
+
       // Start reading session for stats
       await widget.userStatsRepository.startReadingSession();
       
@@ -85,6 +90,9 @@ class _BookReaderPageState extends State<BookReaderPage> {
 
   Future<void> _endReadingSession() async {
     try {
+      if (!await ConnectivityUtils.checkConnectivity(context)) {
+        return;
+      }
       await widget.userStatsRepository.endReadingSession();
     } catch (e) {
       debugPrint('Error ending reading session: $e');
@@ -94,6 +102,9 @@ class _BookReaderPageState extends State<BookReaderPage> {
   Future<void> _markBookAsRead() async {
     if (!_hasMarkedAsRead) {
       try {
+        if (!await ConnectivityUtils.checkConnectivity(context)) {
+          return;
+        }
         await widget.userStatsRepository.markBookAsRead();
         _hasMarkedAsRead = true;
       } catch (e) {
@@ -108,6 +119,10 @@ class _BookReaderPageState extends State<BookReaderPage> {
     });
 
     try {
+      if (!await ConnectivityUtils.checkConnectivity(context)) {
+        return;
+      }
+
       // Update book progress in Firestore
       final updatedBook = widget.book.copyWith(
         currentPage: page,
@@ -400,13 +415,18 @@ class _BookReaderPageState extends State<BookReaderPage> {
             TextSpan(
               text: wordReading.word,
               recognizer: TapGestureRecognizer()
-                ..onTap = () {
+                ..onTap = () async {
                   debugPrint('Tapped word: ${wordReading.word}');
-                  WordDefinitionModal.show(
-                    context,
-                    wordReading.word,
-                    widget.language,
-                  );
+                  if (!await ConnectivityUtils.checkConnectivity(context)) {
+                    return;
+                  }
+                  if (context.mounted) {
+                    WordDefinitionModal.show(
+                      context,
+                      wordReading.word,
+                      widget.language,
+                    );
+                  }
                 },
             ),
           );
@@ -415,7 +435,9 @@ class _BookReaderPageState extends State<BookReaderPage> {
         return SelectableText.rich(
           TextSpan(children: textSpans),
           style: theme.textTheme.bodyMedium?.copyWith(
-            fontSize: theme.textTheme.bodyMedium!.fontSize! * _textScale,
+            fontSize: _baseFontSize * _textScale,
+            fontFamily: widget.language.code == 'ja' ? null : 'Playwrite',
+            height: AppSpacing.lineHeightLarge,
           ),
           textAlign: TextAlign.justify,
         );
@@ -482,48 +504,51 @@ class _BookReaderPageState extends State<BookReaderPage> {
             : AppColors.readerControl;
 
         if (state is TTSPlaying) {
-      return Center(
-        child: Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: buttonColor,
-          ),
-          child: IconButton(
-            icon: const HugeIcon(
-              icon: HugeIcons.strokeRoundedPause,
-              color: AppColors.controlText,
-              size: 24.0,
+          return Center(
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: buttonColor,
+              ),
+              child: IconButton(
+                icon: const HugeIcon(
+                  icon: HugeIcons.strokeRoundedPause,
+                  color: AppColors.controlText,
+                  size: 24.0,
+                ),
+                iconSize: 48,
+                onPressed: () {
+                  _ttsBloc.add(TTSPauseRequested());
+                },
+              ),
             ),
-            iconSize: 48,
-            onPressed: () {
-              _ttsBloc.add(TTSPauseRequested());
-            },
-          ),
-        ),
-      );
+          );
         } else {
-      return Center(
-        child: Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: buttonColor,
-          ),
-          child: IconButton(
-            icon: const HugeIcon(
-              icon: HugeIcons.strokeRoundedPlay,
-              color: AppColors.controlText,
-              size: 24.0,
+          return Center(
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: buttonColor,
+              ),
+              child: IconButton(
+                icon: const HugeIcon(
+                  icon: HugeIcons.strokeRoundedPlay,
+                  color: AppColors.controlText,
+                  size: 24.0,
+                ),
+                iconSize: 48,
+                onPressed: () async {
+                  if (!await ConnectivityUtils.checkConnectivity(context)) {
+                    return;
+                  }
+                  _ttsBloc.add(TTSStarted(
+                    text: pageText,
+                    language: widget.language,
+                  ));
+                },
+              ),
             ),
-            iconSize: 48,
-            onPressed: () {
-              _ttsBloc.add(TTSStarted(
-                text: pageText,
-                language: widget.language,
-              ));
-            },
-          ),
-        ),
-      );
+          );
         }
       },
     );

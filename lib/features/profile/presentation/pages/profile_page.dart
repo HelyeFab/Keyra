@@ -88,10 +88,11 @@ class ProfilePage extends StatelessWidget {
       },
       child: Column(
         children: [
-          AppBar(
-            elevation: 0,
-            actions: [
-              IconButton(
+          Align(
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: IconButton(
                 icon: HugeIcon(
                   icon: HugeIcons.strokeRoundedLogout01,
                   color: iconColor,
@@ -99,8 +100,7 @@ class ProfilePage extends StatelessWidget {
                 ),
                 onPressed: () => _showLogoutConfirmation(context),
               ),
-              const SizedBox(width: 8),
-            ],
+            ),
           ),
           Expanded(
             child: SingleChildScrollView(
@@ -199,7 +199,7 @@ class ProfilePage extends StatelessWidget {
                               ),
                               title: Text(
                                 UiTranslations.of(context).translate('app_colors'),
-                                style: themeState.themeMode == ThemeMode.dark
+                                style: themeState.useGradientTheme 
                                   ? TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5))
                                   : null,
                               ),
@@ -225,7 +225,7 @@ class ProfilePage extends StatelessWidget {
                                 size: 24.0,
                               ),
                               title: Text(
-                                UiTranslations.of(context).translate('dark_mode'),
+                                UiTranslations.of(context).translate('theme_mode'),
                                 style: themeState.useGradientTheme 
                                   ? TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5))
                                   : null,
@@ -235,12 +235,28 @@ class ProfilePage extends StatelessWidget {
                                     UiTranslations.of(context).translate('dark_mode_disabled'),
                                     style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
                                   )
-                                : null,
-                              trailing: Switch(
-                                value: themeState.themeMode == ThemeMode.dark,
-                                onChanged: themeState.useGradientTheme ? null : (bool value) {
-                                  context.read<ThemeBloc>().add(const ThemeEvent.toggleTheme());
-                                },
+                                : Text(
+                                    themeState.themeMode == ThemeMode.system
+                                        ? UiTranslations.of(context).translate('system_theme')
+                                        : themeState.themeMode == ThemeMode.dark
+                                            ? UiTranslations.of(context).translate('dark_theme')
+                                            : UiTranslations.of(context).translate('light_theme'),
+                                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
+                                  ),
+                              trailing: IconButton(
+                                icon: Icon(
+                                  themeState.themeMode == ThemeMode.system
+                                      ? Icons.brightness_auto
+                                      : themeState.themeMode == ThemeMode.dark
+                                          ? Icons.dark_mode
+                                          : Icons.light_mode,
+                                  color: themeState.useGradientTheme 
+                                      ? Theme.of(context).colorScheme.onSurface.withOpacity(0.5)
+                                      : Theme.of(context).colorScheme.onSurface,
+                                ),
+                                onPressed: themeState.useGradientTheme 
+                                    ? null 
+                                    : () => context.read<ThemeBloc>().add(const ThemeEvent.toggleTheme()),
                               ),
                             ),
                           ],

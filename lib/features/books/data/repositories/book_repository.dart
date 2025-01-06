@@ -167,21 +167,47 @@ class BookRepository {
   Stream<List<Book>> getAllBooks() async* {
     print('BookRepository: Starting getAllBooks');
     
+    final user = _auth.currentUser;
     try {
       // Ensure cache service is initialized
       await _initCacheService();
       
       // First, check and return cached books if available
       if (_cacheService.hasCache) {
-        print('BookRepository: Returning cached books');
-        yield _cacheService.getCachedBooks();
+        final cachedBooks = _cacheService.getCachedBooks();
+        print('BookRepository: Returning ${cachedBooks.length} cached books');
+        
+        // Get user's favorites to merge with cached books
+        if (user != null) {
+          try {
+            final userFavoritesDoc = await _firestore
+                .collection('users')
+                .doc(user.uid)
+                .collection('favorites')
+                .get();
+            final favoriteBookIds = userFavoritesDoc.docs.map((doc) => doc.id).toSet();
+            
+            // Update cached books with favorite status
+            final updatedCachedBooks = cachedBooks.map((book) => 
+              book.copyWith(isFavorite: favoriteBookIds.contains(book.id))
+            ).toList();
+            
+            yield updatedCachedBooks;
+          } catch (e) {
+            print('BookRepository: Error fetching favorites for cached books: $e');
+            yield cachedBooks;
+          }
+        } else {
+          yield cachedBooks;
+        }
+        
+        // Add delay before starting Firestore stream to allow cached images to load
+        await Future.delayed(const Duration(milliseconds: 500));
       }
     } catch (e) {
       print('BookRepository: Error accessing cache: $e');
       // Continue without cache
     }
-
-    final user = _auth.currentUser;
     print('BookRepository: User authentication status - ${user != null ? 'Logged in' : 'Not logged in'}');
 
     try {

@@ -18,6 +18,7 @@ import '../../../../features/books/data/repositories/firestore_populator.dart';
 import '../../../../features/dashboard/data/repositories/user_stats_repository.dart';
 import '../../../../features/dictionary/data/services/dictionary_service.dart';
 import '../../../../core/ui_language/translations/ui_translations.dart';
+import '../../../common/presentation/utils/connectivity_utils.dart';
 import '../../../../features/badges/presentation/widgets/badge_display.dart';
 import '../../../../features/badges/presentation/bloc/badge_bloc.dart';
 import '../../../../features/badges/presentation/bloc/badge_state.dart';
@@ -96,6 +97,13 @@ class _HomePageState extends State<HomePage> {
     });
     
     try {
+      if (!await ConnectivityUtils.checkConnectivity(context)) {
+        setState(() {
+          _isLoadingAll = false;
+        });
+        return;
+      }
+
       final populator = FirestorePopulator();
       print('HomePage: Checking if sample books are populated');
       final exists = await populator.areSampleBooksPopulated();
@@ -165,6 +173,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _toggleFavorite(int index) async {
+    if (!await ConnectivityUtils.checkConnectivity(context)) {
+      return;
+    }
+
     final book = _allBooks[index];
     final updatedBook = book.copyWith(isFavorite: !book.isFavorite);
     
@@ -361,7 +373,7 @@ class _HomePageState extends State<HomePage> {
                                     : ListView.builder(
                                         shrinkWrap: true,
                                         physics: const NeverScrollableScrollPhysics(),
-                                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                                        padding: const EdgeInsets.fromLTRB(AppSpacing.md, 0, AppSpacing.md, 120.0),
                                         itemCount: _inProgressBooks.length,
                                         itemBuilder: (context, index) {
                                           final book = _inProgressBooks[index];

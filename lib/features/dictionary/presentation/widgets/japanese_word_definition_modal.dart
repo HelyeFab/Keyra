@@ -251,6 +251,7 @@ class _JapaneseWordDefinitionModalState extends State<JapaneseWordDefinitionModa
       final definition = await _dictionaryService.getDefinition(
         widget.word,
         widget.language,
+        context,
       );
       if (mounted) {
         setState(() {
@@ -312,6 +313,22 @@ class _JapaneseWordDefinitionModalState extends State<JapaneseWordDefinitionModa
     );
   }
 
+  Widget _buildCloseButton(ThemeData theme) {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 8.0, right: 8.0),
+        child: IconButton(
+          icon: Icon(
+            Icons.close,
+            color: theme.colorScheme.onSurface,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+    );
+  }
+
   Widget _buildHeader(ThemeData theme) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -353,7 +370,7 @@ class _JapaneseWordDefinitionModalState extends State<JapaneseWordDefinitionModa
                       size: 24.0,
                     ),
                     onPressed: () {
-                      DictionaryService().speakWord(widget.word, widget.language.code);
+                      DictionaryService().speakWord(widget.word, widget.language.code, context);
                     },
                   ),
                 ],
@@ -398,28 +415,20 @@ class _JapaneseWordDefinitionModalState extends State<JapaneseWordDefinitionModa
                 ),
             ],
           ),
-          Row(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: theme.brightness == Brightness.dark
-                      ? theme.colorScheme.surfaceContainerHighest
-                      : const Color(0xFFFFF9C4),
-                  shape: BoxShape.circle,
-                ),
-                child: IconButton(
-                  icon: Icon(
-                    _isSaved ? Icons.bookmark : Icons.bookmark_border,
-                    color: _isSaved ? theme.colorScheme.primary : null,
-                  ),
-                  onPressed: _toggleSaveWord,
-                ),
+          Container(
+            decoration: BoxDecoration(
+              color: theme.brightness == Brightness.dark
+                  ? theme.colorScheme.surfaceContainerHighest
+                  : const Color(0xFFFFF9C4),
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              icon: Icon(
+                _isSaved ? Icons.bookmark : Icons.bookmark_border,
+                color: _isSaved ? theme.colorScheme.primary : null,
               ),
-              IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ],
+              onPressed: _toggleSaveWord,
+            ),
           ),
         ],
       ),
@@ -493,7 +502,7 @@ class _JapaneseWordDefinitionModalState extends State<JapaneseWordDefinitionModa
                       ],
                     ),
                   ))
-              ,
+              .toList(),
         ],
       ),
     );
@@ -563,7 +572,7 @@ class _JapaneseWordDefinitionModalState extends State<JapaneseWordDefinitionModa
                           ],
                         ),
                       ))
-                  ,
+                  .toList(),
             ],
           ),
         ),
@@ -647,16 +656,25 @@ class _JapaneseWordDefinitionModalState extends State<JapaneseWordDefinitionModa
       wanikaniData = _definition!['wanikani'] as Map<String, dynamic>;
     }
     
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildHeader(theme),
-          _buildMeaningsSection(theme),
-          if (wanikaniData != null)
-            ..._buildWanikaniSections(theme, wanikaniData),
-        ],
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildCloseButton(theme),
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildHeader(theme),
+                _buildMeaningsSection(theme),
+                if (wanikaniData != null)
+                  ..._buildWanikaniSections(theme, wanikaniData),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 
