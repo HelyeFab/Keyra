@@ -37,53 +37,50 @@ class KeyraScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ThemeBloc, ThemeState>(
       builder: (context, state) {
-        return Material(
-          type: MaterialType.transparency,
-          child: FocusScope(
-            child: Stack(
-              children: [
-                Container(
-                  height: MediaQuery.of(context).size.height,
-                  decoration: BoxDecoration(
-                    color: state.useGradientTheme ? null : Theme.of(context).colorScheme.surface,
-                    gradient: state.useGradientTheme
-                        ? LinearGradient(
-                            colors: _getGradientForPage(currentIndex),
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          )
-                        : null,
-                  ),
-                  child: Scaffold(
-                    backgroundColor: Colors.transparent,
-                    body: SafeArea(
-                      bottom: false,
-                      child: child,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  child: SafeArea(
-                    top: false,
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        left: 16,
-                        right: 16,
-                        bottom: 8,
-                      ),
-                      child: KeyraBottomNavBar(
-                        currentIndex: currentIndex,
-                        onTap: onNavigationChanged,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+        return Stack(
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height,
+              decoration: BoxDecoration(
+                color: state.useGradientTheme ? null : Theme.of(context).colorScheme.surface,
+                gradient: state.useGradientTheme
+                    ? LinearGradient(
+                        colors: _getGradientForPage(currentIndex),
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      )
+                    : null,
+              ),
             ),
-          ),
+            Scaffold(
+              backgroundColor: state.useGradientTheme 
+                ? Colors.transparent 
+                : Theme.of(context).colorScheme.surface,
+              body: SafeArea(
+                bottom: false,
+                child: child,
+              ),
+            ),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: SafeArea(
+                top: false,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    left: 16,
+                    right: 16,
+                    bottom: 8,
+                  ),
+                  child: KeyraBottomNavBar(
+                    currentIndex: currentIndex,
+                    onTap: onNavigationChanged,
+                  ),
+                ),
+              ),
+            ),
+          ],
         );
       },
     );

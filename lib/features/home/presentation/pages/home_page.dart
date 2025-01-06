@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_spacing.dart';
-import '../../../../core/widgets/gradient_background.dart';
+import '../../../../core/widgets/keyra_scaffold.dart';
 import '../../../../core/theme/color_schemes.dart';
 import '../../../../core/presentation/bloc/language_bloc.dart';
+import '../../../navigation/presentation/pages/navigation_page.dart';
 import '../../../../core/theme/bloc/theme_bloc.dart';
 import '../../../../features/dashboard/presentation/bloc/dashboard_bloc.dart';
-import '../../../../core/widgets/reading_language_selector.dart';
+import '../../../../core/widgets/reading_language_selector_no_bg.dart';
 import '../../../../core/widgets/loading_indicator.dart';
-import '../../../../core/widgets/mini_stats_display.dart';
-import '../../../../core/widgets/menu_button.dart';
+import '../../../../core/widgets/mini_stats_display_no_bg.dart';
 import '../../../../features/books/domain/models/book.dart';
 import '../../../../features/books/presentation/widgets/book_card.dart';
 import '../../../../features/books/presentation/pages/book_reader_page.dart';
@@ -38,6 +38,7 @@ class _HomePageState extends State<HomePage> {
   List<Book> _inProgressBooks = [];
   bool _isLoadingAll = true;
   bool _isLoadingInProgress = true;
+
   @override
   void initState() {
     super.initState();
@@ -215,226 +216,233 @@ class _HomePageState extends State<HomePage> {
       ),
       child: BlocBuilder<LanguageBloc, LanguageState>(
         builder: (context, languageState) {
-          return Material(
-            type: MaterialType.transparency,
-            child: GradientBackground(
-              pageIndex: 0,
-              child: Column(
-            children: [
-              AppBar(
-                centerTitle: false,
-                automaticallyImplyLeading: false,
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                leading: Padding(
-                  padding: const EdgeInsets.only(left: 16.0),
-                  child: BlocBuilder<BadgeBloc, BadgeState>(
-                    builder: (context, state) {
-                      return state.map(
-                        initial: (_) => const SizedBox.shrink(),
-                        loaded: (loaded) => BadgeDisplay(
-                          level: loaded.progress.currentLevel,
-                        ),
-                        levelingUp: (levelingUp) => BadgeDisplay(
-                          level: levelingUp.progress.currentLevel,
-                        ),
-                      );
-                    },
-                  ),
+          return KeyraScaffold(
+            currentIndex: 0,
+            onNavigationChanged: (index) {
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                  builder: (context) => NavigationPage(initialIndex: index),
                 ),
-                actions: const [
-                  MenuButton(),
-                  SizedBox(width: 16),
-                ],
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(AppSpacing.lg),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const MiniStatsDisplay(),
-                          Row(
-                            children: [
-                              ReadingLanguageSelector(
-                                currentLanguage: languageState.selectedLanguage,
-                                onLanguageChanged: (language) {
-                                  if (language != null) {
-                                    context.read<LanguageBloc>().add(
-                                      LanguageChanged(language),
-                                    );
-                                  }
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: ListView(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: AppSpacing.lg),
-                            child: Text(
-                              UiTranslations.of(context).translate('home_recently_added_stories'),
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                color: context.read<ThemeBloc>().state.useGradientTheme 
-                                  ? Colors.white 
-                                  : AppColors.sectionTitle,
-                                fontWeight: FontWeight.w600,
-                              ),
+                (route) => false,
+              );
+            },
+            child: Column(
+              children: [
+                const SizedBox(height: AppSpacing.lg),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.surfaceContainerLowest,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Theme.of(context).brightness == Brightness.dark
+                                  ? Colors.black.withOpacity(0.2)
+                                  : Colors.black.withOpacity(0.08),
+                              blurRadius: 16,
+                              offset: const Offset(0, 4),
+                              spreadRadius: 0,
                             ),
-                          ),
-                          const SizedBox(height: AppSpacing.md),
-                          SizedBox(
-                            height: 280,
-                            child: _isLoadingAll
-                                ? const Center(
-                                    child: LoadingIndicator(size: 100),
-                                  )
-                                : ListView.builder(
-                                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: _allBooks.length,
-                                    itemBuilder: (context, index) {
-                                      final book = _allBooks[index];
-                                      return Padding(
-                                        padding: const EdgeInsets.only(right: AppSpacing.md),
-                                        child: SizedBox(
-                                          width: 180,
-                                          child: BookCard(
-                                            title: book.getTitle(languageState.selectedLanguage),
-                                            coverImagePath: book.coverImage,
-                                            isFavorite: book.isFavorite,
-                                            onFavoriteTap: () => _toggleFavorite(index),
-                                            onTap: () => _onBookTap(book),
-                                          ),
-                                        ),
-                                      );
-                                    },
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            BlocBuilder<BadgeBloc, BadgeState>(
+                              builder: (context, state) {
+                                return state.map(
+                                  initial: (_) => const SizedBox.shrink(),
+                                  loaded: (loaded) => BadgeDisplay(
+                                    level: loaded.progress.currentLevel,
                                   ),
-                          ),
-                          const SizedBox(height: AppSpacing.lg),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-                            child: Text(
-                              UiTranslations.of(context).translate('home_continue_reading'),
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                color: context.read<ThemeBloc>().state.useGradientTheme 
-                                  ? Colors.white 
-                                  : AppColors.sectionTitle,
-                                fontWeight: FontWeight.w600,
+                                  levelingUp: (levelingUp) => BadgeDisplay(
+                                    level: levelingUp.progress.currentLevel,
+                                  ),
+                                );
+                              },
+                            ),
+                            const MiniStatsDisplayNoBg(),
+                            ReadingLanguageSelectorNoBg(
+                              currentLanguage: languageState.selectedLanguage,
+                              onLanguageChanged: (language) {
+                                if (language != null) {
+                                  context.read<LanguageBloc>().add(
+                                    LanguageChanged(language),
+                                  );
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                      Expanded(
+                        child: ListView(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: AppSpacing.lg),
+                              child: Text(
+                                UiTranslations.of(context).translate('home_recently_added_stories'),
+                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  color: context.read<ThemeBloc>().state.useGradientTheme 
+                                    ? Colors.white 
+                                    : AppColors.sectionTitle,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ),
-                          ),
-                          const SizedBox(height: AppSpacing.md),
-                          _isLoadingInProgress
-                              ? const Center(
-                                  child: LoadingIndicator(size: 100),
-                                )
-                              : _inProgressBooks.isEmpty
-                                  ? Center(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(AppSpacing.lg),
-                                        child: Text(
-                                          UiTranslations.of(context).translate('home_no_in_progress_books'),
-                                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                            color: context.read<ThemeBloc>().state.useGradientTheme 
-                                              ? Colors.white.withOpacity(0.8)
-                                              : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
+                            const SizedBox(height: AppSpacing.md),
+                            SizedBox(
+                              height: 280,
+                              child: _isLoadingAll
+                                  ? const Center(
+                                      child: LoadingIndicator(size: 100),
                                     )
                                   : ListView.builder(
-                                      shrinkWrap: true,
-                                      physics: const NeverScrollableScrollPhysics(),
                                       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-                                      itemCount: _inProgressBooks.length,
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: _allBooks.length,
                                       itemBuilder: (context, index) {
-                                        final book = _inProgressBooks[index];
-                                        return Card(
-                                          elevation: 2,
-                                          margin: const EdgeInsets.only(bottom: AppSpacing.md, left: AppSpacing.sm, right: AppSpacing.sm),
-                                          color: Theme.of(context).colorScheme.surfaceContainerLowest,
-                                          child: ListTile(
-                                            contentPadding: const EdgeInsets.symmetric(
-                                              horizontal: AppSpacing.md,
-                                              vertical: AppSpacing.sm,
+                                        final book = _allBooks[index];
+                                        return Padding(
+                                          padding: const EdgeInsets.only(right: AppSpacing.md),
+                                          child: SizedBox(
+                                            width: 180,
+                                            child: BookCard(
+                                              title: book.getTitle(languageState.selectedLanguage),
+                                              coverImagePath: book.coverImage,
+                                              isFavorite: book.isFavorite,
+                                              onFavoriteTap: () => _toggleFavorite(index),
+                                              onTap: () => _onBookTap(book),
                                             ),
-                                            leading: SizedBox(
-                                              width: 50,
-                                              height: 50,
-                                              child: ClipRRect(
-                                                borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
-                                                child: Image.network(
-                                                  book.coverImage,
-                                                  width: 50,
-                                                  height: 50,
-                                                  fit: BoxFit.cover,
-                                                  cacheWidth: 100,
-                                                  cacheHeight: 100,
-                                                  errorBuilder: (context, error, stackTrace) {
-                                                    print('Error loading cover image: $error');
-                                                    return Container(
-                                                      color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                                                      child: const Center(
-                                                        child: Icon(Icons.broken_image_outlined, size: 24),
-                                                      ),
-                                                    );
-                                                  },
-                                                  loadingBuilder: (context, child, loadingProgress) {
-                                                    if (loadingProgress == null) return child;
-                                                    return const Center(
-                                                      child: LoadingIndicator(size: 24),
-                                                    );
-                                                  },
-                                                ),
-                                              ),
-                                            ),
-                                            title: Text(
-                                              book.getTitle(languageState.selectedLanguage),
-                                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                                color: context.read<ThemeBloc>().state.useGradientTheme 
-                                                  ? Colors.black
-                                                  : Theme.of(context).colorScheme.onSurface,
-                                              ),
-                                            ),
-                                            subtitle: Text(
-                                              UiTranslations.of(context).translate('home_page_progress')
-                                                  .replaceAll('{0}', (book.currentPage + 1).toString())
-                                                  .replaceAll('{1}', book.pages.length.toString()),
-                                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                                color: context.read<ThemeBloc>().state.useGradientTheme 
-                                                  ? Colors.black.withOpacity(0.7)
-                                                  : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                                              ),
-                                            ),
-                                            trailing: Icon(
-                                              Icons.arrow_forward_ios,
-                                              size: 16,
-                                              color: context.read<ThemeBloc>().state.useGradientTheme 
-                                                ? Colors.black
-                                                : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                                            ),
-                                            onTap: () => _onBookTap(book),
                                           ),
                                         );
                                       },
                                     ),
-                        ],
+                            ),
+                            const SizedBox(height: AppSpacing.lg),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                              child: Text(
+                                UiTranslations.of(context).translate('home_continue_reading'),
+                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  color: context.read<ThemeBloc>().state.useGradientTheme 
+                                    ? Colors.white 
+                                    : AppColors.sectionTitle,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: AppSpacing.md),
+                            _isLoadingInProgress
+                                ? const Center(
+                                    child: LoadingIndicator(size: 100),
+                                  )
+                                : _inProgressBooks.isEmpty
+                                    ? Center(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(AppSpacing.lg),
+                                          child: Text(
+                                            UiTranslations.of(context).translate('home_no_in_progress_books'),
+                                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                              color: context.read<ThemeBloc>().state.useGradientTheme 
+                                                ? Colors.white.withOpacity(0.8)
+                                                : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      )
+                                    : ListView.builder(
+                                        shrinkWrap: true,
+                                        physics: const NeverScrollableScrollPhysics(),
+                                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                                        itemCount: _inProgressBooks.length,
+                                        itemBuilder: (context, index) {
+                                          final book = _inProgressBooks[index];
+                                          return Card(
+                                            elevation: 2,
+                                            margin: const EdgeInsets.only(bottom: AppSpacing.md, left: AppSpacing.sm, right: AppSpacing.sm),
+                                            color: Theme.of(context).colorScheme.surfaceContainerLowest,
+                                            child: ListTile(
+                                              contentPadding: const EdgeInsets.symmetric(
+                                                horizontal: AppSpacing.md,
+                                                vertical: AppSpacing.sm,
+                                              ),
+                                              leading: SizedBox(
+                                                width: 50,
+                                                height: 50,
+                                                child: ClipRRect(
+                                                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                                                  child: Image.network(
+                                                    book.coverImage,
+                                                    width: 50,
+                                                    height: 50,
+                                                    fit: BoxFit.cover,
+                                                    cacheWidth: 100,
+                                                    cacheHeight: 100,
+                                                    errorBuilder: (context, error, stackTrace) {
+                                                      print('Error loading cover image: $error');
+                                                      return Container(
+                                                        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                                                        child: const Center(
+                                                          child: Icon(Icons.broken_image_outlined, size: 24),
+                                                        ),
+                                                      );
+                                                    },
+                                                    loadingBuilder: (context, child, loadingProgress) {
+                                                      if (loadingProgress == null) return child;
+                                                      return const Center(
+                                                        child: LoadingIndicator(size: 24),
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                              title: Text(
+                                                book.getTitle(languageState.selectedLanguage),
+                                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                                  color: context.read<ThemeBloc>().state.useGradientTheme 
+                                                    ? Colors.black
+                                                    : Theme.of(context).colorScheme.onSurface,
+                                                ),
+                                              ),
+                                              subtitle: Text(
+                                                UiTranslations.of(context).translate('home_page_progress')
+                                                    .replaceAll('{0}', (book.currentPage + 1).toString())
+                                                    .replaceAll('{1}', book.pages.length.toString()),
+                                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                                  color: context.read<ThemeBloc>().state.useGradientTheme 
+                                                    ? Colors.black.withOpacity(0.7)
+                                                    : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                                                ),
+                                              ),
+                                              trailing: Icon(
+                                                Icons.arrow_forward_ios,
+                                                size: 16,
+                                                color: context.read<ThemeBloc>().state.useGradientTheme 
+                                                  ? Colors.black
+                                                  : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                                              ),
+                                              onTap: () => _onBookTap(book),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          )));
+              ],
+            ),
+          );
         },
       ),
     );

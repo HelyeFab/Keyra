@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:Keyra/core/widgets/menu_button.dart';
 import 'package:Keyra/core/widgets/gradient_background.dart';
 import 'package:Keyra/core/theme/color_schemes.dart';
 import 'package:Keyra/features/books/domain/models/book_language.dart';
 import 'package:Keyra/core/ui_language/service/ui_translation_service.dart';
-import 'package:Keyra/features/badges/presentation/widgets/badge_display.dart';
 import 'package:Keyra/features/badges/presentation/widgets/badges_overview_card.dart';
-import 'package:Keyra/features/badges/presentation/bloc/badge_bloc.dart';
-import 'package:Keyra/features/badges/presentation/bloc/badge_state.dart';
-import 'package:Keyra/features/badges/presentation/bloc/badge_event.dart';
 import 'package:Keyra/features/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:Keyra/features/dashboard/presentation/pages/study_session_page.dart';
 import 'package:Keyra/features/dashboard/presentation/pages/study_words_page.dart';
@@ -286,7 +281,6 @@ class _DashboardPageContentState extends State<_DashboardPageContent> with Autom
         final auth = FirebaseAuth.instance;
         if (auth.currentUser != null) {
           context.read<DashboardBloc>().loadDashboardStats();
-          context.read<BadgeBloc>().add(const BadgeEvent.started());
         }
       }
     });
@@ -310,27 +304,10 @@ class _DashboardPageContentState extends State<_DashboardPageContent> with Autom
             AppBar(
               centerTitle: false,
               automaticallyImplyLeading: false,
-              backgroundColor: Colors.transparent,
               elevation: 0,
               scrolledUnderElevation: 0,
-              leading: Padding(
-                padding: const EdgeInsets.only(left: 16.0),
-                child: BlocBuilder<BadgeBloc, BadgeState>(
-                  builder: (context, state) {
-                    return state.map(
-                      initial: (_) => const SizedBox.shrink(),
-                      loaded: (loaded) => BadgeDisplay(
-                        level: loaded.progress.currentLevel,
-                      ),
-                      levelingUp: (levelingUp) => BadgeDisplay(
-                        level: levelingUp.progress.currentLevel,
-                      ),
-                    );
-                  },
-                ),
-              ),
+              leading: const SizedBox(width: 16),
               actions: const [
-                MenuButton(),
                 SizedBox(width: 16),
               ],
             ),

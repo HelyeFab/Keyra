@@ -89,7 +89,6 @@ class ProfilePage extends StatelessWidget {
       child: Column(
         children: [
           AppBar(
-            backgroundColor: Colors.transparent,
             elevation: 0,
             actions: [
               IconButton(

@@ -44,10 +44,6 @@ class AppColors {
   static const Color controlText = Color(0xFF6750A4); // Dark purple for text in light theme
   static const Color controlTextDark = Color(0xFFFFFFFF); // White text for dark theme
 
-  // Badge tooltip colors
-  static const Color tooltipBackground = readerControl;
-  static const Color tooltipBackgroundTransparent = Color(0x00F0EBFF); // Same as readerControl but fully transparent
-
   // Icon colors for navigation
   static const Color icon = Color(0xFF1C1B1F);
   static const Color iconDark = Color(0xFFFFFFFF);

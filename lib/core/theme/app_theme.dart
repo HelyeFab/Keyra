@@ -12,6 +12,8 @@ class AppTheme {
       scaffoldBackgroundColor: lightColorScheme.surface,
       appBarTheme: AppBarTheme(
         backgroundColor: lightColorScheme.surface,
+        surfaceTintColor: Colors.transparent,
+        shadowColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
         iconTheme: IconThemeData(color: lightColorScheme.onSurface),
@@ -64,6 +66,8 @@ class AppTheme {
       scaffoldBackgroundColor: darkColorScheme.surface,
       appBarTheme: AppBarTheme(
         backgroundColor: darkColorScheme.surface,
+        surfaceTintColor: Colors.transparent,
+        shadowColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
         iconTheme: IconThemeData(color: darkColorScheme.onSurface),

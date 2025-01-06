@@ -4,10 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/gradient_background.dart';
 import '../../../../core/presentation/bloc/language_bloc.dart';
-import '../../../../core/widgets/reading_language_selector.dart';
+import '../../../../core/widgets/reading_language_selector_no_bg.dart';
 import '../../../../core/widgets/loading_indicator.dart';
-import '../../../../core/widgets/mini_stats_display.dart';
-import '../../../../core/widgets/menu_button.dart';
+import '../../../../core/widgets/mini_stats_display_no_bg.dart';
 import '../../../books/domain/models/book.dart';
 import '../../../books/presentation/widgets/book_card.dart';
 import '../../../books/presentation/pages/book_reader_page.dart';
@@ -296,19 +295,6 @@ class _LibraryPageState extends State<LibraryPage> {
     );
   }
 
-  Widget _buildLanguageSelector() {
-    return ReadingLanguageSelector(
-      currentLanguage: context.read<LanguageBloc>().state.selectedLanguage,
-      onLanguageChanged: (language) {
-        if (language != null) {
-          context.read<LanguageBloc>().add(
-                LanguageChanged(language),
-              );
-        }
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LanguageBloc, LanguageState>(
@@ -319,46 +305,54 @@ class _LibraryPageState extends State<LibraryPage> {
               pageIndex: 1,
               child: Column(
           children: [
-            AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              centerTitle: false,
-              automaticallyImplyLeading: false,
-              leading: Padding(
-                padding: const EdgeInsets.only(left: 16.0),
-                child: BlocBuilder<BadgeBloc, BadgeState>(
-                  builder: (context, state) {
-                    return state.map(
-                      initial: (_) => const SizedBox.shrink(),
-                      loaded: (loaded) => BadgeDisplay(
-                        level: loaded.progress.currentLevel,
-                      ),
-                      levelingUp: (levelingUp) => BadgeDisplay(
-                        level: levelingUp.progress.currentLevel,
-                      ),
-                    );
-                  },
-                ),
-              ),
-              actions: const [
-                MenuButton(),
-                SizedBox(width: 16),
-              ],
-            ),
+            const SizedBox(height: AppSpacing.lg),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(AppSpacing.lg),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.surfaceContainerLowest,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.black.withOpacity(0.2)
+                              : Colors.black.withOpacity(0.08),
+                          blurRadius: 16,
+                          offset: const Offset(0, 4),
+                          spreadRadius: 0,
+                        ),
+                      ],
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const MiniStatsDisplay(),
-                        Row(
-                          children: [
-                            _buildLanguageSelector(),
-                          ],
+                        BlocBuilder<BadgeBloc, BadgeState>(
+                          builder: (context, state) {
+                            return state.map(
+                              initial: (_) => const SizedBox.shrink(),
+                              loaded: (loaded) => BadgeDisplay(
+                                level: loaded.progress.currentLevel,
+                              ),
+                              levelingUp: (levelingUp) => BadgeDisplay(
+                                level: levelingUp.progress.currentLevel,
+                              ),
+                            );
+                          },
+                        ),
+                        const MiniStatsDisplayNoBg(),
+                        ReadingLanguageSelectorNoBg(
+                          currentLanguage: context.read<LanguageBloc>().state.selectedLanguage,
+                          onLanguageChanged: (language) {
+                            if (language != null) {
+                              context.read<LanguageBloc>().add(
+                                    LanguageChanged(language),
+                                  );
+                            }
+                          },
                         ),
                       ],
                     ),

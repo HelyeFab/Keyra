@@ -1,107 +1,64 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:hugeicons/hugeicons.dart';
-import '../ui_language/service/ui_translation_service.dart';
+import '../theme/app_spacing.dart';
+import 'menu_button.dart';
 
-
-class AnimatedNavItem extends StatefulWidget {
-  final Widget icon;
-  final Widget activeIcon;
-  final String label;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const AnimatedNavItem({
-    super.key,
-    required this.icon,
-    required this.activeIcon,
-    required this.label,
-    required this.isSelected,
-    required this.onTap,
-  });
-
+class NavBarClipper extends CustomClipper<Path> {
   @override
-  State<AnimatedNavItem> createState() => _AnimatedNavItemState();
-}
-
-class _AnimatedNavItemState extends State<AnimatedNavItem> with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 200),
-      vsync: this,
+  Path getClip(Size size) {
+    final path = Path();
+    final centerX = size.width / 2;
+    final curveWidth = 85.0;
+    final curveHeight = 8.0;
+    final cornerRadius = 10.0;
+    
+    path.moveTo(0, cornerRadius);
+    
+    // Top left corner
+    path.quadraticBezierTo(0, 0, cornerRadius, 0);
+    
+    // Line to start of curve
+    path.lineTo(centerX - curveWidth, 0);
+    
+    // Gentle curve up with smoother transition
+    path.cubicTo(
+      centerX - curveWidth/3, 0,         // First control point
+      centerX - curveWidth/6, -curveHeight,  // Second control point
+      centerX, -curveHeight,              // First end point
     );
-
-    _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: 1.2,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
-  }
-
-  @override
-  void didUpdateWidget(AnimatedNavItem oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.isSelected != oldWidget.isSelected) {
-      if (widget.isSelected) {
-        _controller.forward();
-      } else {
-        _controller.reverse();
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          color: Colors.transparent,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AnimatedBuilder(
-              animation: _controller,
-              builder: (context, child) {
-                return Transform.scale(
-                  scale: _scaleAnimation.value,
-                  child: widget.isSelected ? widget.activeIcon : widget.icon,
-                );
-              },
-            ),
-            const SizedBox(height: 4),
-            AnimatedDefaultTextStyle(
-              duration: const Duration(milliseconds: 200),
-              style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                color: widget.isSelected 
-                  ? Theme.of(context).colorScheme.primary 
-                  : Theme.of(context).colorScheme.onSurface,
-                fontWeight: widget.isSelected ? FontWeight.w600 : FontWeight.normal,
-              ),
-              child: Text(widget.label),
-            ),
-          ],
-        ),
-      ),
+    
+    path.cubicTo(
+      centerX + curveWidth/6, -curveHeight,  // First control point
+      centerX + curveWidth/3, 0,         // Second control point
+      centerX + curveWidth, 0,           // Final end point
     );
+    
+    // Line to top right corner
+    path.lineTo(size.width - cornerRadius, 0);
+    
+    // Top right corner
+    path.quadraticBezierTo(size.width, 0, size.width, cornerRadius);
+    
+    // Right side
+    path.lineTo(size.width, size.height - cornerRadius);
+    
+    // Bottom right corner
+    path.quadraticBezierTo(size.width, size.height, size.width - cornerRadius, size.height);
+    
+    // Bottom side
+    path.lineTo(cornerRadius, size.height);
+    
+    // Bottom left corner
+    path.quadraticBezierTo(0, size.height, 0, size.height - cornerRadius);
+    
+    path.close();
+    
+    return path;
   }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
 
 class KeyraBottomNavBar extends StatelessWidget {
@@ -116,87 +73,81 @@ class KeyraBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(32),
+    final items = [
+      _NavItem(icon: HugeIcons.strokeRoundedHome13, index: 0),
+      _NavItem(icon: HugeIcons.strokeRoundedLibrary, index: 1),
+      _NavItem(icon: HugeIcons.strokeRoundedMortarboard02, index: 2),
+      _NavItem(icon: HugeIcons.strokeRoundedAnalyticsUp, index: 3),
+      _NavItem(icon: HugeIcons.strokeRoundedUserList, index: 4, isMenuButton: true),
+    ];
+
+    return ClipPath(
+      clipper: NavBarClipper(),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
-            borderRadius: BorderRadius.circular(32),
-            border: Border.all(
-              color: Colors.white.withOpacity(0.2),
-              width: 1,
+            border: Border(
+              top: BorderSide(
+                color: Colors.white.withOpacity(0.2),
+                width: 1,
+              ),
             ),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              AnimatedNavItem(
-                icon: HugeIcon(
-                  icon: HugeIcons.strokeRoundedHome13,
-                  color: Theme.of(context).colorScheme.onSurface,
-                  size: 24.0,
-                ),
-                activeIcon: HugeIcon(
-                  icon: HugeIcons.strokeRoundedHome13,
-                  color: Theme.of(context).colorScheme.primary,
-                  size: 28.0,
-                ),
-                label: UiTranslationService.translate(context, 'nav_home'),
-                isSelected: currentIndex == 0,
-                onTap: () => onTap(0),
-              ),
-              AnimatedNavItem(
-                icon: HugeIcon(
-                  icon: HugeIcons.strokeRoundedLibrary,
-                  color: Theme.of(context).colorScheme.onSurface,
-                  size: 24.0,
-                ),
-                activeIcon: HugeIcon(
-                  icon: HugeIcons.strokeRoundedLibrary,
-                  color: Theme.of(context).colorScheme.primary,
-                  size: 28.0,
-                ),
-                label: UiTranslationService.translate(context, 'nav_library'),
-                isSelected: currentIndex == 1,
-                onTap: () => onTap(1),
-              ),
-              AnimatedNavItem(
-                icon: HugeIcon(
-                  icon: HugeIcons.strokeRoundedMortarboard02,
-                  color: Theme.of(context).colorScheme.onSurface,
-                  size: 24.0,
-                ),
-                activeIcon: HugeIcon(
-                  icon: HugeIcons.strokeRoundedMortarboard02,
-                  color: Theme.of(context).colorScheme.primary,
-                  size: 28.0,
-                ),
-                label: UiTranslationService.translate(context, 'nav_study'),
-                isSelected: currentIndex == 2,
-                onTap: () => onTap(2),
-              ),
-              AnimatedNavItem(
-                icon: HugeIcon(
-                  icon: HugeIcons.strokeRoundedAnalyticsUp,
-                  color: Theme.of(context).colorScheme.onSurface,
-                  size: 24.0,
-                ),
-                activeIcon: HugeIcon(
-                  icon: HugeIcons.strokeRoundedAnalyticsUp,
-                  color: Theme.of(context).colorScheme.primary,
-                  size: 28.0,
-                ),
-                label: UiTranslationService.translate(context, 'nav_dashboard'),
-                isSelected: currentIndex == 3,
-                onTap: () => onTap(3),
-              ),
-            ],
+            children: items.map((item) => _buildNavItem(item, context)).toList(),
           ),
         ),
       ),
     );
   }
+
+  Widget _buildNavItem(_NavItem item, BuildContext context) {
+    if (item.isMenuButton) {
+      final isSelected = item.index == currentIndex;
+      return SizedBox(
+        width: 55,
+        child: Center(
+          child: MenuButton(
+            size: isSelected ? AppSpacing.xl : AppSpacing.lg,
+            isSelected: isSelected,
+            onTap: () => onTap(item.index),
+          ),
+        ),
+      );
+    }
+
+    final isSelected = item.index == currentIndex;
+    return SizedBox(
+      width: 55,
+      child: Center(
+        child: GestureDetector(
+          onTap: () => onTap(item.index),
+          behavior: HitTestBehavior.translucent,
+          child: HugeIcon(
+            icon: item.icon,
+            size: isSelected ? AppSpacing.xl : AppSpacing.lg,
+            color: isSelected
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).colorScheme.onSurface,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _NavItem {
+  final IconData icon;
+  final int index;
+  final bool isMenuButton;
+
+  const _NavItem({
+    required this.icon,
+    required this.index,
+    this.isMenuButton = false,
+  });
 }
