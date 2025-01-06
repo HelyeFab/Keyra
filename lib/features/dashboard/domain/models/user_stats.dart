@@ -47,6 +47,11 @@ class UserStats with _$UserStats {
 
   const UserStats._();
 
+  @override
+  String toString() {
+    return 'UserStats(booksRead: $booksRead, favoriteBooks: $favoriteBooks, readingStreak: $readingStreak, savedWords: $savedWords)';
+  }
+
   bool isStreakActive() {
     if (lastReadDate == null) return false;
 

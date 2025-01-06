@@ -26,6 +26,22 @@ class UiTranslations extends InheritedWidget {
 
   static const Map<String, Map<String, String>> translations = {
     'en': {
+      // Navigation & Controls
+      'skip': 'Skip',
+      'next': 'Next',
+      
+      // App Taglines
+      'app_tagline': 'Learn while you read',
+      'onboarding_welcome': 'Welcome to Keyra',
+      'onboarding_description': 'Your journey to language mastery begins here',
+      'onboarding_feature_1_title': 'Interactive Reading',
+      'onboarding_feature_1_desc': 'Read stories and tap words to see translations',
+      'onboarding_feature_2_title': 'Track Progress',
+      'onboarding_feature_2_desc': 'Monitor your learning journey with detailed statistics',
+      'onboarding_feature_3_title': 'Study Mode',
+      'onboarding_feature_3_desc': 'Review saved words with spaced repetition',
+      'onboarding_get_started': 'Get Started',
+      
       // Settings & Profile
       'select_language': 'Select Language',
       'settings': 'Settings',
@@ -233,6 +249,22 @@ Service provided "as is" without warranties.
       'common_definition': 'Definition',
     },
     'fr': {
+      // Navigation & Controls
+      'skip': 'Passer',
+      'next': 'Suivant',
+      
+      // App Taglines
+      'app_tagline': 'Apprenez en lisant',
+      'onboarding_welcome': 'Bienvenue sur Keyra',
+      'onboarding_description': 'Votre voyage vers la maîtrise des langues commence ici',
+      'onboarding_feature_1_title': 'Lecture Interactive',
+      'onboarding_feature_1_desc': 'Lisez des histoires et touchez les mots pour voir les traductions',
+      'onboarding_feature_2_title': 'Suivez vos Progrès',
+      'onboarding_feature_2_desc': 'Surveillez votre parcours d\'apprentissage avec des statistiques détaillées',
+      'onboarding_feature_3_title': 'Mode Étude',
+      'onboarding_feature_3_desc': 'Révisez les mots sauvegardés avec la répétition espacée',
+      'onboarding_get_started': 'Commencer',
+      
       // Settings & Profile
       'settings': 'Paramètres',
       'app_colors': 'Couleurs de l\'App',
@@ -424,6 +456,22 @@ Service fourni "tel quel" sans garanties.
 ''',
     },
     'es': {
+      // Navigation & Controls
+      'skip': 'Saltar',
+      'next': 'Siguiente',
+      
+      // App Taglines
+      'app_tagline': 'Aprende mientras lees',
+      'onboarding_welcome': 'Bienvenido a Keyra',
+      'onboarding_description': 'Tu viaje hacia el dominio del idioma comienza aquí',
+      'onboarding_feature_1_title': 'Lectura Interactiva',
+      'onboarding_feature_1_desc': 'Lee historias y toca palabras para ver traducciones',
+      'onboarding_feature_2_title': 'Seguimiento de Progreso',
+      'onboarding_feature_2_desc': 'Monitorea tu viaje de aprendizaje con estadísticas detalladas',
+      'onboarding_feature_3_title': 'Modo Estudio',
+      'onboarding_feature_3_desc': 'Repasa palabras guardadas con repetición espaciada',
+      'onboarding_get_started': 'Comenzar',
+      
       // Settings & Profile
       'settings': 'Ajustes',
       'app_colors': 'Colores de la App',
@@ -615,6 +663,22 @@ Servicio proporcionado "tal cual".
 ''',
     },
     'it': {
+      // Navigation & Controls
+      'skip': 'Salta',
+      'next': 'Avanti',
+      
+      // App Taglines
+      'app_tagline': 'Impara mentre leggi',
+      'onboarding_welcome': 'Benvenuto su Keyra',
+      'onboarding_description': 'Il tuo viaggio verso la padronanza della lingua inizia qui',
+      'onboarding_feature_1_title': 'Lettura Interattiva',
+      'onboarding_feature_1_desc': 'Leggi storie e tocca le parole per vedere le traduzioni',
+      'onboarding_feature_2_title': 'Traccia i Progressi',
+      'onboarding_feature_2_desc': 'Monitora il tuo percorso di apprendimento con statistiche dettagliate',
+      'onboarding_feature_3_title': 'Modalità Studio',
+      'onboarding_feature_3_desc': 'Rivedi le parole salvate con ripetizione spaziata',
+      'onboarding_get_started': 'Inizia',
+      
       // Settings & Profile
       'settings': 'Impostazioni',
       'app_colors': 'Colori App',
@@ -807,6 +871,22 @@ Servizio fornito "così com'è".
 ''',
     },
     'de': {
+      // Navigation & Controls
+      'skip': 'Überspringen',
+      'next': 'Weiter',
+      
+      // App Taglines
+      'app_tagline': 'Lerne beim Lesen',
+      'onboarding_welcome': 'Willkommen bei Keyra',
+      'onboarding_description': 'Deine Reise zur Sprachbeherrschung beginnt hier',
+      'onboarding_feature_1_title': 'Interaktives Lesen',
+      'onboarding_feature_1_desc': 'Lies Geschichten und tippe auf Wörter für Übersetzungen',
+      'onboarding_feature_2_title': 'Fortschritt verfolgen',
+      'onboarding_feature_2_desc': 'Verfolge deinen Lernfortschritt mit detaillierten Statistiken',
+      'onboarding_feature_3_title': 'Lernmodus',
+      'onboarding_feature_3_desc': 'Wiederhole gespeicherte Wörter mit zeitversetzter Wiederholung',
+      'onboarding_get_started': 'Loslegen',
+      
       // Settings & Profile
       'settings': 'Einstellungen',
       'app_colors': 'App-Farben',
@@ -998,6 +1078,22 @@ Dienst "wie besehen" ohne Garantien.
 ''',
     },
     'ja': {
+      // Navigation & Controls
+      'skip': 'スキップ',
+      'next': '次へ',
+      
+      // App Taglines
+      'app_tagline': '読みながら学ぶ',
+      'onboarding_welcome': 'Keyraへようこそ',
+      'onboarding_description': '言語習得への旅がここから始まります',
+      'onboarding_feature_1_title': 'インタラクティブな読書',
+      'onboarding_feature_1_desc': '物語を読んで単語をタップすると訳が表示されます',
+      'onboarding_feature_2_title': '進捗を追跡',
+      'onboarding_feature_2_desc': '詳細な統計で学習の進捗を確認できます',
+      'onboarding_feature_3_title': '学習モード',
+      'onboarding_feature_3_desc': '間隔をあけた復習で保存した単語を復習します',
+      'onboarding_get_started': '始める',
+      
       // Settings & Profile
       'settings': '設定',
       'app_colors': 'アプリの色',

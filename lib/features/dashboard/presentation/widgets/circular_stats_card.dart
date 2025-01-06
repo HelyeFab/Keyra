@@ -53,11 +53,11 @@ class CircularStatsCard extends StatelessWidget {
         
         // Circle with Value
         SizedBox(
-          width: 85,
-          height: 85,
+          width: 100,
+          height: 100,
           child: CustomPaint(
             painter: CircularProgressPainter(
-              backgroundColor: theme.colorScheme.surfaceContainerHighest,
+              backgroundColor: theme.colorScheme.surfaceVariant.withOpacity(0.3),
               valueColor: color,
               value: value / maxValue,
             ),
@@ -65,16 +65,28 @@ class CircularStatsCard extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    value.toString(),
-                    style: theme.textTheme.headlineMedium?.copyWith(
-                      color: theme.colorScheme.primary,
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      value.toString(),
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        color: theme.colorScheme.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                  Text(
-                    '$value / $maxValue',
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
+                  const SizedBox(height: 1),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      child: Text(
+                        '$value/${maxValue}',  // Removed spaces around slash for more compact look
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: theme.colorScheme.onSurface.withOpacity(0.8),
+                          fontSize: theme.textTheme.labelSmall?.fontSize ?? 6,
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -98,7 +110,7 @@ class CircularProgressPainter extends CustomPainter {
     required this.backgroundColor,
     required this.valueColor,
     required this.value,
-    this.strokeWidth = 8,
+    this.strokeWidth = 4,  // Using a smaller value that better matches theme metrics
   });
 
   @override

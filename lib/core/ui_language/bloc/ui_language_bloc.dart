@@ -33,38 +33,58 @@ class UiLanguageBloc extends Bloc<UiLanguageEvent, UiLanguageState> {
     'ja': '日本語',
   };
 
-  final PlatformDispatcher platformDispatcher;
-
-  UiLanguageBloc(this._prefs, {PlatformDispatcher? platformDispatcher}) 
-      : platformDispatcher = platformDispatcher ?? PlatformDispatcher.instance,
-        super(const UiLanguageState('en')) {
+  UiLanguageBloc(this._prefs) : super(const UiLanguageState('en')) {
     on<ChangeUiLanguageEvent>((event, emit) async {
       await _prefs.setString(_languageKey, event.languageCode);
       emit(UiLanguageState(event.languageCode));
     });
 
     on<LoadSavedUiLanguageEvent>((event, emit) async {
-      // Try to get saved language preference
-      final savedLanguage = _prefs.getString(_languageKey);
+      try {
+        print('LoadSavedUiLanguageEvent started');
+        
+        // Try to get saved language preference
+        final savedLanguage = _prefs.getString(_languageKey);
+        print('Saved language from preferences: $savedLanguage');
 
-      if (savedLanguage != null) {
-        // Use saved language if it exists
-        emit(UiLanguageState(savedLanguage));
-      } else {
-        // Get device language
-        final deviceLocale = platformDispatcher?.locales.firstOrNull ?? const Locale('en');
+        if (savedLanguage != null) {
+          print('Using saved language preference: $savedLanguage');
+          emit(UiLanguageState(savedLanguage));
+          return;
+        }
+
+        // Get device language using Window.locale
+        print('No saved language found, checking system locale');
+        final window = WidgetsBinding.instance.window;
+        final deviceLocale = window.locale;
         final deviceLanguage = deviceLocale.languageCode.toLowerCase();
-
-        // Check if device language is supported
+        print('Device language detected: $deviceLanguage');
+        
+        String? matchedLanguage;
         if (supportedLanguages.containsKey(deviceLanguage)) {
-          // Save and use device language
-          await _prefs.setString(_languageKey, deviceLanguage);
-          emit(UiLanguageState(deviceLanguage));
+          matchedLanguage = deviceLanguage;
+          print('Found matching supported language: $matchedLanguage');
         } else {
-          // Default to English
+          print('Language $deviceLanguage not in supported languages: ${supportedLanguages.keys.join(', ')}');
+        }
+
+        if (matchedLanguage != null) {
+          // Save and use matched device language
+          print('Setting and saving UI language to device language: $matchedLanguage');
+          await _prefs.setString(_languageKey, matchedLanguage);
+          emit(UiLanguageState(matchedLanguage));
+        } else {
+          // Default to English if no supported language found
+          print('No supported device language found, defaulting to English');
           await _prefs.setString(_languageKey, 'en');
           emit(const UiLanguageState('en'));
         }
+      } catch (e, stackTrace) {
+        print('Error in LoadSavedUiLanguageEvent: $e');
+        print('Stack trace: $stackTrace');
+        // Default to English on error
+        await _prefs.setString(_languageKey, 'en');
+        emit(const UiLanguageState('en'));
       }
     });
   }

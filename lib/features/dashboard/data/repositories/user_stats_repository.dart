@@ -20,40 +20,35 @@ class UserStatsRepository {
     }
 
     try {
+      print('[UserStatsRepository] Getting stats for user: ${user.uid}');
+      
       // Get both the stats document and the root user document
       final statsDocRef = _firestore
           .collection('users')
-          .doc(user.uid)
-          .collection('stats')
-          .doc('current')
-          .withConverter(
-            fromFirestore: UserStats.fromFirestore,
-            toFirestore: (UserStats stats, _) => stats.toFirestore(),
-          );
+          .doc(user.uid);
 
-      final userDocRef = _firestore.collection('users').doc(user.uid);
-
-      // Get both documents
-      final statsDocSnap = await statsDocRef.get();
-      final userDocSnap = await userDocRef.get();
-      
-      // If stats document doesn't exist, initialize it
-      if (!statsDocSnap.exists) {
-        print('Initializing user stats document for user: ${user.uid}');
-        await _initializeUserStats(user.uid);
-        // Get the newly created document
-        final newStatsDocSnap = await statsDocRef.get();
-        final stats = newStatsDocSnap.data() ?? const UserStats();
-        // Get saved words count from root user document
-        final savedWords = userDocSnap.data()?['savedWords'] as int? ?? 0;
-        return stats.copyWith(savedWords: savedWords);
+      final statsSnap = await statsDocRef.get();
+      if (!statsSnap.exists) {
+        print('[UserStatsRepository] User document not found');
+        throw Exception('User document not found');
       }
 
-      // Get base stats from stats document
-      final stats = statsDocSnap.data() ?? const UserStats();
-      // Get saved words count from root user document
-      final savedWords = userDocSnap.data()?['savedWords'] as int? ?? 0;
-      return stats.copyWith(savedWords: savedWords);
+      final data = statsSnap.data() ?? {};
+      print('[UserStatsRepository] Raw data from Firebase: $data');
+
+      // Create UserStats from the root document data
+      final stats = UserStats(
+        booksRead: data['booksRead'] as int? ?? 0,
+        favoriteBooks: data['favoriteBooks'] as int? ?? 0,
+        readingStreak: data['readingStreak'] as int? ?? 0,
+        savedWords: data['savedWords'] as int? ?? 0,
+        isReadingActive: data['isReadingActive'] as bool? ?? false,
+        currentSessionMinutes: data['currentSessionMinutes'] as int? ?? 0,
+        lastBookId: data['lastBookId'] as String?,
+      );
+
+      print('[UserStatsRepository] Parsed stats: $stats');
+      return stats;
     } catch (e) {
       print('Error getting user stats: $e');
       throw Exception('Failed to get user stats: $e');
@@ -66,51 +61,36 @@ class UserStatsRepository {
       throw Exception('User not authenticated');
     }
 
-    // Create streams for both documents
-    final statsStream = _firestore
+    print('[UserStatsRepository] Setting up stats stream for user: ${user.uid}');
+
+    return _firestore
         .collection('users')
         .doc(user.uid)
-        .collection('stats')
-        .doc('current')
-        .withConverter(
-          fromFirestore: UserStats.fromFirestore,
-          toFirestore: (UserStats stats, _) => stats.toFirestore(),
-        )
-        .snapshots();
+        .snapshots()
+        .map((doc) {
+          print('[UserStatsRepository] Received document update');
+          if (!doc.exists) {
+            print('[UserStatsRepository] Document does not exist');
+            throw Exception('User document not found');
+          }
 
-    final userStream = _firestore
-        .collection('users')
-        .doc(user.uid)
-        .snapshots();
+          final data = doc.data() ?? {};
+          print('[UserStatsRepository] Raw data from Firebase: $data');
 
-    // Combine both streams
-    return Rx.combineLatest2(
-      statsStream,
-      userStream,
-      (statsDoc, userDoc) async {
-        if (!statsDoc.exists) {
-          // Initialize the document and wait for it to complete
-          await _initializeUserStats(user.uid);
-          // Get the newly created document
-          final newStatsDoc = await _firestore
-              .collection('users')
-              .doc(user.uid)
-              .collection('stats')
-              .doc('current')
-              .withConverter(
-                fromFirestore: UserStats.fromFirestore,
-                toFirestore: (UserStats stats, _) => stats.toFirestore(),
-              )
-              .get();
-          final stats = newStatsDoc.data() ?? const UserStats();
-          final savedWords = userDoc.data()?['savedWords'] as int? ?? 0;
-          return stats.copyWith(savedWords: savedWords);
-        }
-        final stats = statsDoc.data() ?? const UserStats();
-        final savedWords = userDoc.data()?['savedWords'] as int? ?? 0;
-        return stats.copyWith(savedWords: savedWords);
-      },
-    ).asyncMap((stats) => stats);
+          final stats = UserStats(
+            booksRead: data['booksRead'] as int? ?? 0,
+            favoriteBooks: data['favoriteBooks'] as int? ?? 0,
+            readingStreak: data['readingStreak'] as int? ?? 0,
+            savedWords: data['savedWords'] as int? ?? 0,
+            isReadingActive: data['isReadingActive'] as bool? ?? false,
+            currentSessionMinutes: data['currentSessionMinutes'] as int? ?? 0,
+            lastBookId: data['lastBookId'] as String?,
+          );
+
+          print('[UserStatsRepository] Parsed stats: $stats');
+          return stats;
+        })
+        .distinct();
   }
 
   Future<void> _initializeUserStats(String userId) async {
@@ -213,7 +193,11 @@ class UserStatsRepository {
         .doc(user.uid)
         .collection('stats')
         .doc('current');
+    
+    // Get current stats first
     final stats = await getUserStats();
+    print('[UserStatsRepository] Current books read: ${stats.booksRead}');
+    print('[UserStatsRepository] Current reading streak: ${stats.readingStreak}');
     
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
@@ -230,18 +214,19 @@ class UserStatsRepository {
       if (stats.isStreakActive()) {
         // Continue streak
         newStreak += 1;
+        print('[UserStatsRepository] Continuing streak: $newStreak');
       } else {
         // Reset streak
         newStreak = 1;
+        print('[UserStatsRepository] Resetting streak to: $newStreak');
       }
     }
 
     try {
       print('[UserStatsRepository] Updating Firestore with new stats');
-      final batch = _firestore.batch();
-
+      
       // Update stats
-      batch.set(docRef, {
+      await docRef.set({
         'booksRead': FieldValue.increment(1),
         'readingStreak': newStreak,
         'lastReadDate': Timestamp.fromDate(today),
@@ -249,22 +234,16 @@ class UserStatsRepository {
         'lastUpdated': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
 
-      // Commit the batch
-      await batch.commit();
+      // Force a refresh by updating lastUpdated
+      await Future.delayed(const Duration(milliseconds: 100));
+      await docRef.set({
+        'lastUpdated': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
 
-      // Get and emit the updated stats immediately
-      print('[UserStatsRepository] Getting updated stats after marking book as read');
+      // Verify the update
       final updatedStats = await getUserStats();
-      print('[UserStatsRepository] Updated stats: $updatedStats');
-      print('[UserStatsRepository] Books read: ${updatedStats.booksRead}');
-
-      // Update the document again to trigger the stream
-      await docRef.set(
-        {
-          'lastUpdated': FieldValue.serverTimestamp(),
-        },
-        SetOptions(merge: true),
-      );
+      print('[UserStatsRepository] Updated books read: ${updatedStats.booksRead}');
+      print('[UserStatsRepository] Updated reading streak: ${updatedStats.readingStreak}');
     } catch (e) {
       print('[UserStatsRepository] Error marking book as read: $e');
       throw Exception('Failed to mark book as read: $e');
@@ -327,15 +306,32 @@ class UserStatsRepository {
     }
 
     try {
-      await _firestore
+      print('[UserStatsRepository] Incrementing favorite books');
+      final docRef = _firestore
           .collection('users')
           .doc(user.uid)
           .collection('stats')
-          .doc('current')
-          .set({
+          .doc('current');
+
+      // Get current stats first
+      final currentStats = await getUserStats();
+      print('[UserStatsRepository] Current favorite books: ${currentStats.favoriteBooks}');
+
+      // Update the stats
+      await docRef.set({
         'favoriteBooks': FieldValue.increment(1),
         'lastUpdated': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
+
+      // Force a refresh by updating lastUpdated
+      await Future.delayed(const Duration(milliseconds: 100));
+      await docRef.set({
+        'lastUpdated': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+
+      // Verify the update
+      final updatedStats = await getUserStats();
+      print('[UserStatsRepository] Updated favorite books: ${updatedStats.favoriteBooks}');
     } catch (e) {
       print('Error incrementing favorite books: $e');
       throw Exception('Failed to increment favorite books: $e');
@@ -349,15 +345,32 @@ class UserStatsRepository {
     }
 
     try {
-      await _firestore
+      print('[UserStatsRepository] Decrementing favorite books');
+      final docRef = _firestore
           .collection('users')
           .doc(user.uid)
           .collection('stats')
-          .doc('current')
-          .set({
+          .doc('current');
+
+      // Get current stats first
+      final currentStats = await getUserStats();
+      print('[UserStatsRepository] Current favorite books: ${currentStats.favoriteBooks}');
+
+      // Update the stats
+      await docRef.set({
         'favoriteBooks': FieldValue.increment(-1),
         'lastUpdated': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
+
+      // Force a refresh by updating lastUpdated
+      await Future.delayed(const Duration(milliseconds: 100));
+      await docRef.set({
+        'lastUpdated': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+
+      // Verify the update
+      final updatedStats = await getUserStats();
+      print('[UserStatsRepository] Updated favorite books: ${updatedStats.favoriteBooks}');
     } catch (e) {
       print('Error decrementing favorite books: $e');
       throw Exception('Failed to decrement favorite books: $e');

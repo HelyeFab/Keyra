@@ -42,7 +42,7 @@ const badgeRequirementsConfig = {
   BadgeLevel.explorer: BadgeRequirements(
     level: BadgeLevel.explorer,
     displayName: 'badge_explorer',
-    assetPath: 'assets/badge/caterpillar.png',
+    assetPath: 'assets/badge/traveler.png',
     requiredBooksRead: 100,
     requiredFavoriteBooks: 30,
     requiredReadingStreak: 50,
@@ -50,7 +50,7 @@ const badgeRequirementsConfig = {
   BadgeLevel.voyager: BadgeRequirements(
     level: BadgeLevel.voyager,
     displayName: 'badge_voyager',
-    assetPath: 'assets/badge/caterpillar.png',
+    assetPath: 'assets/badge/route.png',
     requiredBooksRead: 150,
     requiredFavoriteBooks: 35,
     requiredReadingStreak: 60,
@@ -58,7 +58,7 @@ const badgeRequirementsConfig = {
   BadgeLevel.weaver: BadgeRequirements(
     level: BadgeLevel.weaver,
     displayName: 'badge_weaver',
-    assetPath: 'assets/badge/caterpillar.png',
+    assetPath: 'assets/badge/yarn.png',
     requiredBooksRead: 200,
     requiredFavoriteBooks: 40,
     requiredReadingStreak: 75,
@@ -66,7 +66,7 @@ const badgeRequirementsConfig = {
   BadgeLevel.navigator: BadgeRequirements(
     level: BadgeLevel.navigator,
     displayName: 'badge_navigator',
-    assetPath: 'assets/badge/caterpillar.png',
+    assetPath: 'assets/badge/speedometer.png',
     requiredBooksRead: 250,
     requiredFavoriteBooks: 45,
     requiredReadingStreak: 90,
@@ -74,7 +74,7 @@ const badgeRequirementsConfig = {
   BadgeLevel.pioneer: BadgeRequirements(
     level: BadgeLevel.pioneer,
     displayName: 'badge_pioneer',
-    assetPath: 'assets/badge/caterpillar.png',
+    assetPath: 'assets/badge/adventurer.png',
     requiredBooksRead: 300,
     requiredFavoriteBooks: 50,
     requiredReadingStreak: 100,
@@ -82,7 +82,7 @@ const badgeRequirementsConfig = {
   BadgeLevel.royalty: BadgeRequirements(
     level: BadgeLevel.royalty,
     displayName: 'badge_royalty',
-    assetPath: 'assets/badge/caterpillar.png',
+    assetPath: 'assets/badge/crown.png',
     requiredBooksRead: 400,
     requiredFavoriteBooks: 60,
     requiredReadingStreak: 120,
@@ -90,7 +90,7 @@ const badgeRequirementsConfig = {
   BadgeLevel.baron: BadgeRequirements(
     level: BadgeLevel.baron,
     displayName: 'badge_baron',
-    assetPath: 'assets/badge/caterpillar.png',
+    assetPath: 'assets/badge/baron.png',
     requiredBooksRead: 500,
     requiredFavoriteBooks: 70,
     requiredReadingStreak: 150,
@@ -98,7 +98,7 @@ const badgeRequirementsConfig = {
   BadgeLevel.legend: BadgeRequirements(
     level: BadgeLevel.legend,
     displayName: 'badge_legend',
-    assetPath: 'assets/badge/caterpillar.png',
+    assetPath: 'assets/badge/michaelangelo.png',
     requiredBooksRead: 600,
     requiredFavoriteBooks: 80,
     requiredReadingStreak: 180,
@@ -106,7 +106,7 @@ const badgeRequirementsConfig = {
   BadgeLevel.wizard: BadgeRequirements(
     level: BadgeLevel.wizard,
     displayName: 'badge_wizard',
-    assetPath: 'assets/badge/caterpillar.png',
+    assetPath: 'assets/badge/wizard.png',
     requiredBooksRead: 700,
     requiredFavoriteBooks: 90,
     requiredReadingStreak: 200,
@@ -114,7 +114,7 @@ const badgeRequirementsConfig = {
   BadgeLevel.epic: BadgeRequirements(
     level: BadgeLevel.epic,
     displayName: 'badge_epic',
-    assetPath: 'assets/badge/caterpillar.png',
+    assetPath: 'assets/badge/epic.png',
     requiredBooksRead: 800,
     requiredFavoriteBooks: 100,
     requiredReadingStreak: 225,
@@ -122,7 +122,7 @@ const badgeRequirementsConfig = {
   BadgeLevel.titan: BadgeRequirements(
     level: BadgeLevel.titan,
     displayName: 'badge_titan',
-    assetPath: 'assets/badge/caterpillar.png',
+    assetPath: 'assets/badge/damage.png',
     requiredBooksRead: 900,
     requiredFavoriteBooks: 110,
     requiredReadingStreak: 250,
@@ -130,7 +130,7 @@ const badgeRequirementsConfig = {
   BadgeLevel.sovereign: BadgeRequirements(
     level: BadgeLevel.sovereign,
     displayName: 'badge_sovereign',
-    assetPath: 'assets/badge/caterpillar.png',
+    assetPath: 'assets/badge/royal.png',
     requiredBooksRead: 1000,
     requiredFavoriteBooks: 120,
     requiredReadingStreak: 275,
@@ -138,7 +138,7 @@ const badgeRequirementsConfig = {
   BadgeLevel.virtuoso: BadgeRequirements(
     level: BadgeLevel.virtuoso,
     displayName: 'badge_virtuoso',
-    assetPath: 'assets/badge/caterpillar.png',
+    assetPath: 'assets/badge/point.png',
     requiredBooksRead: 1200,
     requiredFavoriteBooks: 140,
     requiredReadingStreak: 300,
@@ -146,7 +146,7 @@ const badgeRequirementsConfig = {
   BadgeLevel.luminary: BadgeRequirements(
     level: BadgeLevel.luminary,
     displayName: 'badge_luminary',
-    assetPath: 'assets/badge/caterpillar.png',
+    assetPath: 'assets/badge/prometheus.png',
     requiredBooksRead: 1400,
     requiredFavoriteBooks: 160,
     requiredReadingStreak: 325,
@@ -154,7 +154,7 @@ const badgeRequirementsConfig = {
   BadgeLevel.beacon: BadgeRequirements(
     level: BadgeLevel.beacon,
     displayName: 'badge_beacon',
-    assetPath: 'assets/badge/caterpillar.png',
+    assetPath: 'assets/badge/beacon.png',
     requiredBooksRead: 1600,
     requiredFavoriteBooks: 180,
     requiredReadingStreak: 350,
@@ -162,7 +162,7 @@ const badgeRequirementsConfig = {
   BadgeLevel.radiant: BadgeRequirements(
     level: BadgeLevel.radiant,
     displayName: 'badge_radiant',
-    assetPath: 'assets/badge/caterpillar.png',
+    assetPath: 'assets/badge/jewelry.png',
     requiredBooksRead: 1800,
     requiredFavoriteBooks: 200,
     requiredReadingStreak: 375,
@@ -170,7 +170,7 @@ const badgeRequirementsConfig = {
   BadgeLevel.lighthouse: BadgeRequirements(
     level: BadgeLevel.lighthouse,
     displayName: 'badge_lighthouse',
-    assetPath: 'assets/badge/caterpillar.png',
+    assetPath: 'assets/badge/lighthouse.png',
     requiredBooksRead: 2000,
     requiredFavoriteBooks: 220,
     requiredReadingStreak: 400,
@@ -178,7 +178,7 @@ const badgeRequirementsConfig = {
   BadgeLevel.infinite: BadgeRequirements(
     level: BadgeLevel.infinite,
     displayName: 'badge_infinite',
-    assetPath: 'assets/badge/caterpillar.png',
+    assetPath: 'assets/badge/infinity.png',
     requiredBooksRead: 2500,
     requiredFavoriteBooks: 250,
     requiredReadingStreak: 450,
@@ -186,7 +186,7 @@ const badgeRequirementsConfig = {
   BadgeLevel.renaissance: BadgeRequirements(
     level: BadgeLevel.renaissance,
     displayName: 'badge_renaissance',
-    assetPath: 'assets/badge/caterpillar.png',
+    assetPath: 'assets/badge/owl.png',
     requiredBooksRead: 3000,
     requiredFavoriteBooks: 300,
     requiredReadingStreak: 500,
@@ -194,7 +194,7 @@ const badgeRequirementsConfig = {
   BadgeLevel.ultimate: BadgeRequirements(
     level: BadgeLevel.ultimate,
     displayName: 'badge_ultimate',
-    assetPath: 'assets/badge/caterpillar.png',
+    assetPath: 'assets/badge/unicorn.png',
     requiredBooksRead: 5000,
     requiredFavoriteBooks: 500,
     requiredReadingStreak: 750,

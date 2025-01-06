@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/models/badge_level.dart';
 import '../../domain/models/badge_progress.dart';
 import '../../domain/models/badge_requirements.dart';
+import '../../domain/models/badge_requirements_config.dart';
 import '../../domain/repositories/badge_repository.dart';
 import '../../../dashboard/data/repositories/user_stats_repository.dart';
 import '../../../dashboard/domain/models/user_stats.dart';
@@ -29,7 +30,20 @@ class BadgeBloc extends Bloc<BadgeEvent, BadgeState> {
     on<BadgeEvent>((event, emit) async {
       await event.map(
         started: (_) async => await _onStarted(emit),
-        wordsUpdated: (e) async => await _onWordsUpdated(e.wordCount, emit),
+        wordsUpdated: (_) async {
+          // Words are now handled through the stats stream
+          final stats = await _userStatsRepository.getUserStats();
+          if (!emit.isDone) {
+            final progress = BadgeProgress(
+              currentLevel: _calculateBadgeLevel(stats),
+              booksRead: stats.booksRead,
+              favoriteBooks: stats.favoriteBooks,
+              readingStreak: stats.readingStreak,
+              lastUpdated: DateTime.now(),
+            );
+            emit(BadgeState.loaded(progress));
+          }
+        },
         levelUp: (e) async => await _onLevelUp(e.newLevel, emit),
       );
     });
@@ -53,9 +67,47 @@ class BadgeBloc extends Bloc<BadgeEvent, BadgeState> {
       // Set up subscription only after successful initial load
       await _statsSubscription?.cancel(); // Cancel any existing subscription
       _statsSubscription = _userStatsRepository.streamUserStats().listen(
-        (stats) {
+        (stats) async {
           if (!isClosed) {
-            add(BadgeEvent.wordsUpdated(stats.savedWords));
+            try {
+              print('[BadgeBloc] Received stats update:');
+              print('[BadgeBloc] Books read: ${stats.booksRead}');
+              print('[BadgeBloc] Favorite books: ${stats.favoriteBooks}');
+              print('[BadgeBloc] Reading streak: ${stats.readingStreak}');
+              
+              final newLevel = _calculateBadgeLevel(stats);
+              print('[BadgeBloc] Calculated badge level: $newLevel');
+              
+              final currentState = state;
+              final currentLevel = currentState.map(
+                initial: (_) => BadgeLevel.beginner,
+                loaded: (s) => s.progress.currentLevel,
+                levelingUp: (s) => s.progress.currentLevel,
+              );
+              
+              final progress = BadgeProgress(
+                currentLevel: newLevel,
+                booksRead: stats.booksRead,
+                favoriteBooks: stats.favoriteBooks,
+                readingStreak: stats.readingStreak,
+                lastUpdated: DateTime.now(),
+              );
+              
+              if (newLevel != currentLevel) {
+                print('[BadgeBloc] Badge level changed from $currentLevel to $newLevel');
+                // Show level up animation
+                emit(BadgeState.levelingUp(progress, newLevel));
+                await Future.delayed(const Duration(seconds: 2));
+                if (!isClosed) {
+                  emit(BadgeState.loaded(progress));
+                }
+              } else {
+                print('[BadgeBloc] Updating progress with same level: $newLevel');
+                emit(BadgeState.loaded(progress));
+              }
+            } catch (e) {
+              print('[BadgeBloc] Error updating badge progress: $e');
+            }
           }
         },
         onError: (error) {
@@ -65,22 +117,6 @@ class BadgeBloc extends Bloc<BadgeEvent, BadgeState> {
     } catch (e) {
       // Keep initial state if we can't load stats (e.g. user not authenticated)
       print('Could not load badge stats: $e');
-    }
-  }
-
-  Future<void> _onWordsUpdated(int wordCount, Emitter<BadgeState> emit) async {
-    try {
-      final stats = await _userStatsRepository.getUserStats();
-      final progress = BadgeProgress(
-        currentLevel: _calculateBadgeLevel(stats),
-        booksRead: stats.booksRead,
-        favoriteBooks: stats.favoriteBooks,
-        readingStreak: stats.readingStreak,
-        lastUpdated: DateTime.now(),
-      );
-      emit(BadgeState.loaded(progress));
-    } catch (e) {
-      print('Error updating badge stats: $e');
     }
   }
 
@@ -126,35 +162,31 @@ class BadgeBloc extends Bloc<BadgeEvent, BadgeState> {
   }
 
   BadgeLevel _calculateBadgeLevel(UserStats stats) {
-
+    print('\n[BadgeBloc] Calculating badge level for stats: $stats');
+    
     // Check each level from highest to lowest
-    final masterReqs = BadgeRequirements.getRequirementsForLevel(BadgeLevel.master);
-    if (masterReqs.isSatisfiedBy(
-      booksRead: stats.booksRead,
-      favoriteBooks: stats.favoriteBooks,
-      readingStreak: stats.readingStreak,
-    )) {
-      return BadgeLevel.master;
+    final levels = BadgeLevel.values.toList()
+      ..sort((a, b) => badgeRequirementsConfig[b]!.requiredBooksRead
+          .compareTo(badgeRequirementsConfig[a]!.requiredBooksRead));
+    
+    print('[BadgeBloc] Checking levels in order: ${levels.join(', ')}');
+
+    for (final level in levels) {
+      final requirements = BadgeRequirements.getRequirementsForLevel(level);
+      print('\n[BadgeBloc] Checking requirements for level: $level');
+      print('[BadgeBloc] Requirements: $requirements');
+      
+      if (requirements.isSatisfiedBy(
+        booksRead: stats.booksRead,
+        favoriteBooks: stats.favoriteBooks,
+        readingStreak: stats.readingStreak,
+      )) {
+        print('[BadgeBloc] Found matching level: $level');
+        return level;
+      }
     }
 
-    final advancedReqs = BadgeRequirements.getRequirementsForLevel(BadgeLevel.advanced);
-    if (advancedReqs.isSatisfiedBy(
-      booksRead: stats.booksRead,
-      favoriteBooks: stats.favoriteBooks,
-      readingStreak: stats.readingStreak,
-    )) {
-      return BadgeLevel.advanced;
-    }
-
-    final intermediateReqs = BadgeRequirements.getRequirementsForLevel(BadgeLevel.intermediate);
-    if (intermediateReqs.isSatisfiedBy(
-      booksRead: stats.booksRead,
-      favoriteBooks: stats.favoriteBooks,
-      readingStreak: stats.readingStreak,
-    )) {
-      return BadgeLevel.intermediate;
-    }
-
+    print('[BadgeBloc] No matching level found, defaulting to beginner');
     return BadgeLevel.beginner;
   }
 

@@ -6,6 +6,7 @@ import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../models/onboarding_data.dart';
 import '../widgets/onboarding_page_widget.dart';
 import '../../../../core/services/preferences_service.dart';
+import '../../../../core/ui_language/translations/ui_translations.dart';
 
 class OnboardingPage extends StatefulWidget {
   final PreferencesService preferencesService;
@@ -22,6 +23,17 @@ class OnboardingPage extends StatefulWidget {
 class _OnboardingPageState extends State<OnboardingPage> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
+  late List<OnboardingData> _pages;
+  bool _initialized = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_initialized) {
+      _pages = getOnboardingPages(context);
+      _initialized = true;
+    }
+  }
 
   @override
   void dispose() {
@@ -37,7 +49,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   void _skipToEnd() {
     _pageController.animateToPage(
-      onboardingPages.length - 1,
+      _pages.length - 1,
       duration: const Duration(milliseconds: 400),
       curve: Curves.easeInOut,
     );
@@ -70,130 +82,132 @@ class _OnboardingPageState extends State<OnboardingPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      body: Stack(
-        children: [
-          // PageView
-          PageView.builder(
-            controller: _pageController,
-            onPageChanged: _onPageChanged,
-            itemCount: onboardingPages.length,
-            itemBuilder: (context, index) {
-              return OnboardingPageWidget(
-                data: onboardingPages[index],
-              );
-            },
-          ),
+      body: !_initialized
+          ? const Center(child: CircularProgressIndicator())
+          : Stack(
+              children: [
+                // PageView
+                PageView.builder(
+                  controller: _pageController,
+                  onPageChanged: _onPageChanged,
+                  itemCount: _pages.length,
+                  itemBuilder: (context, index) {
+                    return OnboardingPageWidget(
+                      data: _pages[index],
+                    );
+                  },
+                ),
 
-          // Bottom navigation and controls
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Container(
-              padding: const EdgeInsets.all(32),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surface,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 8,
-                    offset: const Offset(0, -2),
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Page indicators
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(
-                      onboardingPages.length,
-                      (index) => Semantics(
-                        label: 'Page ${index + 1} of ${onboardingPages.length}',
-                        selected: _currentPage == index,
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 300),
-                            height: 8,
-                            width: _currentPage == index ? 24 : 8,
-                            decoration: BoxDecoration(
-                              color: _currentPage == index
-                                  ? theme.colorScheme.primary
-                                  : theme.colorScheme.surfaceContainerHighest,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  
-                  // Navigation buttons
-                  if (_currentPage == onboardingPages.length - 1)
-                    // Center the Get Started button when on last page
-                    SizedBox(
-                      width: double.infinity,
-                      child: Center(
-                        child: Semantics(
-                          button: true,
-                          label: 'Complete onboarding and get started',
-                          child: ElevatedButton(
-                            onPressed: _onGetStarted,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: theme.colorScheme.primary,
-                              foregroundColor: theme.colorScheme.onPrimary,
-                              minimumSize: const Size(200, 48),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                            ),
-                            child: const Text('Get Started'),
-                          ),
-                        ),
-                      ),
-                    )
-                  else
-                    // Show Skip and Next buttons on other pages
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Semantics(
-                          button: true,
-                          label: 'Skip onboarding',
-                          child: TextButton(
-                            onPressed: _skipToEnd,
-                            style: TextButton.styleFrom(
-                              foregroundColor: theme.colorScheme.primary,
-                              minimumSize: const Size(88, 48),
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
-                            ),
-                            child: const Text('Skip'),
-                          ),
-                        ),
-                        Semantics(
-                          button: true,
-                          label: 'Next page',
-                          child: ElevatedButton(
-                            onPressed: () => _pageController.nextPage(
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeInOut,
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: theme.colorScheme.primary,
-                              foregroundColor: theme.colorScheme.onPrimary,
-                              minimumSize: const Size(88, 48),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                            ),
-                            child: const Text('Next'),
-                          ),
+                // Bottom navigation and controls
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: Container(
+                    padding: const EdgeInsets.all(32),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surface,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, -2),
                         ),
                       ],
                     ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Page indicators
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(
+                            _pages.length,
+                            (index) => Semantics(
+                              label: 'Page ${index + 1} of ${_pages.length}',
+                              selected: _currentPage == index,
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(horizontal: 4),
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 300),
+                                  height: 8,
+                                  width: _currentPage == index ? 24 : 8,
+                                  decoration: BoxDecoration(
+                                    color: _currentPage == index
+                                        ? theme.colorScheme.primary
+                                        : theme.colorScheme.surfaceContainerHighest,
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        
+                        // Navigation buttons
+                        if (_currentPage == _pages.length - 1)
+                          // Center the Get Started button when on last page
+                          SizedBox(
+                            width: double.infinity,
+                            child: Center(
+                              child: Semantics(
+                                button: true,
+                                label: 'Complete onboarding and get started',
+                                child: ElevatedButton(
+                                  onPressed: _onGetStarted,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: theme.colorScheme.primary,
+                                    foregroundColor: theme.colorScheme.onPrimary,
+                                    minimumSize: const Size(200, 48),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                  ),
+                                  child: Text(UiTranslations.of(context).translate('onboarding_get_started')),
+                                ),
+                              ),
+                            ),
+                          )
+                        else
+                          // Show Skip and Next buttons on other pages
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Semantics(
+                                button: true,
+                                label: 'Skip onboarding',
+                                child: TextButton(
+                                  onPressed: _skipToEnd,
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: theme.colorScheme.primary,
+                                    minimumSize: const Size(88, 48),
+                                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                                  ),
+                                  child: Text(UiTranslations.of(context).translate('skip')),
+                                ),
+                              ),
+                              Semantics(
+                                button: true,
+                                label: 'Next page',
+                                child: ElevatedButton(
+                                  onPressed: () => _pageController.nextPage(
+                                    duration: const Duration(milliseconds: 300),
+                                    curve: Curves.easeInOut,
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: theme.colorScheme.primary,
+                                    foregroundColor: theme.colorScheme.onPrimary,
+                                    minimumSize: const Size(88, 48),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                  ),
+                                  child: Text(UiTranslations.of(context).translate('next')),
+                                ),
+                              ),
+                            ],
+                          ),
                 ],
               ),
             ),

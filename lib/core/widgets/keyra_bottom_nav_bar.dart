@@ -109,7 +109,7 @@ class KeyraBottomNavBar extends StatelessWidget {
     if (item.isMenuButton) {
       final isSelected = item.index == currentIndex;
       return SizedBox(
-        width: 55,
+        width: 65,
         child: Center(
           child: MenuButton(
             size: isSelected ? AppSpacing.xl : AppSpacing.lg,
@@ -122,17 +122,23 @@ class KeyraBottomNavBar extends StatelessWidget {
 
     final isSelected = item.index == currentIndex;
     return SizedBox(
-      width: 55,
-      child: Center(
-        child: GestureDetector(
+      width: 65,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
           onTap: () => onTap(item.index),
-          behavior: HitTestBehavior.translucent,
-          child: HugeIcon(
-            icon: item.icon,
-            size: isSelected ? AppSpacing.xl : AppSpacing.lg,
-            color: isSelected
-                ? Theme.of(context).colorScheme.primary
-                : Theme.of(context).colorScheme.onSurface,
+          borderRadius: BorderRadius.circular(8),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Center(
+              child: HugeIcon(
+                icon: item.icon,
+                size: isSelected ? AppSpacing.xl : AppSpacing.lg,
+                color: isSelected
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.onSurface,
+              ),
+            ),
           ),
         ),
       ),

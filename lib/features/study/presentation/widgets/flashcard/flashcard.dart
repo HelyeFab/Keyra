@@ -100,30 +100,39 @@ class Flashcard extends StatelessWidget {
                   ),
             ),
             const SizedBox(height: 8),
-            Text(
-              definition,
-              style: Theme.of(context).textTheme.bodyLarge,
-              textAlign: TextAlign.left,
-            ),
-            if (examples != null && examples!.isNotEmpty) ...[
-              const SizedBox(height: 16),
-              Text(
-                '$examplesText:',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      definition,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                      textAlign: TextAlign.left,
                     ),
+                    if (examples != null && examples!.isNotEmpty) ...[
+                      const SizedBox(height: 16),
+                      Text(
+                        '$examplesText:',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                      ),
+                      const SizedBox(height: 8),
+                      ...examples!.map((example) => Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Text(
+                              '• $example',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          )),
+                    ],
+                  ],
+                ),
               ),
-              const SizedBox(height: 8),
-              ...examples!.map((example) => Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: Text(
-                      '• $example',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  )),
-            ],
-            const Spacer(),
+            ),
+            const SizedBox(height: 16),
             Center(
               child: Text(
                 tapToSeeWordText,

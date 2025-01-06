@@ -30,8 +30,21 @@ class BadgeRequirements with _$BadgeRequirements {
     required int favoriteBooks,
     required int readingStreak,
   }) {
-    return booksRead >= requiredBooksRead &&
+    print('[BadgeRequirements] Checking level: $level');
+    print('[BadgeRequirements] Books read: $booksRead >= $requiredBooksRead');
+    print('[BadgeRequirements] Favorite books: $favoriteBooks >= $requiredFavoriteBooks');
+    print('[BadgeRequirements] Reading streak: $readingStreak >= $requiredReadingStreak');
+    
+    final satisfied = booksRead >= requiredBooksRead &&
         favoriteBooks >= requiredFavoriteBooks &&
         readingStreak >= requiredReadingStreak;
+    
+    print('[BadgeRequirements] Requirements satisfied: $satisfied');
+    return satisfied;
+  }
+
+  @override
+  String toString() {
+    return 'BadgeRequirements(level: $level, required: books=$requiredBooksRead, favorites=$requiredFavoriteBooks, streak=$requiredReadingStreak)';
   }
 }

@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'core/services/preferences_service.dart';
 import 'core/config/app_strings.dart';
 import 'core/theme/color_schemes.dart';
+import 'core/ui_language/translations/ui_translations.dart';
 
 class SplashScreen extends StatefulWidget {
   final bool isInitialized;
@@ -167,7 +168,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
               ),
             ),
           ),
-          const Spacer(),
           // Bottom content
           ShaderMask(
             shaderCallback: (bounds) => LinearGradient(
@@ -189,7 +189,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
           ),
           const SizedBox(height: 8),
           Text(
-            AppStrings.appTagline,
+            UiTranslations.of(context).translate('app_tagline'),
             style: TextStyle(
               fontFamily: 'Playwrite',
               fontSize: 20,
@@ -197,23 +197,34 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
               letterSpacing: 1.2,
             ),
           ),
-          const SizedBox(height: 24),
-          Lottie.asset(
-            'assets/loader/animation_1734447560170.json',
-            width: 60,
-            height: 60,
-          ),
-          const SizedBox(height: 16),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32.0),
-            child: Text(
-              _currentMessage,
-              textAlign: TextAlign.center,
-              style: theme.textTheme.bodyLarge?.copyWith(
-                color: theme.colorScheme.primary,
+          const Spacer(flex: 1),
+          SizedBox(
+            height: size.height * 0.3,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Lottie.asset(
+                    'assets/loader/animation_1734447560170.json',
+                    width: 60,
+                    height: 60,
+                  ),
+                  const SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                    child: Text(
+                      _currentMessage,
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        color: theme.colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
+          const Spacer(flex: 1),
           const SizedBox(height: 32),
         ],
       ),

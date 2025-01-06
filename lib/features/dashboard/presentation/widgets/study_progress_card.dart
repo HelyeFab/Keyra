@@ -191,7 +191,8 @@ class _StudyProgressCardState extends State<StudyProgressCard> {
         Text(
           label,
           style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
+            color: theme.colorScheme.onSurface,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ],

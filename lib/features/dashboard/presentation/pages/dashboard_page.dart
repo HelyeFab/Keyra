@@ -73,7 +73,7 @@ class _DashboardContent extends StatelessWidget {
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 120.0),
+              padding: const EdgeInsets.fromLTRB(12.0, 16.0, 12.0, 120.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -89,9 +89,9 @@ class _DashboardContent extends StatelessWidget {
                                 'books_read',
                               ),
                               value: booksRead,
-                              maxValue: 50,
+                              maxValue: 500, // Baron level requirement
                               icon: Icons.book,
-                              color: AppColors.playful,  // Using playful amber color (#FFAB40) for better visibility
+                              color: AppColors.playful,
                             ),
                           ),
                           Expanded(
@@ -101,14 +101,14 @@ class _DashboardContent extends StatelessWidget {
                                 'favorite_books',
                               ),
                               value: favoriteBooks,
-                              maxValue: 20,
+                              maxValue: 70, // Baron level requirement
                               icon: Icons.favorite,
                               color: Colors.red,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 32),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -119,7 +119,7 @@ class _DashboardContent extends StatelessWidget {
                                 'reading_streak',
                               ),
                               value: readingStreak,
-                              maxValue: 30,
+                              maxValue: 150, // Baron level requirement
                               icon: Icons.local_fire_department,
                               color: Colors.orange,
                             ),
@@ -197,7 +197,7 @@ class _DashboardContent extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: 40),
                       const Column(
                         children: [
                           BadgesOverviewCard(),

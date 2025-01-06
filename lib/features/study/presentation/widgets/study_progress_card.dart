@@ -258,10 +258,16 @@ class _StudyProgressCardState extends State<StudyProgressCard> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          Text(
-            label,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: Colors.white.withOpacity(0.8),
+          SizedBox(
+            width: 80, // Fixed width for consistency
+            child: Text(
+              label,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: Colors.white.withOpacity(0.8),
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],

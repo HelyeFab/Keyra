@@ -88,7 +88,13 @@ void main() async {
     // Initialize UI language bloc
     final prefs = await SharedPreferences.getInstance();
     final uiLanguageBloc = UiLanguageBloc(prefs);
+    
+    // Clear any existing language preference to force system language detection
+    await prefs.remove('app_ui_language_preference');
+    
+    // Load saved language or detect system language
     uiLanguageBloc.add(LoadSavedUiLanguageEvent());
+    print('Initialized UI language bloc');
 
     // Initialize connectivity monitoring
     final connectivityBloc = ConnectivityBloc();

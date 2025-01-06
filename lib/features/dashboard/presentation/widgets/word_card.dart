@@ -38,6 +38,7 @@ class WordCard extends StatelessWidget {
                     word.word,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
+                          color: Colors.black,
                         ),
                   ),
                   const Spacer(),
@@ -56,7 +57,9 @@ class WordCard extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 '${UiTranslationService.translate(context, 'common_definition')}: ${word.definition}',
-                style: Theme.of(context).textTheme.bodyLarge,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: Colors.black,
+                    ),
               ),
               if (word.examples.isNotEmpty) ...[
                 const SizedBox(height: 8),
@@ -64,6 +67,7 @@ class WordCard extends StatelessWidget {
                   '${UiTranslationService.translate(context, 'common_examples')}:',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.bold,
+                        color: Colors.black,
                       ),
                 ),
                 const SizedBox(height: 4),
@@ -72,7 +76,9 @@ class WordCard extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 16.0),
                     child: Text(
                       '• $example',
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 ),
