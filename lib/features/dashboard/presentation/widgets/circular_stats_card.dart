@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-import '../../../../core/theme/bloc/theme_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/theme/bloc/theme_bloc.dart';
 
 class CircularStatsCard extends StatelessWidget {
   final String title;
@@ -39,9 +39,7 @@ class CircularStatsCard extends StatelessWidget {
               child: Text(
                 title,
                 style: theme.textTheme.bodyLarge?.copyWith(
-                  color: context.read<ThemeBloc>().state.useGradientTheme 
-                    ? Colors.white 
-                    : theme.colorScheme.onSurface,
+                  color: theme.colorScheme.onSurface,
                   fontWeight: FontWeight.bold,
                 ),
                 overflow: TextOverflow.ellipsis,
@@ -57,7 +55,7 @@ class CircularStatsCard extends StatelessWidget {
           height: 100,
           child: CustomPaint(
             painter: CircularProgressPainter(
-              backgroundColor: theme.colorScheme.surfaceVariant.withOpacity(0.3),
+              backgroundColor: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
               valueColor: color,
               value: value / maxValue,
             ),
@@ -71,7 +69,8 @@ class CircularStatsCard extends StatelessWidget {
                       value.toString(),
                       style: theme.textTheme.titleLarge?.copyWith(
                         color: theme.colorScheme.primary,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w500,
+                        height: 1.1,  // Tighter line height for better vertical alignment
                       ),
                     ),
                   ),
@@ -81,10 +80,12 @@ class CircularStatsCard extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 4.0),
                       child: Text(
-                        '$value/${maxValue}',  // Removed spaces around slash for more compact look
+                        '$value/$maxValue',  // Removed spaces around slash for more compact look
                         style: theme.textTheme.labelSmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withOpacity(0.8),
+                          color: theme.colorScheme.onSurface.withOpacity(0.7),
                           fontSize: theme.textTheme.labelSmall?.fontSize ?? 6,
+                          letterSpacing: -0.2,  // Tighter letter spacing for better readability
+                          height: 1,  // Remove any extra line height
                         ),
                       ),
                     ),

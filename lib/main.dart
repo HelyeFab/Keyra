@@ -53,12 +53,14 @@ Future<void> initServices() async {
   try {
     // Initialize Hive
     await Hive.initFlutter();
-    
+
     // Register Hive adapters in correct order
     if (!Hive.isAdapterRegistered(0)) Hive.registerAdapter(BookAdapter());
-    if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(BookLanguageAdapter());
+    if (!Hive.isAdapterRegistered(1)) {
+      Hive.registerAdapter(BookLanguageAdapter());
+    }
     if (!Hive.isAdapterRegistered(2)) Hive.registerAdapter(BookPageAdapter());
-    
+
     // Initialize caches
     _bookCacheService = BookCacheService();
     await _bookCacheService.init();
@@ -71,7 +73,7 @@ Future<void> initServices() async {
 void main() async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
-    
+
     // Initialize core services
     await initServices();
     await dotenv.load(fileName: '.env');
@@ -88,10 +90,10 @@ void main() async {
     // Initialize UI language bloc
     final prefs = await SharedPreferences.getInstance();
     final uiLanguageBloc = UiLanguageBloc(prefs);
-    
+
     // Clear any existing language preference to force system language detection
     await prefs.remove('app_ui_language_preference');
-    
+
     // Load saved language or detect system language
     uiLanguageBloc.add(LoadSavedUiLanguageEvent());
     print('Initialized UI language bloc');
@@ -113,7 +115,7 @@ void main() async {
     // Initialize Firebase Auth and wait for initial state
     final auth = FirebaseAuth.instance;
     await auth.authStateChanges().first;
-    
+
     // Sign in anonymously if no user is signed in
     if (auth.currentUser == null) {
       try {
@@ -130,9 +132,8 @@ void main() async {
 
     // Initialize repositories with caches
     _firestorePopulator = FirestorePopulator(
-      bookCacheService: _bookCacheService,
-      coverCacheManager: BookCoverCacheManager.instance
-    );
+        bookCacheService: _bookCacheService,
+        coverCacheManager: BookCoverCacheManager.instance);
     _userStatsRepository = UserStatsRepository();
 
     // Start preloading books in background
@@ -164,7 +165,8 @@ void main() async {
         } catch (e) {
           print('Error initializing user stats: $e');
           if (!_userStatsInitController.isClosed) {
-            _userStatsInitController.add(true); // Allow proceeding even on error
+            _userStatsInitController
+                .add(true); // Allow proceeding even on error
           }
         }
       });
@@ -187,7 +189,8 @@ void main() async {
         } catch (e) {
           debugPrint('Error initializing dictionary: $e');
           if (!_dictionaryInitController.isClosed) {
-            _dictionaryInitController.add(true); // Allow proceeding even on error
+            _dictionaryInitController
+                .add(true); // Allow proceeding even on error
           }
         }
       });
@@ -260,7 +263,9 @@ void main() async {
                           ),
                           initialData: [!isFirstLaunch, false, false],
                           builder: (context, snapshot) {
-                            final isInitialized = snapshot.data?.every((init) => init) ?? false;
+                            final isInitialized =
+                                snapshot.data?.every((init) => init) ?? false;
+                            // Show splash screen while initializing
                             return SplashScreen(
                               isInitialized: isInitialized,
                               isFirstLaunch: isFirstLaunch,
@@ -270,45 +275,47 @@ void main() async {
                         ),
                         routes: {
                           '/home': (context) => BlocProvider.value(
-                            value: context.read<AuthBloc>(),
-                            child: const HomePage(),
-                          ),
-                          '/library': (context) => MultiBlocProvider(
-                            providers: [
-                              BlocProvider.value(
                                 value: context.read<AuthBloc>(),
+                                child: const HomePage(),
                               ),
-                              BlocProvider(
-                                create: (context) => DashboardBloc(
-                                  userStatsRepository: context.read<UserStatsRepository>(),
-                                ),
+                          '/library': (context) => MultiBlocProvider(
+                                providers: [
+                                  BlocProvider.value(
+                                    value: context.read<AuthBloc>(),
+                                  ),
+                                  BlocProvider(
+                                    create: (context) => DashboardBloc(
+                                      userStatsRepository:
+                                          context.read<UserStatsRepository>(),
+                                    ),
+                                  ),
+                                  BlocProvider.value(
+                                    value: context.read<BadgeBloc>(),
+                                  ),
+                                ],
+                                child: const LibraryPage(),
                               ),
-                              BlocProvider.value(
-                                value: context.read<BadgeBloc>(),
-                              ),
-                            ],
-                            child: const LibraryPage(),
-                          ),
                           '/study': (context) => BlocProvider.value(
-                            value: context.read<AuthBloc>(),
-                            child: const StudyPage(),
-                          ),
+                                value: context.read<AuthBloc>(),
+                                child: const StudyPage(),
+                              ),
                           '/dashboard': (context) => BlocProvider.value(
-                            value: context.read<AuthBloc>(),
-                            child: const DashboardPage(),
-                          ),
+                                value: context.read<AuthBloc>(),
+                                child: const DashboardPage(),
+                              ),
                           '/profile': (context) => BlocProvider.value(
-                            value: context.read<AuthBloc>(),
-                            child: const ProfilePage(),
-                          ),
+                                value: context.read<AuthBloc>(),
+                                child: const ProfilePage(),
+                              ),
                           '/onboarding': (context) => BlocProvider.value(
-                            value: context.read<AuthBloc>(),
-                            child: OnboardingPage(preferencesService: preferencesService),
-                          ),
+                                value: context.read<AuthBloc>(),
+                                child: OnboardingPage(
+                                    preferencesService: preferencesService),
+                              ),
                           '/navigation': (context) => BlocProvider.value(
-                            value: context.read<AuthBloc>(),
-                            child: const NavigationPage(),
-                          ),
+                                value: context.read<AuthBloc>(),
+                                child: const NavigationPage(),
+                              ),
                         },
                       ),
                     );

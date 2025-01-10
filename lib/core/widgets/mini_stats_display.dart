@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../features/dashboard/presentation/bloc/dashboard_bloc.dart';
 import '../ui_language/translations/ui_translations.dart';
+import '../theme/color_schemes.dart';
 
 class MiniStatsDisplay extends StatefulWidget {
   const MiniStatsDisplay({super.key});
@@ -108,14 +109,14 @@ class _MiniStatsDisplayState extends State<MiniStatsDisplay> with WidgetsBinding
       children: [
         Icon(
           icon,
-          color: color,
+          color: AppColors.sectionTitle,
           size: 24,
         ),
         const SizedBox(width: 4),
         Text(
           value,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            color: color,
+            color: AppColors.sectionTitle,
             fontWeight: FontWeight.w500,
           ),
         ),

@@ -134,10 +134,7 @@ class _StudyPageState extends State<StudyPage> {
                         Text(
                           UiTranslations.of(context).translate('study_tips'),
                           style: theme.textTheme.titleLarge?.copyWith(
-                            color:
-                                context.read<ThemeBloc>().state.useGradientTheme
-                                    ? Colors.white
-                                    : AppColors.sectionTitle,
+                            color: Theme.of(context).colorScheme.onSurface,
                             fontWeight: FontWeight.w600,
                           ),
                         ),

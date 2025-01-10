@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:Keyra/core/widgets/gradient_background.dart';
+import 'package:Keyra/core/widgets/keyra_page_background.dart';
 import 'package:Keyra/features/common/presentation/utils/connectivity_utils.dart';
 import 'package:Keyra/core/theme/color_schemes.dart';
 import 'package:Keyra/features/books/domain/models/book_language.dart';
@@ -91,7 +91,7 @@ class _DashboardContent extends StatelessWidget {
                               value: booksRead,
                               maxValue: 500, // Baron level requirement
                               icon: Icons.book,
-                              color: AppColors.playful,
+                              color: Theme.of(context).colorScheme.primary,
                             ),
                           ),
                           Expanded(
@@ -103,7 +103,7 @@ class _DashboardContent extends StatelessWidget {
                               value: favoriteBooks,
                               maxValue: 70, // Baron level requirement
                               icon: Icons.favorite,
-                              color: Colors.red,
+                              color: Theme.of(context).colorScheme.secondary,
                             ),
                           ),
                         ],
@@ -121,7 +121,7 @@ class _DashboardContent extends StatelessWidget {
                               value: readingStreak,
                               maxValue: 150, // Baron level requirement
                               icon: Icons.local_fire_department,
-                              color: Colors.orange,
+                              color: Theme.of(context).colorScheme.tertiary,
                             ),
                           ),
                           Expanded(
@@ -154,10 +154,10 @@ class _DashboardContent extends StatelessWidget {
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          const Icon(
+                                          Icon(
                                             Icons.bookmark,
                                             size: 20,
-                                            color: Colors.purple,
+                                            color: Theme.of(context).colorScheme.tertiary,
                                           ),
                                           const SizedBox(width: 8),
                                           Flexible(
@@ -166,9 +166,8 @@ class _DashboardContent extends StatelessWidget {
                                                 context,
                                                 'saved_words',
                                               ),
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.grey[700],
+                                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                                color: Theme.of(context).colorScheme.onSurface,
                                               ),
                                               overflow: TextOverflow.ellipsis,
                                             ),
@@ -177,15 +176,15 @@ class _DashboardContent extends StatelessWidget {
                                           Icon(
                                             Icons.chevron_right,
                                             size: 20,
-                                            color: Colors.grey[400],
+                                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                                           ),
                                         ],
                                       ),
                                       const SizedBox(height: 8),
                                       Text(
                                         savedWords.toString(),
-                                        style: const TextStyle(
-                                          fontSize: 32,
+                                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                          color: Theme.of(context).colorScheme.primary,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -300,8 +299,8 @@ class _DashboardPageContentState extends State<_DashboardPageContent> with Autom
 
     return Material(
       type: MaterialType.transparency,
-      child: GradientBackground(
-        pageIndex: 3,
+      child: KeyraPageBackground(
+        page: 'dashboard',
         child: Column(
           children: [
             Expanded(

@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:rxdart/rxdart.dart';
 import '../../domain/models/user_stats.dart';
 
 class UserStatsRepository {
@@ -22,10 +21,12 @@ class UserStatsRepository {
     try {
       print('[UserStatsRepository] Getting stats for user: ${user.uid}');
       
-      // Get both the stats document and the root user document
+      // Get the stats document
       final statsDocRef = _firestore
           .collection('users')
-          .doc(user.uid);
+          .doc(user.uid)
+          .collection('stats')
+          .doc('current');
 
       final statsSnap = await statsDocRef.get();
       if (!statsSnap.exists) {
@@ -66,6 +67,8 @@ class UserStatsRepository {
     return _firestore
         .collection('users')
         .doc(user.uid)
+        .collection('stats')
+        .doc('current')
         .snapshots()
         .map((doc) {
           print('[UserStatsRepository] Received document update');
@@ -166,15 +169,36 @@ class UserStatsRepository {
     }
 
     try {
-      await _firestore
+      print('[UserStatsRepository] Decrementing saved words');
+      final docRef = _firestore
           .collection('users')
           .doc(user.uid)
           .collection('stats')
-          .doc('current')
-          .set({
+          .doc('current');
+
+      // Get current stats to prevent negative values
+      final currentStats = await getUserStats();
+      print('[UserStatsRepository] Current saved words: ${currentStats.savedWords}');
+      if (currentStats.savedWords <= 0) {
+        print('[UserStatsRepository] Cannot decrement saved words: already at 0');
+        return;
+      }
+
+      // Update the stats only if we have saved words to decrement
+      await docRef.set({
         'savedWords': FieldValue.increment(-1),
         'lastUpdated': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
+
+      // Force a refresh by updating lastUpdated
+      await Future.delayed(const Duration(milliseconds: 100));
+      await docRef.set({
+        'lastUpdated': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+
+      // Verify the update
+      final updatedStats = await getUserStats();
+      print('[UserStatsRepository] Updated saved words: ${updatedStats.savedWords}');
     } catch (e) {
       print('Error decrementing saved words: $e');
       throw Exception('Failed to decrement saved words: $e');
@@ -352,11 +376,15 @@ class UserStatsRepository {
           .collection('stats')
           .doc('current');
 
-      // Get current stats first
+      // Get current stats to prevent negative values
       final currentStats = await getUserStats();
       print('[UserStatsRepository] Current favorite books: ${currentStats.favoriteBooks}');
+      if (currentStats.favoriteBooks <= 0) {
+        print('[UserStatsRepository] Cannot decrement favorite books: already at 0');
+        return;
+      }
 
-      // Update the stats
+      // Update the stats only if we have favorites to decrement
       await docRef.set({
         'favoriteBooks': FieldValue.increment(-1),
         'lastUpdated': FieldValue.serverTimestamp(),

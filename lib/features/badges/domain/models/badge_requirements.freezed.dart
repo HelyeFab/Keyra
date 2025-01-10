@@ -198,11 +198,6 @@ class _$BadgeRequirementsImpl extends _BadgeRequirements {
   final int requiredReadingStreak;
 
   @override
-  String toString() {
-    return 'BadgeRequirements(level: $level, displayName: $displayName, assetPath: $assetPath, requiredBooksRead: $requiredBooksRead, requiredFavoriteBooks: $requiredFavoriteBooks, requiredReadingStreak: $requiredReadingStreak)';
-  }
-
-  @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&

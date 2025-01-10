@@ -9,55 +9,39 @@ part 'theme_state.dart';
 
 class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
   static const String _themePreferenceKey = 'theme_mode';
-  static const String _gradientThemePreferenceKey = 'use_gradient_theme';
   final SharedPreferences _prefs;
 
   ThemeBloc(this._prefs)
-      : super(const ThemeState(
-            themeMode: ThemeMode.system, useGradientTheme: false)) {
+      : super(const ThemeState(themeMode: ThemeMode.dark)) {
     on<ThemeEvent>((event, emit) {
       event.when(
         toggleTheme: () {
-          if (!state.useGradientTheme) {
-            final ThemeMode newMode;
-            switch (state.themeMode) {
-              case ThemeMode.system:
-                // When in system mode, switch to explicit light/dark based on current system preference
-                final brightness = WidgetsBinding.instance.window.platformBrightness;
-                newMode = brightness == Brightness.dark ? ThemeMode.light : ThemeMode.dark;
-                break;
-              case ThemeMode.light:
-                newMode = ThemeMode.dark;
-                break;
-              case ThemeMode.dark:
-                newMode = ThemeMode.system;
-                break;
-            }
-            _saveThemeMode(newMode);
-            emit(state.copyWith(themeMode: newMode));
+          final ThemeMode newMode;
+          switch (state.themeMode) {
+            case ThemeMode.system:
+              // When in system mode, switch to explicit light/dark based on current system preference
+              final brightness = WidgetsBinding.instance.window.platformBrightness;
+              newMode = brightness == Brightness.dark ? ThemeMode.light : ThemeMode.dark;
+              break;
+            case ThemeMode.light:
+              newMode = ThemeMode.dark;
+              break;
+            case ThemeMode.dark:
+              newMode = ThemeMode.system;
+              break;
           }
+          _saveThemeMode(newMode);
+          emit(state.copyWith(themeMode: newMode));
         },
         setTheme: (ThemeMode mode) {
-          if (!state.useGradientTheme) {
-            _saveThemeMode(mode);
-            emit(state.copyWith(themeMode: mode));
-          }
-        },
-        toggleGradientTheme: () {
-          final newGradientState = !state.useGradientTheme;
-          _saveGradientTheme(newGradientState);
-          emit(state.copyWith(useGradientTheme: newGradientState));
-        },
-        setGradientTheme: (bool useGradient) {
-          _saveGradientTheme(useGradient);
-          emit(state.copyWith(useGradientTheme: useGradient));
+          _saveThemeMode(mode);
+          emit(state.copyWith(themeMode: mode));
         },
       );
     });
 
     // Load saved theme immediately
     _loadSavedTheme();
-    _loadSavedGradientTheme();
   }
 
   static Future<ThemeBloc> create() async {
@@ -81,24 +65,15 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
             themeMode = ThemeMode.system;
             break;
           default:
-            themeMode = ThemeMode.system;
+            themeMode = ThemeMode.dark;
         }
         add(ThemeEvent.setTheme(themeMode));
       } else {
-        // If no saved preference, default to system theme
-        add(const ThemeEvent.setTheme(ThemeMode.system));
+        // If no saved preference, default to dark theme
+        add(const ThemeEvent.setTheme(ThemeMode.dark));
       }
     } catch (e) {
       debugPrint('Error loading theme: $e');
-    }
-  }
-
-  void _loadSavedGradientTheme() {
-    try {
-      final useGradient = _prefs.getBool(_gradientThemePreferenceKey) ?? false;
-      add(ThemeEvent.setGradientTheme(useGradient));
-    } catch (e) {
-      debugPrint('Error loading gradient theme: $e');
     }
   }
 
@@ -119,14 +94,6 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
       _prefs.setString(_themePreferenceKey, themeString);
     } catch (e) {
       debugPrint('Error saving theme: $e');
-    }
-  }
-
-  void _saveGradientTheme(bool useGradient) {
-    try {
-      _prefs.setBool(_gradientThemePreferenceKey, useGradient);
-    } catch (e) {
-      debugPrint('Error saving gradient theme: $e');
     }
   }
 }

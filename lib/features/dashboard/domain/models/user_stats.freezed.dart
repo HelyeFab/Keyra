@@ -334,11 +334,6 @@ class _$UserStatsImpl extends _UserStats {
   final String? lastBookId;
 
   @override
-  String toString() {
-    return 'UserStats(booksRead: $booksRead, favoriteBooks: $favoriteBooks, readingStreak: $readingStreak, savedWords: $savedWords, readDates: $readDates, sessionStartTime: $sessionStartTime, isReadingActive: $isReadingActive, currentSessionMinutes: $currentSessionMinutes, lastReadDate: $lastReadDate, lastUpdated: $lastUpdated, lastBookId: $lastBookId)';
-  }
-
-  @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&

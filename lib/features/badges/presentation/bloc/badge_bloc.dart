@@ -30,20 +30,7 @@ class BadgeBloc extends Bloc<BadgeEvent, BadgeState> {
     on<BadgeEvent>((event, emit) async {
       await event.map(
         started: (_) async => await _onStarted(emit),
-        wordsUpdated: (_) async {
-          // Words are now handled through the stats stream
-          final stats = await _userStatsRepository.getUserStats();
-          if (!emit.isDone) {
-            final progress = BadgeProgress(
-              currentLevel: _calculateBadgeLevel(stats),
-              booksRead: stats.booksRead,
-              favoriteBooks: stats.favoriteBooks,
-              readingStreak: stats.readingStreak,
-              lastUpdated: DateTime.now(),
-            );
-            emit(BadgeState.loaded(progress));
-          }
-        },
+        wordsUpdated: (e) async => await _onStatsUpdated(await _userStatsRepository.getUserStats(), emit),
         levelUp: (e) async => await _onLevelUp(e.newLevel, emit),
       );
     });
@@ -53,61 +40,14 @@ class BadgeBloc extends Bloc<BadgeEvent, BadgeState> {
     try {
       // Try to get initial stats
       final stats = await _userStatsRepository.getUserStats();
-      if (!emit.isDone) {
-        final progress = BadgeProgress(
-          currentLevel: _calculateBadgeLevel(stats),
-          booksRead: stats.booksRead,
-          favoriteBooks: stats.favoriteBooks,
-          readingStreak: stats.readingStreak,
-          lastUpdated: DateTime.now(),
-        );
-        emit(BadgeState.loaded(progress));
-      }
+      await _onStatsUpdated(stats, emit);
 
       // Set up subscription only after successful initial load
       await _statsSubscription?.cancel(); // Cancel any existing subscription
       _statsSubscription = _userStatsRepository.streamUserStats().listen(
-        (stats) async {
+        (stats) {
           if (!isClosed) {
-            try {
-              print('[BadgeBloc] Received stats update:');
-              print('[BadgeBloc] Books read: ${stats.booksRead}');
-              print('[BadgeBloc] Favorite books: ${stats.favoriteBooks}');
-              print('[BadgeBloc] Reading streak: ${stats.readingStreak}');
-              
-              final newLevel = _calculateBadgeLevel(stats);
-              print('[BadgeBloc] Calculated badge level: $newLevel');
-              
-              final currentState = state;
-              final currentLevel = currentState.map(
-                initial: (_) => BadgeLevel.beginner,
-                loaded: (s) => s.progress.currentLevel,
-                levelingUp: (s) => s.progress.currentLevel,
-              );
-              
-              final progress = BadgeProgress(
-                currentLevel: newLevel,
-                booksRead: stats.booksRead,
-                favoriteBooks: stats.favoriteBooks,
-                readingStreak: stats.readingStreak,
-                lastUpdated: DateTime.now(),
-              );
-              
-              if (newLevel != currentLevel) {
-                print('[BadgeBloc] Badge level changed from $currentLevel to $newLevel');
-                // Show level up animation
-                emit(BadgeState.levelingUp(progress, newLevel));
-                await Future.delayed(const Duration(seconds: 2));
-                if (!isClosed) {
-                  emit(BadgeState.loaded(progress));
-                }
-              } else {
-                print('[BadgeBloc] Updating progress with same level: $newLevel');
-                emit(BadgeState.loaded(progress));
-              }
-            } catch (e) {
-              print('[BadgeBloc] Error updating badge progress: $e');
-            }
+            add(BadgeEvent.wordsUpdated(stats.savedWords)); // Pass saved words count
           }
         },
         onError: (error) {
@@ -120,10 +60,55 @@ class BadgeBloc extends Bloc<BadgeEvent, BadgeState> {
     }
   }
 
+  Future<void> _onStatsUpdated(UserStats stats, Emitter<BadgeState> emit) async {
+    if (emit.isDone) return;
+    
+    try {
+      print('[BadgeBloc] Processing stats update:');
+      print('[BadgeBloc] Books read: ${stats.booksRead}');
+      print('[BadgeBloc] Favorite books: ${stats.favoriteBooks}');
+      print('[BadgeBloc] Reading streak: ${stats.readingStreak}');
+      
+      final newLevel = _calculateBadgeLevel(stats);
+      print('[BadgeBloc] Calculated badge level: $newLevel');
+      
+      final currentState = state;
+      final currentLevel = currentState.map(
+        initial: (_) => BadgeLevel.beginner,
+        loaded: (s) => s.progress.currentLevel,
+        levelingUp: (s) => s.progress.currentLevel,
+      );
+      
+      final progress = BadgeProgress(
+        currentLevel: newLevel,
+        booksRead: stats.booksRead,
+        favoriteBooks: stats.favoriteBooks,
+        readingStreak: stats.readingStreak,
+        lastUpdated: DateTime.now(),
+      );
+      
+      if (newLevel != currentLevel) {
+        print('[BadgeBloc] Badge level changed from $currentLevel to $newLevel');
+        emit(BadgeState.levelingUp(progress, newLevel));
+        await Future.delayed(const Duration(seconds: 2));
+        if (!isClosed && !emit.isDone) {
+          emit(BadgeState.loaded(progress));
+        }
+      } else {
+        print('[BadgeBloc] Updating progress with same level: $newLevel');
+        emit(BadgeState.loaded(progress));
+      }
+    } catch (e) {
+      print('[BadgeBloc] Error updating badge progress: $e');
+    }
+  }
+
   Future<void> _onLevelUp(
     BadgeLevel newLevel,
     Emitter<BadgeState> emit,
   ) async {
+    if (emit.isDone) return;
+    
     try {
       final currentState = state;
       if (!currentState.map(
@@ -146,11 +131,7 @@ class BadgeBloc extends Bloc<BadgeEvent, BadgeState> {
         levelingUp: (s) => s.progress,
       );
 
-      if (!emit.isDone) {
-        emit(BadgeState.levelingUp(currentProgress, newLevel));
-      }
-
-      // Reset to loaded state after showing level up
+      emit(BadgeState.levelingUp(currentProgress, newLevel));
       await Future.delayed(const Duration(seconds: 2));
       if (!emit.isDone) {
         final updatedProgress = currentProgress.copyWith(currentLevel: newLevel);

@@ -99,6 +99,7 @@ flutter:
     - assets/images/onboarding/
     - assets/images/login/
     - assets/images/navbar/
+    - assets/images/splashscreen/
     - assets/fonts/
     - assets/flags/
     - assets/loader/

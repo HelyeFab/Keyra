@@ -245,23 +245,8 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.surfaceContainerLowest,
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Theme.of(context).brightness == Brightness.dark
-                                  ? Colors.black.withOpacity(0.2)
-                                  : Colors.black.withOpacity(0.08),
-                              blurRadius: 16,
-                              offset: const Offset(0, 4),
-                              spreadRadius: 0,
-                            ),
-                          ],
-                        ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -301,16 +286,14 @@ class _HomePageState extends State<HomePage> {
                               child: Text(
                                 UiTranslations.of(context).translate('home_recently_added_stories'),
                                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  color: context.read<ThemeBloc>().state.useGradientTheme 
-                                    ? Colors.white 
-                                    : AppColors.sectionTitle,
+                                  color: Theme.of(context).colorScheme.onSurface,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
                             ),
                             const SizedBox(height: AppSpacing.md),
                             SizedBox(
-                              height: 280,
+                              height: 340,
                               child: _isLoadingAll
                                   ? const Center(
                                       child: LoadingIndicator(size: 100),
@@ -343,9 +326,7 @@ class _HomePageState extends State<HomePage> {
                               child: Text(
                                 UiTranslations.of(context).translate('home_continue_reading'),
                                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  color: context.read<ThemeBloc>().state.useGradientTheme 
-                                    ? Colors.white 
-                                    : AppColors.sectionTitle,
+                                  color: Theme.of(context).colorScheme.onSurface,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -362,9 +343,7 @@ class _HomePageState extends State<HomePage> {
                                           child: Text(
                                             UiTranslations.of(context).translate('home_no_in_progress_books'),
                                             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                              color: context.read<ThemeBloc>().state.useGradientTheme 
-                                                ? Colors.white.withOpacity(0.8)
-                                                : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                                             ),
                                             textAlign: TextAlign.center,
                                           ),
@@ -419,9 +398,7 @@ class _HomePageState extends State<HomePage> {
                                               title: Text(
                                                 book.getTitle(languageState.selectedLanguage),
                                                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                                  color: context.read<ThemeBloc>().state.useGradientTheme 
-                                                    ? Colors.black
-                                                    : Theme.of(context).colorScheme.onSurface,
+                                                  color: Theme.of(context).colorScheme.onSurface,
                                                 ),
                                               ),
                                               subtitle: Text(
@@ -429,17 +406,13 @@ class _HomePageState extends State<HomePage> {
                                                     .replaceAll('{0}', (book.currentPage + 1).toString())
                                                     .replaceAll('{1}', book.pages.length.toString()),
                                                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                                  color: context.read<ThemeBloc>().state.useGradientTheme 
-                                                    ? Colors.black.withOpacity(0.7)
-                                                    : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                                                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                                                 ),
                                               ),
                                               trailing: Icon(
                                                 Icons.arrow_forward_ios,
                                                 size: 16,
-                                                color: context.read<ThemeBloc>().state.useGradientTheme 
-                                                  ? Colors.black
-                                                  : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                                                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                                               ),
                                               onTap: () => _onBookTap(book),
                                             ),

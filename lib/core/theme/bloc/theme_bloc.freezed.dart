@@ -20,24 +20,18 @@ mixin _$ThemeEvent {
   TResult when<TResult extends Object?>({
     required TResult Function() toggleTheme,
     required TResult Function(ThemeMode mode) setTheme,
-    required TResult Function() toggleGradientTheme,
-    required TResult Function(bool useGradient) setGradientTheme,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? toggleTheme,
     TResult? Function(ThemeMode mode)? setTheme,
-    TResult? Function()? toggleGradientTheme,
-    TResult? Function(bool useGradient)? setGradientTheme,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? toggleTheme,
     TResult Function(ThemeMode mode)? setTheme,
-    TResult Function()? toggleGradientTheme,
-    TResult Function(bool useGradient)? setGradientTheme,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -45,24 +39,18 @@ mixin _$ThemeEvent {
   TResult map<TResult extends Object?>({
     required TResult Function(_ToggleTheme value) toggleTheme,
     required TResult Function(_SetTheme value) setTheme,
-    required TResult Function(_ToggleGradientTheme value) toggleGradientTheme,
-    required TResult Function(_SetGradientTheme value) setGradientTheme,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_ToggleTheme value)? toggleTheme,
     TResult? Function(_SetTheme value)? setTheme,
-    TResult? Function(_ToggleGradientTheme value)? toggleGradientTheme,
-    TResult? Function(_SetGradientTheme value)? setGradientTheme,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_ToggleTheme value)? toggleTheme,
     TResult Function(_SetTheme value)? setTheme,
-    TResult Function(_ToggleGradientTheme value)? toggleGradientTheme,
-    TResult Function(_SetGradientTheme value)? setGradientTheme,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -132,8 +120,6 @@ class _$ToggleThemeImpl implements _ToggleTheme {
   TResult when<TResult extends Object?>({
     required TResult Function() toggleTheme,
     required TResult Function(ThemeMode mode) setTheme,
-    required TResult Function() toggleGradientTheme,
-    required TResult Function(bool useGradient) setGradientTheme,
   }) {
     return toggleTheme();
   }
@@ -143,8 +129,6 @@ class _$ToggleThemeImpl implements _ToggleTheme {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? toggleTheme,
     TResult? Function(ThemeMode mode)? setTheme,
-    TResult? Function()? toggleGradientTheme,
-    TResult? Function(bool useGradient)? setGradientTheme,
   }) {
     return toggleTheme?.call();
   }
@@ -154,8 +138,6 @@ class _$ToggleThemeImpl implements _ToggleTheme {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? toggleTheme,
     TResult Function(ThemeMode mode)? setTheme,
-    TResult Function()? toggleGradientTheme,
-    TResult Function(bool useGradient)? setGradientTheme,
     required TResult orElse(),
   }) {
     if (toggleTheme != null) {
@@ -169,8 +151,6 @@ class _$ToggleThemeImpl implements _ToggleTheme {
   TResult map<TResult extends Object?>({
     required TResult Function(_ToggleTheme value) toggleTheme,
     required TResult Function(_SetTheme value) setTheme,
-    required TResult Function(_ToggleGradientTheme value) toggleGradientTheme,
-    required TResult Function(_SetGradientTheme value) setGradientTheme,
   }) {
     return toggleTheme(this);
   }
@@ -180,8 +160,6 @@ class _$ToggleThemeImpl implements _ToggleTheme {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_ToggleTheme value)? toggleTheme,
     TResult? Function(_SetTheme value)? setTheme,
-    TResult? Function(_ToggleGradientTheme value)? toggleGradientTheme,
-    TResult? Function(_SetGradientTheme value)? setGradientTheme,
   }) {
     return toggleTheme?.call(this);
   }
@@ -191,8 +169,6 @@ class _$ToggleThemeImpl implements _ToggleTheme {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_ToggleTheme value)? toggleTheme,
     TResult Function(_SetTheme value)? setTheme,
-    TResult Function(_ToggleGradientTheme value)? toggleGradientTheme,
-    TResult Function(_SetGradientTheme value)? setGradientTheme,
     required TResult orElse(),
   }) {
     if (toggleTheme != null) {
@@ -276,8 +252,6 @@ class _$SetThemeImpl implements _SetTheme {
   TResult when<TResult extends Object?>({
     required TResult Function() toggleTheme,
     required TResult Function(ThemeMode mode) setTheme,
-    required TResult Function() toggleGradientTheme,
-    required TResult Function(bool useGradient) setGradientTheme,
   }) {
     return setTheme(mode);
   }
@@ -287,8 +261,6 @@ class _$SetThemeImpl implements _SetTheme {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? toggleTheme,
     TResult? Function(ThemeMode mode)? setTheme,
-    TResult? Function()? toggleGradientTheme,
-    TResult? Function(bool useGradient)? setGradientTheme,
   }) {
     return setTheme?.call(mode);
   }
@@ -298,8 +270,6 @@ class _$SetThemeImpl implements _SetTheme {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? toggleTheme,
     TResult Function(ThemeMode mode)? setTheme,
-    TResult Function()? toggleGradientTheme,
-    TResult Function(bool useGradient)? setGradientTheme,
     required TResult orElse(),
   }) {
     if (setTheme != null) {
@@ -313,8 +283,6 @@ class _$SetThemeImpl implements _SetTheme {
   TResult map<TResult extends Object?>({
     required TResult Function(_ToggleTheme value) toggleTheme,
     required TResult Function(_SetTheme value) setTheme,
-    required TResult Function(_ToggleGradientTheme value) toggleGradientTheme,
-    required TResult Function(_SetGradientTheme value) setGradientTheme,
   }) {
     return setTheme(this);
   }
@@ -324,8 +292,6 @@ class _$SetThemeImpl implements _SetTheme {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_ToggleTheme value)? toggleTheme,
     TResult? Function(_SetTheme value)? setTheme,
-    TResult? Function(_ToggleGradientTheme value)? toggleGradientTheme,
-    TResult? Function(_SetGradientTheme value)? setGradientTheme,
   }) {
     return setTheme?.call(this);
   }
@@ -335,8 +301,6 @@ class _$SetThemeImpl implements _SetTheme {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_ToggleTheme value)? toggleTheme,
     TResult Function(_SetTheme value)? setTheme,
-    TResult Function(_ToggleGradientTheme value)? toggleGradientTheme,
-    TResult Function(_SetGradientTheme value)? setGradientTheme,
     required TResult orElse(),
   }) {
     if (setTheme != null) {
@@ -359,282 +323,8 @@ abstract class _SetTheme implements ThemeEvent {
 }
 
 /// @nodoc
-abstract class _$$ToggleGradientThemeImplCopyWith<$Res> {
-  factory _$$ToggleGradientThemeImplCopyWith(_$ToggleGradientThemeImpl value,
-          $Res Function(_$ToggleGradientThemeImpl) then) =
-      __$$ToggleGradientThemeImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$ToggleGradientThemeImplCopyWithImpl<$Res>
-    extends _$ThemeEventCopyWithImpl<$Res, _$ToggleGradientThemeImpl>
-    implements _$$ToggleGradientThemeImplCopyWith<$Res> {
-  __$$ToggleGradientThemeImplCopyWithImpl(_$ToggleGradientThemeImpl _value,
-      $Res Function(_$ToggleGradientThemeImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of ThemeEvent
-  /// with the given fields replaced by the non-null parameter values.
-}
-
-/// @nodoc
-
-class _$ToggleGradientThemeImpl implements _ToggleGradientTheme {
-  const _$ToggleGradientThemeImpl();
-
-  @override
-  String toString() {
-    return 'ThemeEvent.toggleGradientTheme()';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ToggleGradientThemeImpl);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() toggleTheme,
-    required TResult Function(ThemeMode mode) setTheme,
-    required TResult Function() toggleGradientTheme,
-    required TResult Function(bool useGradient) setGradientTheme,
-  }) {
-    return toggleGradientTheme();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? toggleTheme,
-    TResult? Function(ThemeMode mode)? setTheme,
-    TResult? Function()? toggleGradientTheme,
-    TResult? Function(bool useGradient)? setGradientTheme,
-  }) {
-    return toggleGradientTheme?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? toggleTheme,
-    TResult Function(ThemeMode mode)? setTheme,
-    TResult Function()? toggleGradientTheme,
-    TResult Function(bool useGradient)? setGradientTheme,
-    required TResult orElse(),
-  }) {
-    if (toggleGradientTheme != null) {
-      return toggleGradientTheme();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_ToggleTheme value) toggleTheme,
-    required TResult Function(_SetTheme value) setTheme,
-    required TResult Function(_ToggleGradientTheme value) toggleGradientTheme,
-    required TResult Function(_SetGradientTheme value) setGradientTheme,
-  }) {
-    return toggleGradientTheme(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_ToggleTheme value)? toggleTheme,
-    TResult? Function(_SetTheme value)? setTheme,
-    TResult? Function(_ToggleGradientTheme value)? toggleGradientTheme,
-    TResult? Function(_SetGradientTheme value)? setGradientTheme,
-  }) {
-    return toggleGradientTheme?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_ToggleTheme value)? toggleTheme,
-    TResult Function(_SetTheme value)? setTheme,
-    TResult Function(_ToggleGradientTheme value)? toggleGradientTheme,
-    TResult Function(_SetGradientTheme value)? setGradientTheme,
-    required TResult orElse(),
-  }) {
-    if (toggleGradientTheme != null) {
-      return toggleGradientTheme(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _ToggleGradientTheme implements ThemeEvent {
-  const factory _ToggleGradientTheme() = _$ToggleGradientThemeImpl;
-}
-
-/// @nodoc
-abstract class _$$SetGradientThemeImplCopyWith<$Res> {
-  factory _$$SetGradientThemeImplCopyWith(_$SetGradientThemeImpl value,
-          $Res Function(_$SetGradientThemeImpl) then) =
-      __$$SetGradientThemeImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({bool useGradient});
-}
-
-/// @nodoc
-class __$$SetGradientThemeImplCopyWithImpl<$Res>
-    extends _$ThemeEventCopyWithImpl<$Res, _$SetGradientThemeImpl>
-    implements _$$SetGradientThemeImplCopyWith<$Res> {
-  __$$SetGradientThemeImplCopyWithImpl(_$SetGradientThemeImpl _value,
-      $Res Function(_$SetGradientThemeImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of ThemeEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? useGradient = null,
-  }) {
-    return _then(_$SetGradientThemeImpl(
-      null == useGradient
-          ? _value.useGradient
-          : useGradient // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$SetGradientThemeImpl implements _SetGradientTheme {
-  const _$SetGradientThemeImpl(this.useGradient);
-
-  @override
-  final bool useGradient;
-
-  @override
-  String toString() {
-    return 'ThemeEvent.setGradientTheme(useGradient: $useGradient)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$SetGradientThemeImpl &&
-            (identical(other.useGradient, useGradient) ||
-                other.useGradient == useGradient));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, useGradient);
-
-  /// Create a copy of ThemeEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$SetGradientThemeImplCopyWith<_$SetGradientThemeImpl> get copyWith =>
-      __$$SetGradientThemeImplCopyWithImpl<_$SetGradientThemeImpl>(
-          this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() toggleTheme,
-    required TResult Function(ThemeMode mode) setTheme,
-    required TResult Function() toggleGradientTheme,
-    required TResult Function(bool useGradient) setGradientTheme,
-  }) {
-    return setGradientTheme(useGradient);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? toggleTheme,
-    TResult? Function(ThemeMode mode)? setTheme,
-    TResult? Function()? toggleGradientTheme,
-    TResult? Function(bool useGradient)? setGradientTheme,
-  }) {
-    return setGradientTheme?.call(useGradient);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? toggleTheme,
-    TResult Function(ThemeMode mode)? setTheme,
-    TResult Function()? toggleGradientTheme,
-    TResult Function(bool useGradient)? setGradientTheme,
-    required TResult orElse(),
-  }) {
-    if (setGradientTheme != null) {
-      return setGradientTheme(useGradient);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_ToggleTheme value) toggleTheme,
-    required TResult Function(_SetTheme value) setTheme,
-    required TResult Function(_ToggleGradientTheme value) toggleGradientTheme,
-    required TResult Function(_SetGradientTheme value) setGradientTheme,
-  }) {
-    return setGradientTheme(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_ToggleTheme value)? toggleTheme,
-    TResult? Function(_SetTheme value)? setTheme,
-    TResult? Function(_ToggleGradientTheme value)? toggleGradientTheme,
-    TResult? Function(_SetGradientTheme value)? setGradientTheme,
-  }) {
-    return setGradientTheme?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_ToggleTheme value)? toggleTheme,
-    TResult Function(_SetTheme value)? setTheme,
-    TResult Function(_ToggleGradientTheme value)? toggleGradientTheme,
-    TResult Function(_SetGradientTheme value)? setGradientTheme,
-    required TResult orElse(),
-  }) {
-    if (setGradientTheme != null) {
-      return setGradientTheme(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _SetGradientTheme implements ThemeEvent {
-  const factory _SetGradientTheme(final bool useGradient) =
-      _$SetGradientThemeImpl;
-
-  bool get useGradient;
-
-  /// Create a copy of ThemeEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$SetGradientThemeImplCopyWith<_$SetGradientThemeImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
 mixin _$ThemeState {
   ThemeMode get themeMode => throw _privateConstructorUsedError;
-  bool get useGradientTheme => throw _privateConstructorUsedError;
 
   /// Create a copy of ThemeState
   /// with the given fields replaced by the non-null parameter values.
@@ -649,7 +339,7 @@ abstract class $ThemeStateCopyWith<$Res> {
           ThemeState value, $Res Function(ThemeState) then) =
       _$ThemeStateCopyWithImpl<$Res, ThemeState>;
   @useResult
-  $Res call({ThemeMode themeMode, bool useGradientTheme});
+  $Res call({ThemeMode themeMode});
 }
 
 /// @nodoc
@@ -668,17 +358,12 @@ class _$ThemeStateCopyWithImpl<$Res, $Val extends ThemeState>
   @override
   $Res call({
     Object? themeMode = null,
-    Object? useGradientTheme = null,
   }) {
     return _then(_value.copyWith(
       themeMode: null == themeMode
           ? _value.themeMode
           : themeMode // ignore: cast_nullable_to_non_nullable
               as ThemeMode,
-      useGradientTheme: null == useGradientTheme
-          ? _value.useGradientTheme
-          : useGradientTheme // ignore: cast_nullable_to_non_nullable
-              as bool,
     ) as $Val);
   }
 }
@@ -691,7 +376,7 @@ abstract class _$$ThemeStateImplCopyWith<$Res>
       __$$ThemeStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({ThemeMode themeMode, bool useGradientTheme});
+  $Res call({ThemeMode themeMode});
 }
 
 /// @nodoc
@@ -708,17 +393,12 @@ class __$$ThemeStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? themeMode = null,
-    Object? useGradientTheme = null,
   }) {
     return _then(_$ThemeStateImpl(
       themeMode: null == themeMode
           ? _value.themeMode
           : themeMode // ignore: cast_nullable_to_non_nullable
               as ThemeMode,
-      useGradientTheme: null == useGradientTheme
-          ? _value.useGradientTheme
-          : useGradientTheme // ignore: cast_nullable_to_non_nullable
-              as bool,
     ));
   }
 }
@@ -726,19 +406,15 @@ class __$$ThemeStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$ThemeStateImpl implements _ThemeState {
-  const _$ThemeStateImpl(
-      {this.themeMode = ThemeMode.light, this.useGradientTheme = false});
+  const _$ThemeStateImpl({this.themeMode = ThemeMode.dark});
 
   @override
   @JsonKey()
   final ThemeMode themeMode;
-  @override
-  @JsonKey()
-  final bool useGradientTheme;
 
   @override
   String toString() {
-    return 'ThemeState(themeMode: $themeMode, useGradientTheme: $useGradientTheme)';
+    return 'ThemeState(themeMode: $themeMode)';
   }
 
   @override
@@ -747,13 +423,11 @@ class _$ThemeStateImpl implements _ThemeState {
         (other.runtimeType == runtimeType &&
             other is _$ThemeStateImpl &&
             (identical(other.themeMode, themeMode) ||
-                other.themeMode == themeMode) &&
-            (identical(other.useGradientTheme, useGradientTheme) ||
-                other.useGradientTheme == useGradientTheme));
+                other.themeMode == themeMode));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, themeMode, useGradientTheme);
+  int get hashCode => Object.hash(runtimeType, themeMode);
 
   /// Create a copy of ThemeState
   /// with the given fields replaced by the non-null parameter values.
@@ -765,14 +439,10 @@ class _$ThemeStateImpl implements _ThemeState {
 }
 
 abstract class _ThemeState implements ThemeState {
-  const factory _ThemeState(
-      {final ThemeMode themeMode,
-      final bool useGradientTheme}) = _$ThemeStateImpl;
+  const factory _ThemeState({final ThemeMode themeMode}) = _$ThemeStateImpl;
 
   @override
   ThemeMode get themeMode;
-  @override
-  bool get useGradientTheme;
 
   /// Create a copy of ThemeState
   /// with the given fields replaced by the non-null parameter values.

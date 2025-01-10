@@ -193,49 +193,14 @@ class ProfilePage extends StatelessWidget {
                           children: [
                             ListTile(
                               leading: HugeIcon(
-                                icon: HugeIcons.strokeRoundedPaintBrush04,
-                                color: themeState.themeMode == ThemeMode.dark ? iconColor.withOpacity(0.5) : iconColor,
-                                size: 24.0,
-                              ),
-                              title: Text(
-                                UiTranslations.of(context).translate('app_colors'),
-                                style: themeState.useGradientTheme 
-                                  ? TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5))
-                                  : null,
-                              ),
-                              subtitle: themeState.useGradientTheme 
-                                ? Text(
-                                    UiTranslations.of(context).translate('gradient_theme_enabled'),
-                                    style: themeState.themeMode == ThemeMode.dark
-                                      ? TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5))
-                                      : null,
-                                  )
-                                : null,
-                              trailing: Switch(
-                                value: themeState.useGradientTheme,
-                                onChanged: themeState.themeMode == ThemeMode.dark ? null : (bool value) {
-                                  context.read<ThemeBloc>().add(const ThemeEvent.toggleGradientTheme());
-                                },
-                              ),
-                            ),
-                            ListTile(
-                              leading: HugeIcon(
                                 icon: HugeIcons.strokeRoundedMoon,
-                                color: themeState.useGradientTheme ? iconColor.withOpacity(0.5) : iconColor,
+                                color: iconColor,
                                 size: 24.0,
                               ),
                               title: Text(
                                 UiTranslations.of(context).translate('theme_mode'),
-                                style: themeState.useGradientTheme 
-                                  ? TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5))
-                                  : null,
                               ),
-                              subtitle: themeState.useGradientTheme 
-                                ? Text(
-                                    UiTranslations.of(context).translate('dark_mode_disabled'),
-                                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
-                                  )
-                                : Text(
+                              subtitle: Text(
                                     themeState.themeMode == ThemeMode.system
                                         ? UiTranslations.of(context).translate('system_theme')
                                         : themeState.themeMode == ThemeMode.dark
@@ -250,13 +215,9 @@ class ProfilePage extends StatelessWidget {
                                       : themeState.themeMode == ThemeMode.dark
                                           ? Icons.dark_mode
                                           : Icons.light_mode,
-                                  color: themeState.useGradientTheme 
-                                      ? Theme.of(context).colorScheme.onSurface.withOpacity(0.5)
-                                      : Theme.of(context).colorScheme.onSurface,
+                                  color: Theme.of(context).colorScheme.onSurface,
                                 ),
-                                onPressed: themeState.useGradientTheme 
-                                    ? null 
-                                    : () => context.read<ThemeBloc>().add(const ThemeEvent.toggleTheme()),
+                                onPressed: () => context.read<ThemeBloc>().add(const ThemeEvent.toggleTheme()),
                               ),
                             ),
                           ],

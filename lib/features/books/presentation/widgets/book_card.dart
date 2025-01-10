@@ -36,36 +36,36 @@ class BookCard extends StatelessWidget {
           children: [
             Stack(
               children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(AppSpacing.radiusMd),
-                    topRight: Radius.circular(AppSpacing.radiusMd),
-                  ),
-                  child: CachedNetworkImage(
-                    cacheManager: BookCoverCacheManager.instance,
-                    imageUrl: coverImagePath,
-                    height: 160,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => Container(
-                      height: 160,
-                      color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                      child: const Center(
-                        child: LoadingIndicator(size: 30),
-                      ),
+                AspectRatio(
+                  aspectRatio: 0.75, // Standard book cover ratio
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(AppSpacing.radiusMd),
+                      topRight: Radius.circular(AppSpacing.radiusMd),
                     ),
-                    memCacheWidth: 360, // 2x the display width for quality
-                    memCacheHeight: 320, // 2x the display height for quality
-                    errorWidget: (context, url, error) {
-                      print('Error loading cover image: $error');
-                      return Container(
-                        height: 160,
+                    child: CachedNetworkImage(
+                      cacheManager: BookCoverCacheManager.instance,
+                      imageUrl: coverImagePath,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Container(
                         color: Theme.of(context).colorScheme.surfaceContainerHighest,
                         child: const Center(
-                          child: Icon(Icons.broken_image_outlined, size: 40),
+                          child: LoadingIndicator(size: 30),
                         ),
-                      );
-                    },
+                      ),
+                      memCacheWidth: 360, // 2x the display width for quality
+                      memCacheHeight: 320, // 2x the display height for quality
+                      errorWidget: (context, url, error) {
+                        print('Error loading cover image: $error');
+                        return Container(
+                          color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                          child: const Center(
+                            child: Icon(Icons.broken_image_outlined, size: 40),
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
                 Positioned(

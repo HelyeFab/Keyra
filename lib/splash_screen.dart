@@ -1,11 +1,145 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'core/services/preferences_service.dart';
-import 'core/config/app_strings.dart';
 import 'core/theme/color_schemes.dart';
-import 'core/ui_language/translations/ui_translations.dart';
+
+class BubblePainter extends CustomPainter {
+  final Color color;
+  final bool drawShadow;
+
+  BubblePainter({this.color = AppColors.darkPrimary, this.drawShadow = true});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (drawShadow) {
+      // Draw shadow
+      final shadowPaint = Paint()
+        ..color = Colors.black.withOpacity(0.08)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2);
+
+      final shadowRect = RRect.fromRectAndRadius(
+        Rect.fromLTWH(1, 1, size.width, size.height - 10),
+        const Radius.circular(20),
+      );
+      canvas.drawRRect(shadowRect, shadowPaint);
+
+      final shadowPath = Path()
+        ..moveTo(size.width / 2 - 6, size.height - 8)
+        ..lineTo(size.width / 2 + 1, size.height + 1)
+        ..lineTo(size.width / 2 + 8, size.height - 8)
+        ..close();
+      canvas.drawPath(shadowPath, shadowPaint);
+    }
+
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.fill;
+
+    // Draw main bubble
+    final rect = RRect.fromRectAndRadius(
+      Rect.fromLTWH(0, 0, size.width, size.height - 10),
+      const Radius.circular(20),
+    );
+    canvas.drawRRect(rect, paint);
+
+    // Draw pointer
+    final path = Path()
+      ..moveTo(size.width / 2 - 6, size.height - 10)
+      ..lineTo(size.width / 2, size.height - 2)
+      ..lineTo(size.width / 2 + 6, size.height - 10)
+      ..close();
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+class MessageBubble extends StatelessWidget {
+  final String message;
+  final double xFraction;
+  final double yFraction;
+  final double opacity;
+  final String flagAsset;
+  final double screenWidth;
+  final double bubbleAreaHeight;
+
+  const MessageBubble({
+    super.key,
+    required this.message,
+    required this.xFraction,
+    required this.yFraction,
+    required this.opacity,
+    required this.flagAsset,
+    required this.screenWidth,
+    required this.bubbleAreaHeight,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    // Calculate absolute positions within the bubble area
+    final left = xFraction * screenWidth;
+    final top = yFraction * bubbleAreaHeight;
+
+    // Responsive font size and image size
+    final fontSize = screenWidth * 0.05; // 5% of screen width
+    final imageSize = screenWidth * 0.06; // 6% of screen width
+
+    return Positioned(
+      left: left,
+      top: top,
+      child: TweenAnimationBuilder<double>(
+        tween: Tween<double>(begin: 0.5, end: opacity),
+        duration: const Duration(milliseconds: 800),
+        curve: Curves.elasticOut,
+        builder: (context, value, child) => Transform.scale(
+          scale: value * 0.9 + 0.1,
+          child: Opacity(
+            opacity: value.clamp(0.0, 1.0),
+            child: child,
+          ),
+        ),
+        child: CustomPaint(
+          painter: BubblePainter(),
+          child: Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: screenWidth * 0.04,
+              vertical: bubbleAreaHeight * 0.04,
+            ),
+            constraints: BoxConstraints(
+              minWidth: screenWidth * 0.3,
+              maxWidth: screenWidth * 0.6,
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                  child: Text(
+                    message,
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontSize: fontSize,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.white,
+                      letterSpacing: 0.3,
+                    ),
+                  ),
+                ),
+                SizedBox(width: screenWidth * 0.03),
+                Image.asset(
+                  flagAsset,
+                  width: imageSize,
+                  height: imageSize,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class SplashScreen extends StatefulWidget {
   final bool isInitialized;
@@ -23,78 +157,78 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
   Timer? _timer;
-  String _currentMessage = "";
-  int _currentGroupIndex = 0;
-  int _currentLanguageIndex = 0;
-  late AnimationController _controller;
-  late Animation<double> _fadeAnimation;
+  final List<Map<String, dynamic>> messages = [
+    {
+      'message': 'Hello',
+      'xFraction': 0.03,
+      'yFraction': 0.10,
+      'flagAsset': 'assets/flags/united-kingdom.png',
+    },
+    {
+      'message': 'Bonjour',
+      'xFraction': 0.5,
+      'yFraction': 0.05,
+      'flagAsset': 'assets/flags/france.png',
+    },
+    {
+      'message': 'こんにちは',
+      'xFraction': 0.5,
+      'yFraction': 0.35,
+      'flagAsset': 'assets/flags/japan.png',
+    },
+    {
+      'message': 'Hola',
+      'xFraction': 0.05,
+      'yFraction': 0.45,
+      'flagAsset': 'assets/flags/spain.png',
+    },
+    {
+      'message': 'Ciao',
+      'xFraction': 0.6,
+      'yFraction': 0.65,
+      'flagAsset': 'assets/flags/italy.png',
+    },
+    {
+      'message': 'Hallo',
+      'xFraction': 0.2,
+      'yFraction': 0.72,
+      'flagAsset': 'assets/flags/germany.png',
+    },
+  ];
+
+  final List<double> opacities = List.generate(6, (_) => 0.0);
 
   @override
   void initState() {
     super.initState();
-    debugPrint('SplashScreen initState - isFirstLaunch: ${widget.isFirstLaunch}');
-    
-    // Initialize animation controller
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 1500),
-      vsync: this,
-    );
-    
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeOut,
-      ),
-    );
-    
-    _controller.forward();
-    
-    // Start with the first message in English
-    _currentMessage = AppStrings.splashMessages[0][AppStrings.englishIndex];
+    debugPrint(
+        'SplashScreen initState - isFirstLaunch: ${widget.isFirstLaunch}');
 
-    // Update message every 2 seconds
-    _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
-      if (mounted) {
-        setState(() {
-          // Update language index first
-          _currentLanguageIndex = (_currentLanguageIndex + 1) % 5;
+    _animateMessages();
 
-          // If we've shown all languages for current message, move to next message
-          if (_currentLanguageIndex == 0) {
-            _currentGroupIndex = (_currentGroupIndex + 1) % AppStrings.splashMessages.length;
-          }
-
-          _currentMessage = AppStrings.splashMessages[_currentGroupIndex][_currentLanguageIndex];
-        });
-      }
-    });
-
-    // Navigate after delay - now 10 seconds for both cases
     Future.delayed(
-      const Duration(seconds: 10),
+      const Duration(seconds: 8),
       () async {
         if (mounted) {
           _timer?.cancel();
           debugPrint('Navigating - isFirstLaunch: ${widget.isFirstLaunch}');
-          
-          // Check auth state first
+
           final user = FirebaseAuth.instance.currentUser;
-          
+
           if (!mounted) return;
 
           if (user != null) {
-            // User is logged in, go directly to navigation
             Navigator.pushReplacementNamed(context, '/navigation');
           } else if (widget.isFirstLaunch) {
-            // First launch, go to onboarding
             Navigator.pushReplacementNamed(context, '/onboarding');
           } else {
-            // Not first launch and not logged in, check onboarding status
-            final hasSeenOnboarding = await widget.preferencesService.hasSeenOnboarding;
+            final hasSeenOnboarding =
+                widget.preferencesService.hasSeenOnboarding;
             if (!mounted) return;
-            
+
             if (hasSeenOnboarding) {
               Navigator.pushReplacementNamed(context, '/navigation');
             } else {
@@ -106,127 +240,197 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     );
   }
 
+  void _animateMessages() {
+    void startAnimation() {
+      for (int i = 0; i < messages.length; i++) {
+        Future.delayed(Duration(milliseconds: i * 500), () {
+          if (mounted) {
+            setState(() {
+              opacities[i] = 1.0;
+            });
+          }
+        });
+      }
+
+      Future.delayed(Duration(milliseconds: messages.length * 500 + 5500), () {
+        if (mounted) {
+          setState(() {
+            for (int i = 0; i < opacities.length; i++) {
+              opacities[i] = 0.0;
+            }
+          });
+          Future.delayed(const Duration(milliseconds: 1000), startAnimation);
+        }
+      });
+    }
+
+    startAnimation();
+  }
+
   @override
   void dispose() {
     _timer?.cancel();
-    _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final size = MediaQuery.of(context).size;
-
     return Scaffold(
-      backgroundColor: AppColors.darkBackground,
-      body: Column(
-        children: [
-          const SizedBox(height: 32),
-          // Top half with image
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: FadeTransition(
-              opacity: _fadeAnimation,
-              child: Container(
-                height: size.height * 0.45,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      blurRadius: 15,
-                      spreadRadius: 5,
-                    ),
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final screenWidth = constraints.maxWidth;
+            final screenHeight = constraints.maxHeight;
+            final bubbleAreaHeight = screenHeight * 0.30;
+            final imageAreaHeight = screenHeight * 0.42;
+            final bottomAreaHeight = screenHeight * 0.38;
+
+            return Container(
+              decoration: const BoxDecoration(
+                gradient: RadialGradient(
+                  center: Alignment(0.0, -0.5),
+                  radius: 1.5,
+                  stops: [0.0, 0.2, 0.6],
+                  colors: [
+                    AppColors.darkSurfaceVariant, // Lighter at center
+                    AppColors.darkSurface, // Medium
+                    AppColors.darkBackground, // Darkest at edges
                   ],
                 ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(30),
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      Image.asset(
-                        'assets/images/onboarding/keyra01.png',
-                        fit: BoxFit.cover,
-                      ),
-                      // Subtle gradient overlay
-                      Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.transparent,
-                              Colors.black.withOpacity(0.2),
-                            ],
+              ),
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  // Layer 1 (back): Bottom white container
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      height: bottomAreaHeight,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(30),
+                          topRight: Radius.circular(30),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 10,
+                            offset: const Offset(0, -5),
                           ),
+                        ],
+                      ),
+                      padding: EdgeInsets.only(
+                        left: screenWidth * 0.06,
+                        right: screenWidth * 0.06,
+                        top: screenHeight * 0.08,
+                        bottom: screenHeight * 0.04,
+                      ),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Welcome to',
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: screenHeight * 0.028,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black45,
+                              ),
+                            ),
+                            Text(
+                              'Keyra',
+                              style: TextStyle(
+                                fontFamily: 'FascinateInline',
+                                fontSize: screenHeight * 0.072,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.splashKeyraText,
+                                shadows: [
+                                  // Create border effect with 4 shadows
+                                  Shadow(
+                                    offset: const Offset(-1.5, -1.5),
+                                    color: AppColors.splashKeyraBorder,
+                                    blurRadius: 0,
+                                  ),
+                                  Shadow(
+                                    offset: const Offset(1.5, -1.5),
+                                    color: AppColors.splashKeyraBorder,
+                                    blurRadius: 0,
+                                  ),
+                                  Shadow(
+                                    offset: const Offset(-1.5, 1.5),
+                                    color: AppColors.splashKeyraBorder,
+                                    blurRadius: 0,
+                                  ),
+                                  Shadow(
+                                    offset: const Offset(1.5, 1.5),
+                                    color: AppColors.splashKeyraBorder,
+                                    blurRadius: 0,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: screenHeight * 0.012),
+                            Text(
+                              'Your journey to mastering languages starts here',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: screenHeight * 0.020,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black45,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-            ),
-          ),
-          // Bottom content
-          ShaderMask(
-            shaderCallback: (bounds) => LinearGradient(
-              colors: [
-                theme.colorScheme.primary,
-                theme.colorScheme.primary.withBlue(255),
-              ],
-            ).createShader(bounds),
-            child: Text(
-              AppStrings.appName,
-              style: const TextStyle(
-                fontFamily: 'FascinateInline',
-                fontSize: 57,
-                fontWeight: FontWeight.w400,
-                color: Colors.white,
-                letterSpacing: -0.25,
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            UiTranslations.of(context).translate('app_tagline'),
-            style: TextStyle(
-              fontFamily: 'Playwrite',
-              fontSize: 20,
-              color: theme.colorScheme.primary.withOpacity(0.8),
-              letterSpacing: 1.2,
-            ),
-          ),
-          const Spacer(flex: 1),
-          SizedBox(
-            height: size.height * 0.3,
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Lottie.asset(
-                    'assets/loader/animation_1734447560170.json',
-                    width: 60,
-                    height: 60,
+                  Positioned(
+                    top: bubbleAreaHeight * 1,
+                    left: (screenWidth - screenWidth * 1.1) / 2,
+                    child: SizedBox(
+                      height: imageAreaHeight,
+                      child: Image.asset(
+                        'assets/images/splashscreen/keyra_splashscreen.png',
+                        width: screenWidth * 1.1,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 16),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 32.0),
-                    child: Text(
-                      _currentMessage,
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color: theme.colorScheme.primary,
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    child: SizedBox(
+                      height: bubbleAreaHeight,
+                      child: Stack(
+                        children: List.generate(
+                          messages.length,
+                          (index) {
+                            final message = messages[index];
+                            return MessageBubble(
+                              message: message['message'] as String,
+                              xFraction: message['xFraction'] as double,
+                              yFraction: message['yFraction'] as double,
+                              opacity: opacities[index],
+                              flagAsset: message['flagAsset'] as String,
+                              screenWidth: screenWidth,
+                              bubbleAreaHeight: bubbleAreaHeight,
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ),
                 ],
               ),
-            ),
-          ),
-          const Spacer(flex: 1),
-          const SizedBox(height: 32),
-        ],
+            );
+          },
+        ),
       ),
     );
   }

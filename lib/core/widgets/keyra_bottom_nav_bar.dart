@@ -83,23 +83,20 @@ class KeyraBottomNavBar extends StatelessWidget {
 
     return ClipPath(
       clipper: NavBarClipper(),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
-            border: Border(
-              top: BorderSide(
-                color: Colors.white.withOpacity(0.2),
-                width: 1,
-              ),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          border: Border(
+            top: BorderSide(
+              color: Theme.of(context).colorScheme.outline,
+              width: 1,
             ),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: items.map((item) => _buildNavItem(item, context)).toList(),
-          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: items.map((item) => _buildNavItem(item, context)).toList(),
         ),
       ),
     );
