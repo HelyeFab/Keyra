@@ -63,7 +63,7 @@ class _MiniStatsDisplayNoBgState extends State<MiniStatsDisplayNoBg> with Widget
                     Icons.book,
                     booksRead.toString(),
                     UiTranslations.of(context).translate('stats_books_read'),
-                    Colors.blue,
+                    Theme.of(context).colorScheme.primary,
                   ),
                   const SizedBox(width: 16),
                   _buildStatItem(
@@ -71,7 +71,7 @@ class _MiniStatsDisplayNoBgState extends State<MiniStatsDisplayNoBg> with Widget
                     Icons.local_fire_department,
                     readingStreak.toString(),
                     UiTranslations.of(context).translate('stats_day_streak'),
-                    Colors.orange,
+                    Theme.of(context).colorScheme.tertiary,
                   ),
                 ],
               ),

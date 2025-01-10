@@ -30,8 +30,21 @@ class UserStatsRepository {
 
       final statsSnap = await statsDocRef.get();
       if (!statsSnap.exists) {
-        print('[UserStatsRepository] User document not found');
-        throw Exception('User document not found');
+        print('[UserStatsRepository] User document not found, initializing...');
+        await _initializeUserStats(user.uid);
+        // Get the newly created stats
+        final newStatsSnap = await statsDocRef.get();
+        if (!newStatsSnap.exists) {
+          throw Exception('Failed to initialize user stats');
+        }
+        return UserStats(
+          booksRead: 0,
+          favoriteBooks: 0,
+          readingStreak: 0,
+          savedWords: 0,
+          isReadingActive: false,
+          currentSessionMinutes: 0,
+        );
       }
 
       final data = statsSnap.data() ?? {};
@@ -56,7 +69,7 @@ class UserStatsRepository {
     }
   }
 
-  Stream<UserStats> streamUserStats() {
+  Stream<UserStats> streamUserStats() async* {
     final user = _auth.currentUser;
     if (user == null) {
       throw Exception('User not authenticated');
@@ -64,36 +77,38 @@ class UserStatsRepository {
 
     print('[UserStatsRepository] Setting up stats stream for user: ${user.uid}');
 
-    return _firestore
+    final docRef = _firestore
         .collection('users')
         .doc(user.uid)
         .collection('stats')
-        .doc('current')
-        .snapshots()
-        .map((doc) {
-          print('[UserStatsRepository] Received document update');
-          if (!doc.exists) {
-            print('[UserStatsRepository] Document does not exist');
-            throw Exception('User document not found');
-          }
+        .doc('current');
 
-          final data = doc.data() ?? {};
-          print('[UserStatsRepository] Raw data from Firebase: $data');
+    // First check if we need to initialize
+    final doc = await docRef.get();
+    if (!doc.exists) {
+      print('[UserStatsRepository] Document does not exist, initializing...');
+      await _initializeUserStats(user.uid);
+    }
 
-          final stats = UserStats(
-            booksRead: data['booksRead'] as int? ?? 0,
-            favoriteBooks: data['favoriteBooks'] as int? ?? 0,
-            readingStreak: data['readingStreak'] as int? ?? 0,
-            savedWords: data['savedWords'] as int? ?? 0,
-            isReadingActive: data['isReadingActive'] as bool? ?? false,
-            currentSessionMinutes: data['currentSessionMinutes'] as int? ?? 0,
-            lastBookId: data['lastBookId'] as String?,
-          );
+    // Now stream the document
+    await for (final doc in docRef.snapshots()) {
+      print('[UserStatsRepository] Received document update');
+      final data = doc.data() ?? {};
+      print('[UserStatsRepository] Raw data from Firebase: $data');
 
-          print('[UserStatsRepository] Parsed stats: $stats');
-          return stats;
-        })
-        .distinct();
+      final stats = UserStats(
+        booksRead: data['booksRead'] as int? ?? 0,
+        favoriteBooks: data['favoriteBooks'] as int? ?? 0,
+        readingStreak: data['readingStreak'] as int? ?? 0,
+        savedWords: data['savedWords'] as int? ?? 0,
+        isReadingActive: data['isReadingActive'] as bool? ?? false,
+        currentSessionMinutes: data['currentSessionMinutes'] as int? ?? 0,
+        lastBookId: data['lastBookId'] as String?,
+      );
+
+      print('[UserStatsRepository] Parsed stats: $stats');
+      yield stats;
+    }
   }
 
   Future<void> _initializeUserStats(String userId) async {

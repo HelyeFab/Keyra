@@ -12,6 +12,7 @@ import '../../../books/presentation/widgets/book_card.dart';
 import '../../../books/presentation/pages/book_reader_page.dart';
 import '../../../books/data/repositories/book_repository.dart';
 import '../../../dashboard/data/repositories/user_stats_repository.dart';
+import '../../../dashboard/presentation/bloc/dashboard_bloc.dart';
 import '../../../dictionary/data/services/dictionary_service.dart';
 import '../../../../core/ui_language/service/ui_translation_service.dart';
 import '../../../badges/presentation/widgets/badge_display.dart';
@@ -299,9 +300,13 @@ class _LibraryPageState extends State<LibraryPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LanguageBloc, LanguageState>(
-      builder: (context, languageState) {
-        return Material(
+    return BlocProvider<DashboardBloc>(
+      create: (context) => DashboardBloc(
+        userStatsRepository: UserStatsRepository(),
+      ),
+      child: BlocBuilder<LanguageBloc, LanguageState>(
+        builder: (context, languageState) {
+          return Material(
             type: MaterialType.transparency,
             child: KeyraPageBackground(
                 page: 'library',
@@ -450,7 +455,8 @@ class _LibraryPageState extends State<LibraryPage> {
                     ),
                   ],
                 )));
-      },
+        },
+      ),
     );
   }
 }
