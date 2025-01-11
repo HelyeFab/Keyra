@@ -5,20 +5,22 @@ import '../../../../core/ui_language/translations/ui_translations.dart';
 
 class SubscriptionCard extends StatelessWidget {
   final String title;
-  final String price;
+  final String? storePrice;
   final List<String> features;
   final VoidCallback onSubscribe;
   final bool isCurrentPlan;
   final bool isPremium;
+  final bool isAvailable;
 
   const SubscriptionCard({
     super.key,
     required this.title,
-    required this.price,
+    this.storePrice,
     required this.features,
     required this.onSubscribe,
     this.isCurrentPlan = false,
     this.isPremium = false,
+    this.isAvailable = true,
   });
 
   @override
@@ -67,13 +69,24 @@ class SubscriptionCard extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: AppSpacing.xs),
-                    Text(
-                      price,
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.subscriptionText,
-                          ),
-                    ),
+                    if (storePrice != null)
+                      Text(
+                        storePrice!,
+                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.subscriptionText,
+                            ),
+                      )
+                    else
+                      Text(
+                        isAvailable 
+                            ? translations.translate('loading')
+                            : translations.translate('not_available'),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: AppColors.subscriptionText,
+                              fontStyle: FontStyle.italic,
+                            ),
+                      ),
                     const SizedBox(height: AppSpacing.sm),
                     ...features.map((feature) => Padding(
                           padding: const EdgeInsets.only(bottom: AppSpacing.xs),

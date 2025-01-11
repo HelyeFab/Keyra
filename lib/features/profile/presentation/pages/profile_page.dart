@@ -118,36 +118,46 @@ class ProfilePage extends StatelessWidget {
                       child: Column(
                         children: [
                           Container(
-                            width: 100,
-                            height: 100,
-                            decoration: user.photoURL != null
-                              ? null
-                              : BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: [
-                                      Theme.of(context).colorScheme.primary,
-                                      Theme.of(context).colorScheme.secondary,
-                                    ],
-                                  ),
-                                ),
-                            child: CircleAvatar(
-                              radius: 50,
-                              backgroundColor: Colors.transparent,
-                              backgroundImage: user.photoURL != null
-                                  ? NetworkImage(user.photoURL!)
-                                  : null,
-                              child: user.photoURL == null
-                                  ? Text(
-                                      user.email?.substring(0, 1).toUpperCase() ?? 'U',
-                                      style: theme.textTheme.headlineMedium?.copyWith(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    )
-                                  : null,
+                            padding: const EdgeInsets.all(3),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: Theme.of(context).colorScheme.primary,
+                                width: 3,
+                              ),
+                            ),
+                            child: Container(
+                              width: 94,
+                              height: 94,
+                              decoration: user.photoURL == null
+                                ? BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        Theme.of(context).colorScheme.primary,
+                                        Theme.of(context).colorScheme.secondary,
+                                      ],
+                                    ),
+                                  )
+                                : null,
+                              child: CircleAvatar(
+                                radius: 47,
+                                backgroundColor: Colors.transparent,
+                                backgroundImage: user.photoURL != null
+                                    ? NetworkImage(user.photoURL!)
+                                    : null,
+                                child: user.photoURL == null
+                                    ? Text(
+                                        user.email?.substring(0, 1).toUpperCase() ?? 'U',
+                                        style: theme.textTheme.headlineMedium?.copyWith(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      )
+                                    : null,
+                              ),
                             ),
                           ),
                           const SizedBox(height: 16),

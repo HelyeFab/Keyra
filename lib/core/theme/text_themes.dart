@@ -1,88 +1,94 @@
 import 'package:flutter/material.dart';
+import 'font_constants.dart';
 
 class AppTextTheme {
+  // This can be changed to test different fonts for the app title
+  static const String appTitleFont = AppFonts.paytoneOne;
+  static const String bodyFont = AppFonts.roboto;
+  static const String headlineFont = AppFonts.poppins;
+  
   static TextTheme get textTheme {
     return const TextTheme(
       displayLarge: TextStyle(
-        fontFamily: 'FascinateInline',
+        fontFamily: appTitleFont,
         fontSize: 57,
         fontWeight: FontWeight.w400,
         letterSpacing: -0.25,
       ),
       displayMedium: TextStyle(
-        fontFamily: 'FascinateInline',
+        fontFamily: appTitleFont,
         fontSize: 45,
         fontWeight: FontWeight.w400,
       ),
       displaySmall: TextStyle(
-        fontFamily: 'FascinateInline',
+        fontFamily: appTitleFont,
         fontSize: 36,
         fontWeight: FontWeight.w400,
       ),
       headlineLarge: TextStyle(
-        fontFamily: 'Poppins',
+        fontFamily: headlineFont,
         fontSize: 32,
         fontWeight: FontWeight.w700, // Using Bold since we have it
       ),
       headlineMedium: TextStyle(
-        fontFamily: 'Poppins',
+        fontFamily: headlineFont,
         fontSize: 28,
         fontWeight: FontWeight.w700,
       ),
       headlineSmall: TextStyle(
-        fontFamily: 'Poppins',
+        fontFamily: headlineFont,
         fontSize: 24,
         fontWeight: FontWeight.w700,
       ),
       titleLarge: TextStyle(
-        fontFamily: 'Poppins',
+        fontFamily: headlineFont,
         fontSize: 22,
         fontWeight: FontWeight.w500,
       ),
       titleMedium: TextStyle(
-        fontFamily: 'Poppins',
+        fontFamily: headlineFont,
         fontSize: 16,
         fontWeight: FontWeight.w500,
         letterSpacing: 0.15,
       ),
       titleSmall: TextStyle(
-        fontFamily: 'Poppins',
+        fontFamily: headlineFont,
         fontSize: 14,
         fontWeight: FontWeight.w500,
         letterSpacing: 0.1,
       ),
       labelLarge: TextStyle(
-        fontFamily: 'Poppins',
+        fontFamily: headlineFont,
         fontSize: 14,
         fontWeight: FontWeight.w500,
         letterSpacing: 0.1,
       ),
       labelMedium: TextStyle(
-        fontFamily: 'Poppins',
+        fontFamily: headlineFont,
         fontSize: 12,
         fontWeight: FontWeight.w500,
         letterSpacing: 0.5,
       ),
       labelSmall: TextStyle(
-        fontFamily: 'Poppins',
+        fontFamily: headlineFont,
         fontSize: 11,
         fontWeight: FontWeight.w500,
         letterSpacing: 0.5,
       ),
       bodyLarge: TextStyle(
-        fontFamily: 'Roboto',
+        fontFamily: bodyFont,
         fontSize: 16,
         fontWeight: FontWeight.w400,
         letterSpacing: 0.5,
       ),
       bodyMedium: TextStyle(
-        fontFamily: 'Roboto',
+        fontFamily: bodyFont,
         fontSize: 14,
         fontWeight: FontWeight.w400,
         letterSpacing: 0.25,
       ),
       bodySmall: TextStyle(
-        fontFamily: 'Roboto',
+        fontFamily: bodyFont,
         fontSize: 12,
         fontWeight: FontWeight.w400,
         letterSpacing: 0.4,

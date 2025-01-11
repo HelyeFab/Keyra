@@ -416,3 +416,52 @@ Webhook handling for subscription events
 Enhanced error handling and recovery
 Subscription analytics and tracking
 The foundation is solid with Phase 1, making it ready for Phase 2's payment integration and advanced features.
+
+## **c. Testing**
+
+Yes, you can test in-app purchases before releasing the app. Here's how to set it up:
+
+For Google Play Store:
+
+Create a Google Play Developer account
+Create an app in Google Play Console
+Set up in-app products:
+Go to "Monetize" > "Products" > "In-app products"
+Add your subscription products (monthly, yearly, lifetime)
+Set test prices
+Set up test track:
+Upload a test build of your app
+Add test users' Gmail accounts to the testers list
+Testing:
+Use test accounts listed in Play Console
+Purchases made in test mode won't charge real money
+Test purchases are marked with "Test" label
+For App Store:
+
+Create an Apple Developer account
+Create an app in App Store Connect
+Set up in-app purchases:
+Go to "Features" > "In-App Purchases"
+Add your subscription products
+Set test prices
+Set up sandbox testing:
+Go to "Users and Access" > "Sandbox"
+Create sandbox tester accounts
+Testing:
+Install app through TestFlight
+Use sandbox accounts for testing
+Sandbox purchases won't charge real money
+Subscription renewal times are accelerated for testing
+Important Notes:
+
+You don't need to release the app to test purchases
+Use test/sandbox accounts only, never real accounts
+Test builds must use the same bundle ID/package name as production
+Test purchases are completely separate from production
+You can test the full purchase flow including:
+Product display
+Purchase flow
+Receipt validation
+Restore purchases
+Subscription management
+Would you like me to provide instructions for setting up either the Google Play Console or App Store Connect configuration?

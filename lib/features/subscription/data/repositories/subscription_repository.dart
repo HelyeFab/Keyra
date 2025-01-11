@@ -3,25 +3,66 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../domain/entities/subscription.dart';
 import '../../domain/entities/subscription_enums.dart';
 import '../../domain/repositories/i_subscription_repository.dart';
+import '../services/purchase_handler.dart';
 
 class SubscriptionRepository implements ISubscriptionRepository {
   final FirebaseFirestore _firestore;
   final FirebaseAuth _auth;
+  final PurchaseHandler _purchaseHandler;
 
   SubscriptionRepository({
     FirebaseFirestore? firestore,
     FirebaseAuth? auth,
+    PurchaseHandler? purchaseHandler,
   })  : _firestore = firestore ?? FirebaseFirestore.instance,
-        _auth = auth ?? FirebaseAuth.instance;
+        _auth = auth ?? FirebaseAuth.instance,
+        _purchaseHandler = purchaseHandler ?? PurchaseHandler(
+          onError: (message) => print('Purchase error: $message'),
+          onPending: () => print('Purchase pending'),
+          onPurchaseVerified: (details) async {
+            final user = FirebaseAuth.instance.currentUser;
+            if (user != null) {
+              await FirebaseFirestore.instance
+                  .collection('subscriptions')
+                  .doc(user.uid)
+                  .update({
+                'status': 'active',
+                'tier': 'premium',
+                'startDate': FieldValue.serverTimestamp(),
+                'endDate': DateTime.now().add(const Duration(days: 30)),
+                'paymentId': details.purchaseID,
+              });
+            }
+          },
+        );
+
+  Future<void> initializePurchases() async {
+    try {
+      await _purchaseHandler.initialize();
+    } catch (e) {
+      print('Error initializing purchases: $e');
+    }
+  }
+
+  Future<User?> _waitForAuthentication() async {
+    User? user = _auth.currentUser;
+    if (user == null) {
+      // Wait briefly for auth state to be determined
+      await Future.delayed(const Duration(milliseconds: 500));
+      user = _auth.currentUser;
+    }
+    return user;
+  }
 
   @override
   Future<Subscription?> getCurrentSubscription() async {
-    final user = _auth.currentUser;
-    if (user == null) {
-      return Subscription.free;
-    }
-
     try {
+      final user = await _waitForAuthentication();
+      if (user == null) {
+        print('User not authenticated, returning free subscription');
+        return Subscription.free;
+      }
+
       final querySnapshot = await _firestore
           .collection('subscriptions')
           .where('userId', isEqualTo: user.uid)
@@ -29,34 +70,36 @@ class SubscriptionRepository implements ISubscriptionRepository {
 
       if (querySnapshot.docs.isEmpty) {
         print('No subscription found for user ${user.uid}');
-        return Subscription.free.copyWith(userId: user.uid);
+        final freeSubscription = Subscription.free.copyWith(userId: user.uid);
+        await createSubscriptionForUser(user.uid); // Create initial subscription
+        return freeSubscription;
       }
 
       final doc = querySnapshot.docs.first;
-
-      print('Subscription Data from Firestore: ${doc.data()}');
-
       if (!doc.exists) {
-        print('No subscription document exists, returning free subscription');
-        return Subscription.free.copyWith(userId: user.uid);
+        print('No subscription document exists, creating free subscription');
+        final freeSubscription = Subscription.free.copyWith(userId: user.uid);
+        await createSubscriptionForUser(user.uid);
+        return freeSubscription;
       }
 
       final subscription = Subscription.fromFirestore(doc);
-      print('Parsed Subscription: tier=${subscription.tier}, status=${subscription.status}');
+      print('Current subscription: tier=${subscription.tier}, status=${subscription.status}');
       return subscription;
     } catch (e) {
-      return Subscription.free.copyWith(userId: user.uid);
+      print('Error getting subscription: $e');
+      return Subscription.free;
     }
   }
 
   @override
   Future<List<Subscription>> getSubscriptionHistory() async {
-    final user = _auth.currentUser;
-    if (user == null) {
-      return [];
-    }
-
     try {
+      final user = await _waitForAuthentication();
+      if (user == null) {
+        return [];
+      }
+
       final snapshot = await _firestore
           .collection('subscriptions')
           .doc(user.uid)
@@ -68,103 +111,138 @@ class SubscriptionRepository implements ISubscriptionRepository {
           .map((doc) => Subscription.fromFirestore(doc))
           .toList();
     } catch (e) {
+      print('Error getting subscription history: $e');
       return [];
     }
   }
 
   @override
   Future<void> updateSubscription(Subscription subscription) async {
-    final user = _auth.currentUser;
-    if (user == null) {
-      throw Exception('User not authenticated');
-    }
+    try {
+      final user = await _waitForAuthentication();
+      if (user == null) {
+        throw Exception('User not authenticated');
+      }
 
-    await _firestore
-        .collection('subscriptions')
-        .doc(user.uid)
-        .set(subscription.toMap());
+      await _firestore
+          .collection('subscriptions')
+          .doc(user.uid)
+          .set(subscription.toMap());
+    } catch (e) {
+      print('Error updating subscription: $e');
+      throw Exception('Failed to update subscription: $e');
+    }
   }
 
   @override
   Future<void> createSubscriptionForUser(String userId) async {
-    final freeSubscription = Subscription.free.copyWith(userId: userId);
-    await _firestore
-        .collection('subscriptions')
-        .doc(userId)
-        .set(freeSubscription.toMap());
+    try {
+      final freeSubscription = Subscription.free.copyWith(userId: userId);
+      await _firestore
+          .collection('subscriptions')
+          .doc(userId)
+          .set(freeSubscription.toMap());
+      print('Created free subscription for user $userId');
+    } catch (e) {
+      print('Error creating subscription: $e');
+      throw Exception('Failed to create subscription: $e');
+    }
   }
 
   @override
   Future<bool> checkSubscriptionAccess(String feature) async {
-    final subscription = await getCurrentSubscription();
-    return subscription?.hasAccess ?? false;
+    try {
+      final subscription = await getCurrentSubscription();
+      final hasAccess = subscription?.hasAccess ?? false;
+      print('Subscription access check: $feature = $hasAccess');
+      return hasAccess;
+    } catch (e) {
+      print('Error checking subscription access: $e');
+      return false;
+    }
   }
 
-  // Additional methods needed by the SubscriptionBloc
   Future<Subscription> upgradeSubscription() async {
-    final user = _auth.currentUser;
-    if (user == null) {
-      throw Exception('User not authenticated');
+    try {
+      final user = await _waitForAuthentication();
+      if (user == null) {
+        throw Exception('User not authenticated');
+      }
+
+      final currentSubscription = await getCurrentSubscription();
+      if (currentSubscription == null) {
+        throw Exception('No subscription found');
+      }
+
+      await _purchaseHandler.buySubscription(PurchaseHandler.monthlySubscriptionId);
+      return currentSubscription;
+    } catch (e) {
+      print('Error upgrading subscription: $e');
+      throw Exception('Failed to upgrade subscription: $e');
     }
+  }
 
-    final currentSubscription = await getCurrentSubscription();
-    if (currentSubscription == null) {
-      throw Exception('No subscription found');
+  Future<void> restorePurchases() async {
+    try {
+      await _purchaseHandler.restorePurchases();
+    } catch (e) {
+      print('Error restoring purchases: $e');
+      throw Exception('Failed to restore purchases: $e');
     }
-
-    final upgradedSubscription = currentSubscription.copyWith(
-      tier: SubscriptionTier.premium,
-      status: SubscriptionStatus.active,
-      startDate: DateTime.now(),
-      endDate: DateTime.now().add(const Duration(days: 30)),
-    );
-
-    await updateSubscription(upgradedSubscription);
-    return upgradedSubscription;
   }
 
   Future<Subscription> renewSubscription() async {
-    final user = _auth.currentUser;
-    if (user == null) {
-      throw Exception('User not authenticated');
+    try {
+      final user = await _waitForAuthentication();
+      if (user == null) {
+        throw Exception('User not authenticated');
+      }
+
+      final currentSubscription = await getCurrentSubscription();
+      if (currentSubscription == null) {
+        throw Exception('No subscription found');
+      }
+
+      final renewedSubscription = currentSubscription.copyWith(
+        status: SubscriptionStatus.active,
+        startDate: DateTime.now(),
+        endDate: DateTime.now().add(const Duration(days: 30)),
+      );
+
+      await updateSubscription(renewedSubscription);
+      return renewedSubscription;
+    } catch (e) {
+      print('Error renewing subscription: $e');
+      throw Exception('Failed to renew subscription: $e');
     }
-
-    final currentSubscription = await getCurrentSubscription();
-    if (currentSubscription == null) {
-      throw Exception('No subscription found');
-    }
-
-    final renewedSubscription = currentSubscription.copyWith(
-      status: SubscriptionStatus.active,
-      startDate: DateTime.now(),
-      endDate: DateTime.now().add(const Duration(days: 30)),
-    );
-
-    await updateSubscription(renewedSubscription);
-    return renewedSubscription;
   }
 
   @override
   Future<Subscription> cancelSubscription() async {
-    final user = _auth.currentUser;
-    if (user == null) {
-      throw Exception('User not authenticated');
+    try {
+      final user = await _waitForAuthentication();
+      if (user == null) {
+        throw Exception('User not authenticated');
+      }
+
+      final subscription = await getCurrentSubscription();
+      if (subscription == null) {
+        throw Exception('No subscription found');
+      }
+
+      if (subscription.tier == SubscriptionTier.free) {
+        throw Exception('Cannot cancel a free subscription');
+      }
+
+      final cancelledSubscription = subscription.copyWith(
+        status: SubscriptionStatus.cancelled,
+      );
+
+      await updateSubscription(cancelledSubscription);
+      return cancelledSubscription;
+    } catch (e) {
+      print('Error cancelling subscription: $e');
+      throw Exception('Failed to cancel subscription: $e');
     }
-
-    final subscription = await getCurrentSubscription();
-    if (subscription == null) {
-      throw Exception('No subscription found');
-    }
-
-    if (subscription.tier == SubscriptionTier.free) {
-      throw Exception('Cannot cancel a free subscription');
-    }
-
-    final cancelledSubscription = subscription.copyWith(
-      status: SubscriptionStatus.cancelled,
-    );
-
-    await updateSubscription(cancelledSubscription);
-    return cancelledSubscription;
   }
 }

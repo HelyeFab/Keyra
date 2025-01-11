@@ -8,4 +8,5 @@ class SubscriptionEvent with _$SubscriptionEvent {
   const factory SubscriptionEvent.upgraded() = _Upgraded;
   const factory SubscriptionEvent.cancelled() = _Cancelled;
   const factory SubscriptionEvent.renewed() = _Renewed;
+  const factory SubscriptionEvent.restored() = _Restored;
 }

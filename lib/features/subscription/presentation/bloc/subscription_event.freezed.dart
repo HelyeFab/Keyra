@@ -22,6 +22,7 @@ mixin _$SubscriptionEvent {
     required TResult Function() upgraded,
     required TResult Function() cancelled,
     required TResult Function() renewed,
+    required TResult Function() restored,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -30,6 +31,7 @@ mixin _$SubscriptionEvent {
     TResult? Function()? upgraded,
     TResult? Function()? cancelled,
     TResult? Function()? renewed,
+    TResult? Function()? restored,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -38,6 +40,7 @@ mixin _$SubscriptionEvent {
     TResult Function()? upgraded,
     TResult Function()? cancelled,
     TResult Function()? renewed,
+    TResult Function()? restored,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -47,6 +50,7 @@ mixin _$SubscriptionEvent {
     required TResult Function(_Upgraded value) upgraded,
     required TResult Function(_Cancelled value) cancelled,
     required TResult Function(_Renewed value) renewed,
+    required TResult Function(_Restored value) restored,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -55,6 +59,7 @@ mixin _$SubscriptionEvent {
     TResult? Function(_Upgraded value)? upgraded,
     TResult? Function(_Cancelled value)? cancelled,
     TResult? Function(_Renewed value)? renewed,
+    TResult? Function(_Restored value)? restored,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -63,6 +68,7 @@ mixin _$SubscriptionEvent {
     TResult Function(_Upgraded value)? upgraded,
     TResult Function(_Cancelled value)? cancelled,
     TResult Function(_Renewed value)? renewed,
+    TResult Function(_Restored value)? restored,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -134,6 +140,7 @@ class _$StartedImpl implements _Started {
     required TResult Function() upgraded,
     required TResult Function() cancelled,
     required TResult Function() renewed,
+    required TResult Function() restored,
   }) {
     return started();
   }
@@ -145,6 +152,7 @@ class _$StartedImpl implements _Started {
     TResult? Function()? upgraded,
     TResult? Function()? cancelled,
     TResult? Function()? renewed,
+    TResult? Function()? restored,
   }) {
     return started?.call();
   }
@@ -156,6 +164,7 @@ class _$StartedImpl implements _Started {
     TResult Function()? upgraded,
     TResult Function()? cancelled,
     TResult Function()? renewed,
+    TResult Function()? restored,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -171,6 +180,7 @@ class _$StartedImpl implements _Started {
     required TResult Function(_Upgraded value) upgraded,
     required TResult Function(_Cancelled value) cancelled,
     required TResult Function(_Renewed value) renewed,
+    required TResult Function(_Restored value) restored,
   }) {
     return started(this);
   }
@@ -182,6 +192,7 @@ class _$StartedImpl implements _Started {
     TResult? Function(_Upgraded value)? upgraded,
     TResult? Function(_Cancelled value)? cancelled,
     TResult? Function(_Renewed value)? renewed,
+    TResult? Function(_Restored value)? restored,
   }) {
     return started?.call(this);
   }
@@ -193,6 +204,7 @@ class _$StartedImpl implements _Started {
     TResult Function(_Upgraded value)? upgraded,
     TResult Function(_Cancelled value)? cancelled,
     TResult Function(_Renewed value)? renewed,
+    TResult Function(_Restored value)? restored,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -251,6 +263,7 @@ class _$UpgradedImpl implements _Upgraded {
     required TResult Function() upgraded,
     required TResult Function() cancelled,
     required TResult Function() renewed,
+    required TResult Function() restored,
   }) {
     return upgraded();
   }
@@ -262,6 +275,7 @@ class _$UpgradedImpl implements _Upgraded {
     TResult? Function()? upgraded,
     TResult? Function()? cancelled,
     TResult? Function()? renewed,
+    TResult? Function()? restored,
   }) {
     return upgraded?.call();
   }
@@ -273,6 +287,7 @@ class _$UpgradedImpl implements _Upgraded {
     TResult Function()? upgraded,
     TResult Function()? cancelled,
     TResult Function()? renewed,
+    TResult Function()? restored,
     required TResult orElse(),
   }) {
     if (upgraded != null) {
@@ -288,6 +303,7 @@ class _$UpgradedImpl implements _Upgraded {
     required TResult Function(_Upgraded value) upgraded,
     required TResult Function(_Cancelled value) cancelled,
     required TResult Function(_Renewed value) renewed,
+    required TResult Function(_Restored value) restored,
   }) {
     return upgraded(this);
   }
@@ -299,6 +315,7 @@ class _$UpgradedImpl implements _Upgraded {
     TResult? Function(_Upgraded value)? upgraded,
     TResult? Function(_Cancelled value)? cancelled,
     TResult? Function(_Renewed value)? renewed,
+    TResult? Function(_Restored value)? restored,
   }) {
     return upgraded?.call(this);
   }
@@ -310,6 +327,7 @@ class _$UpgradedImpl implements _Upgraded {
     TResult Function(_Upgraded value)? upgraded,
     TResult Function(_Cancelled value)? cancelled,
     TResult Function(_Renewed value)? renewed,
+    TResult Function(_Restored value)? restored,
     required TResult orElse(),
   }) {
     if (upgraded != null) {
@@ -368,6 +386,7 @@ class _$CancelledImpl implements _Cancelled {
     required TResult Function() upgraded,
     required TResult Function() cancelled,
     required TResult Function() renewed,
+    required TResult Function() restored,
   }) {
     return cancelled();
   }
@@ -379,6 +398,7 @@ class _$CancelledImpl implements _Cancelled {
     TResult? Function()? upgraded,
     TResult? Function()? cancelled,
     TResult? Function()? renewed,
+    TResult? Function()? restored,
   }) {
     return cancelled?.call();
   }
@@ -390,6 +410,7 @@ class _$CancelledImpl implements _Cancelled {
     TResult Function()? upgraded,
     TResult Function()? cancelled,
     TResult Function()? renewed,
+    TResult Function()? restored,
     required TResult orElse(),
   }) {
     if (cancelled != null) {
@@ -405,6 +426,7 @@ class _$CancelledImpl implements _Cancelled {
     required TResult Function(_Upgraded value) upgraded,
     required TResult Function(_Cancelled value) cancelled,
     required TResult Function(_Renewed value) renewed,
+    required TResult Function(_Restored value) restored,
   }) {
     return cancelled(this);
   }
@@ -416,6 +438,7 @@ class _$CancelledImpl implements _Cancelled {
     TResult? Function(_Upgraded value)? upgraded,
     TResult? Function(_Cancelled value)? cancelled,
     TResult? Function(_Renewed value)? renewed,
+    TResult? Function(_Restored value)? restored,
   }) {
     return cancelled?.call(this);
   }
@@ -427,6 +450,7 @@ class _$CancelledImpl implements _Cancelled {
     TResult Function(_Upgraded value)? upgraded,
     TResult Function(_Cancelled value)? cancelled,
     TResult Function(_Renewed value)? renewed,
+    TResult Function(_Restored value)? restored,
     required TResult orElse(),
   }) {
     if (cancelled != null) {
@@ -485,6 +509,7 @@ class _$RenewedImpl implements _Renewed {
     required TResult Function() upgraded,
     required TResult Function() cancelled,
     required TResult Function() renewed,
+    required TResult Function() restored,
   }) {
     return renewed();
   }
@@ -496,6 +521,7 @@ class _$RenewedImpl implements _Renewed {
     TResult? Function()? upgraded,
     TResult? Function()? cancelled,
     TResult? Function()? renewed,
+    TResult? Function()? restored,
   }) {
     return renewed?.call();
   }
@@ -507,6 +533,7 @@ class _$RenewedImpl implements _Renewed {
     TResult Function()? upgraded,
     TResult Function()? cancelled,
     TResult Function()? renewed,
+    TResult Function()? restored,
     required TResult orElse(),
   }) {
     if (renewed != null) {
@@ -522,6 +549,7 @@ class _$RenewedImpl implements _Renewed {
     required TResult Function(_Upgraded value) upgraded,
     required TResult Function(_Cancelled value) cancelled,
     required TResult Function(_Renewed value) renewed,
+    required TResult Function(_Restored value) restored,
   }) {
     return renewed(this);
   }
@@ -533,6 +561,7 @@ class _$RenewedImpl implements _Renewed {
     TResult? Function(_Upgraded value)? upgraded,
     TResult? Function(_Cancelled value)? cancelled,
     TResult? Function(_Renewed value)? renewed,
+    TResult? Function(_Restored value)? restored,
   }) {
     return renewed?.call(this);
   }
@@ -544,6 +573,7 @@ class _$RenewedImpl implements _Renewed {
     TResult Function(_Upgraded value)? upgraded,
     TResult Function(_Cancelled value)? cancelled,
     TResult Function(_Renewed value)? renewed,
+    TResult Function(_Restored value)? restored,
     required TResult orElse(),
   }) {
     if (renewed != null) {
@@ -555,4 +585,127 @@ class _$RenewedImpl implements _Renewed {
 
 abstract class _Renewed implements SubscriptionEvent {
   const factory _Renewed() = _$RenewedImpl;
+}
+
+/// @nodoc
+abstract class _$$RestoredImplCopyWith<$Res> {
+  factory _$$RestoredImplCopyWith(
+          _$RestoredImpl value, $Res Function(_$RestoredImpl) then) =
+      __$$RestoredImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$RestoredImplCopyWithImpl<$Res>
+    extends _$SubscriptionEventCopyWithImpl<$Res, _$RestoredImpl>
+    implements _$$RestoredImplCopyWith<$Res> {
+  __$$RestoredImplCopyWithImpl(
+      _$RestoredImpl _value, $Res Function(_$RestoredImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of SubscriptionEvent
+  /// with the given fields replaced by the non-null parameter values.
+}
+
+/// @nodoc
+
+class _$RestoredImpl implements _Restored {
+  const _$RestoredImpl();
+
+  @override
+  String toString() {
+    return 'SubscriptionEvent.restored()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$RestoredImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() started,
+    required TResult Function() upgraded,
+    required TResult Function() cancelled,
+    required TResult Function() renewed,
+    required TResult Function() restored,
+  }) {
+    return restored();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? started,
+    TResult? Function()? upgraded,
+    TResult? Function()? cancelled,
+    TResult? Function()? renewed,
+    TResult? Function()? restored,
+  }) {
+    return restored?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? started,
+    TResult Function()? upgraded,
+    TResult Function()? cancelled,
+    TResult Function()? renewed,
+    TResult Function()? restored,
+    required TResult orElse(),
+  }) {
+    if (restored != null) {
+      return restored();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Started value) started,
+    required TResult Function(_Upgraded value) upgraded,
+    required TResult Function(_Cancelled value) cancelled,
+    required TResult Function(_Renewed value) renewed,
+    required TResult Function(_Restored value) restored,
+  }) {
+    return restored(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Started value)? started,
+    TResult? Function(_Upgraded value)? upgraded,
+    TResult? Function(_Cancelled value)? cancelled,
+    TResult? Function(_Renewed value)? renewed,
+    TResult? Function(_Restored value)? restored,
+  }) {
+    return restored?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Started value)? started,
+    TResult Function(_Upgraded value)? upgraded,
+    TResult Function(_Cancelled value)? cancelled,
+    TResult Function(_Renewed value)? renewed,
+    TResult Function(_Restored value)? restored,
+    required TResult orElse(),
+  }) {
+    if (restored != null) {
+      return restored(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _Restored implements SubscriptionEvent {
+  const factory _Restored() = _$RestoredImpl;
 }

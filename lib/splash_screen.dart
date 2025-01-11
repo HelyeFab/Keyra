@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'core/services/preferences_service.dart';
 import 'core/theme/color_schemes.dart';
+import 'core/theme/text_themes.dart';
 
 class BubblePainter extends CustomPainter {
   final Color color;
@@ -10,48 +11,105 @@ class BubblePainter extends CustomPainter {
 
   BubblePainter({this.color = AppColors.splashKeyraText, this.drawShadow = true});
 
-  // BubblePainter({this.color = AppColors.darkPrimary, this.drawShadow = true});
-
   @override
   void paint(Canvas canvas, Size size) {
     if (drawShadow) {
-      // Draw shadow
       final shadowPaint = Paint()
         ..color = AppColors.splashBubbleShadow
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2);
 
-      final shadowRect = RRect.fromRectAndRadius(
-        Rect.fromLTWH(1, 1, size.width, size.height - 10),
-        const Radius.circular(20),
+      final shadowPath = Path();
+      
+      // Main bubble body
+      shadowPath.addRRect(
+        RRect.fromRectAndRadius(
+          Rect.fromLTWH(1, 1, size.width, size.height - 10),
+          const Radius.circular(20),
+        ),
       );
-      canvas.drawRRect(shadowRect, shadowPaint);
 
-      final shadowPath = Path()
-        ..moveTo(size.width / 2 - 6, size.height - 8)
-        ..lineTo(size.width / 2 + 1, size.height + 1)
-        ..lineTo(size.width / 2 + 8, size.height - 8)
-        ..close();
+      // Add the pointer to the same path
+      shadowPath.moveTo(size.width / 2 - 6, size.height - 10);
+      shadowPath.lineTo(size.width / 2 + 1, size.height + 1);
+      shadowPath.lineTo(size.width / 2 + 8, size.height - 10);
+      shadowPath.close();
+      
       canvas.drawPath(shadowPath, shadowPaint);
     }
 
+    // Create the fill path (includes both bubble and pointer)
+    final fillPath = Path();
+    
+    // Draw the main rounded rectangle
+    fillPath.addRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromLTWH(0, 0, size.width, size.height - 10),
+        const Radius.circular(20),
+      ),
+    );
+
+    // Add the pointer to the fill path
+    fillPath.moveTo(size.width / 2 - 6, size.height - 10);
+    fillPath.lineTo(size.width / 2, size.height - 2);
+    fillPath.lineTo(size.width / 2 + 6, size.height - 10);
+    fillPath.close();
+
+    // Fill the entire shape
     final paint = Paint()
       ..color = color
       ..style = PaintingStyle.fill;
+    canvas.drawPath(fillPath, paint);
 
-    // Draw main bubble
-    final rect = RRect.fromRectAndRadius(
-      Rect.fromLTWH(0, 0, size.width, size.height - 10),
-      const Radius.circular(20),
+    // Create the border path (excludes triangle base)
+    final borderPath = Path();
+    
+    // Draw the main rounded rectangle border (excluding the bottom center)
+    const radius = 20.0;
+    borderPath.moveTo(size.width / 2 - 6, size.height - 10); // Start from left of pointer
+    
+    // Draw left side and top-left corner
+    borderPath.lineTo(radius, size.height - 10);
+    borderPath.arcToPoint(
+      Offset(0, size.height - 10 - radius),
+      radius: const Radius.circular(radius),
     );
-    canvas.drawRRect(rect, paint);
+    
+    // Draw left side
+    borderPath.lineTo(0, radius);
+    
+    // Draw top-left corner and top side
+    borderPath.arcToPoint(
+      Offset(radius, 0),
+      radius: const Radius.circular(radius),
+    );
+    borderPath.lineTo(size.width - radius, 0);
+    
+    // Draw top-right corner and right side
+    borderPath.arcToPoint(
+      Offset(size.width, radius),
+      radius: const Radius.circular(radius),
+    );
+    borderPath.lineTo(size.width, size.height - 10 - radius);
+    
+    // Draw bottom-right corner
+    borderPath.arcToPoint(
+      Offset(size.width - radius, size.height - 10),
+      radius: const Radius.circular(radius),
+    );
+    
+    // Complete the right side to the pointer
+    borderPath.lineTo(size.width / 2 + 6, size.height - 10);
+    
+    // Draw the pointer sides (excluding the base)
+    borderPath.lineTo(size.width / 2, size.height - 2);
+    borderPath.lineTo(size.width / 2 - 6, size.height - 10);
 
-    // Draw pointer
-    final path = Path()
-      ..moveTo(size.width / 2 - 6, size.height - 10)
-      ..lineTo(size.width / 2, size.height - 2)
-      ..lineTo(size.width / 2 + 6, size.height - 10)
-      ..close();
-    canvas.drawPath(path, paint);
+    // Draw the border
+    final borderPaint = Paint()
+      ..color = AppColors.lightSurfaceVariant
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.0;
+    canvas.drawPath(borderPath, borderPaint);
   }
 
   @override
@@ -290,7 +348,6 @@ class _SplashScreenState extends State<SplashScreen>
               child: Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  // Layer 1 (back): Bottom white container
                   Positioned(
                     bottom: 0,
                     left: 0,
@@ -299,15 +356,21 @@ class _SplashScreenState extends State<SplashScreen>
                       height: bottomAreaHeight,
                       decoration: BoxDecoration(
                         color: AppColors.darkSurface,
+                        border: const Border(
+                          top: BorderSide(
+                            color: AppColors.lightSurfaceVariant,
+                            width: 1.0,
+                          ),
+                        ),
                         borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(30),
                           topRight: Radius.circular(30),
                         ),
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                             color: AppColors.splashBoxShadow,
                             blurRadius: 10,
-                            offset: const Offset(0, -5),
+                            offset: Offset(0, -5),
                           ),
                         ],
                       ),
@@ -324,38 +387,38 @@ class _SplashScreenState extends State<SplashScreen>
                             Text(
                               'Welcome to',
                               style: TextStyle(
-                                fontFamily: 'Poppins',
+                                fontFamily: AppTextTheme.headlineFont,
                                 fontSize: screenHeight * 0.028,
                                 fontWeight: FontWeight.w400,
                                 color: AppColors.splashWelcomeText,
                               ),
                             ),
                             Text(
-                              'Keyra',
+                              'KEYRA',
                               style: TextStyle(
-                                fontFamily: 'FascinateInline',
+                                fontFamily: AppTextTheme.appTitleFont,
                                 fontSize: screenHeight * 0.072,
                                 fontWeight: FontWeight.w400,
                                 color: AppColors.splashKeyraText,
                                 shadows: const [
                                   // Create border effect with 4 shadows
                                   Shadow(
-                                    offset: Offset(-1.5, -1.5),
+                                    offset: const Offset(-1.5, -1.5),
                                     color: AppColors.splashKeyraTextShadow,
                                     blurRadius: 0,
                                   ),
                                   Shadow(
-                                    offset: Offset(1.5, -1.5),
+                                    offset: const Offset(1.5, -1.5),
                                     color: AppColors.splashKeyraTextShadow,
                                     blurRadius: 0,
                                   ),
                                   Shadow(
-                                    offset: Offset(-1.5, 1.5),
+                                    offset: const Offset(-1.5, 1.5),
                                     color: AppColors.splashKeyraTextShadow,
                                     blurRadius: 0,
                                   ),
                                   Shadow(
-                                    offset: Offset(1.5, 1.5),
+                                    offset: const Offset(1.5, 1.5),
                                     color: AppColors.splashKeyraTextShadow,
                                     blurRadius: 0,
                                   ),
