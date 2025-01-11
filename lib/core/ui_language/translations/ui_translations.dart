@@ -247,6 +247,23 @@ Service provided "as is" without warranties.
       'saved_words_title': 'Saved Words',
       'meanings': 'Meanings:',
       'common_definition': 'Definition',
+
+      // Subscription
+      'premium_access_title': 'Get Premium access to all books and features',
+      'premium_access_subtitle': 'This access will grant you special access to our entire library of books and premium features. All the benefits of Premium access are listed below:',
+      'premium_feature_1': 'Unlimited access to all books',
+      'premium_feature_2': 'New books released every week',
+      'premium_feature_3': 'Create and study flashcards',
+      'premium_feature_4': 'Study review mode',
+      'premium_feature_5': 'Access to new exciting features',
+      'select_subscription': 'Select your subscription',
+      'premium_yearly': 'Premium - 12 Months',
+      'premium_monthly': 'Premium - Monthly',
+      'premium_lifetime': 'Premium - Lifetime',
+      'best_value': 'Best Value',
+      'price_yearly': '£79.99',
+      'price_monthly': '£7.99',
+      'price_lifetime': '£149.99',
     },
     'fr': {
       // Navigation & Controls
@@ -397,63 +414,21 @@ Service provided "as is" without warranties.
       'books_read_requirement': '{0} livres lus requis',
       'favorite_books_requirement': '{0} livres favoris requis',
       'reading_streak_requirement': '{0} jours de lecture consécutifs requis',
-      'privacy_policy_content': '''
-Bienvenue sur Keyra ! Cette Politique de Confidentialité explique comment nous collectons, utilisons et protégeons vos informations personnelles.
-
-1. Informations Collectées
-- Informations de compte (email, nom)
-- Progrès de lecture et préférences
-- Statistiques d'étude et mots sauvegardés
-- Informations sur l'appareil
-
-2. Utilisation des Informations
-- Pour fournir une expérience d'apprentissage personnalisée
-- Pour améliorer nos services
-- Pour envoyer des mises à jour importantes
-
-3. Protection des Données
-Nous mettons en œuvre des mesures de sécurité pour protéger vos informations personnelles.
-
-4. Vos Droits
-Vous avez le droit de :
-- Accéder à vos données personnelles
-- Demander des corrections
-- Supprimer votre compte
-- Refuser les communications
-
-5. Contactez-nous
-Pour toute question, contactez-nous via l'application.
-''',
-      'terms_of_service_content': '''
-Conditions d'Utilisation
-
-1. Acceptation des Conditions
-En utilisant Keyra, vous acceptez ces conditions.
-
-2. Compte Utilisateur
-- Vous êtes responsable de la sécurité
-- Fournir des informations exactes
-- Un compte par utilisateur
-
-3. Utilisation Acceptable
-- Usage personnel uniquement
-- Ne pas partager l'accès
-- Ne pas abuser du service
-
-4. Contenu
-- Nous possédons le contenu de l'app
-- Vous possédez vos données
-- Respecter les droits d'auteur
-
-5. Résiliation
-Nous pouvons suspendre les comptes en infraction.
-
-6. Modifications
-Nous pouvons mettre à jour ces conditions.
-
-7. Avertissement
-Service fourni "tel quel" sans garanties.
-''',
+      'premium_access_title': 'Obtenez un accès Premium à tous les livres et fonctionnalités',
+      'premium_access_subtitle': 'Cet accès vous donnera un accès spécial à toute notre bibliothèque de livres et aux fonctionnalités premium. Tous les avantages de l\'accès Premium sont énumérés ci-dessous :',
+      'premium_feature_1': 'Accès illimité à tous les livres',
+      'premium_feature_2': 'Nouveaux livres publiés chaque semaine',
+      'premium_feature_3': 'Créez et étudiez des cartes mémoire',
+      'premium_feature_4': 'Mode de révision d\'étude',
+      'premium_feature_5': 'Accès à de nouvelles fonctionnalités passionnantes',
+      'select_subscription': 'Sélectionnez votre abonnement',
+      'premium_yearly': 'Premium - 12 Mois',
+      'premium_monthly': 'Premium - Mensuel',
+      'premium_lifetime': 'Premium - Vie',
+      'best_value': 'Meilleure Valeur',
+      'price_yearly': '79,99 €',
+      'price_monthly': '7,99 €',
+      'price_lifetime': '149,99 €',
     },
     'es': {
       // Navigation & Controls
@@ -604,63 +579,21 @@ Service fourni "tel quel" sans garanties.
       'books_read_requirement': '{0} libros leídos requeridos',
       'favorite_books_requirement': '{0} libros favoritos requeridos',
       'reading_streak_requirement': '{0} días de racha de lectura requeridos',
-      'privacy_policy_content': '''
-¡Bienvenido a Keyra! Esta Política de Privacidad explica cómo recopilamos, usamos y protegemos su información personal.
-
-1. Información que Recopilamos
-- Información de cuenta (email, nombre)
-- Progreso de lectura y preferencias
-- Estadísticas de estudio y palabras guardadas
-- Información del dispositivo
-
-2. Uso de la Información
-- Para proporcionar experiencia personalizada
-- Para mejorar nuestros servicios
-- Para enviar actualizaciones importantes
-
-3. Protección de Datos
-Implementamos medidas de seguridad para proteger su información personal.
-
-4. Sus Derechos
-Tiene derecho a:
-- Acceder a sus datos personales
-- Solicitar correcciones
-- Eliminar su cuenta
-- Optar por no recibir comunicaciones
-
-5. Contáctenos
-Para preguntas, contáctenos a través de la aplicación.
-''',
-      'terms_of_service_content': '''
-Términos de Servicio
-
-1. Aceptación de Términos
-Al usar Keyra, acepta estos términos.
-
-2. Cuenta de Usuario
-- Es responsable de la seguridad
-- Proporcionar información precisa
-- Una cuenta por usuario
-
-3. Uso Aceptable
-- Solo uso personal
-- No compartir acceso
-- No abusar del servicio
-
-4. Contenido
-- Poseemos el contenido de la app
-- Usted posee sus datos
-- Respetar derechos de autor
-
-5. Terminación
-Podemos suspender cuentas infractoras.
-
-6. Cambios
-Podemos actualizar estos términos.
-
-7. Descargo
-Servicio proporcionado "tal cual".
-''',
+      'premium_access_title': 'Obtén acceso Premium a todos los libros y características',
+      'premium_access_subtitle': 'Este acceso te dará acceso especial a toda nuestra biblioteca de libros y características premium. Todos los beneficios del acceso Premium están enumerados a continuación:',
+      'premium_feature_1': 'Acceso ilimitado a todos los libros',
+      'premium_feature_2': 'Nuevos libros publicados cada semana',
+      'premium_feature_3': 'Crea y estudia tarjetas de memoria',
+      'premium_feature_4': 'Modo de revisión de estudio',
+      'premium_feature_5': 'Acceso a nuevas características emocionantes',
+      'select_subscription': 'Selecciona tu suscripción',
+      'premium_yearly': 'Premium - 12 Meses',
+      'premium_monthly': 'Premium - Mensual',
+      'premium_lifetime': 'Premium - De por vida',
+      'best_value': 'Mejor Valor',
+      'price_yearly': '79,99 €',
+      'price_monthly': '7,99 €',
+      'price_lifetime': '149,99 €',
     },
     'it': {
       // Navigation & Controls
@@ -812,63 +745,21 @@ Servicio proporcionado "tal cual".
       'favorite_books_requirement': '{0} libri preferiti richiesti',
       'reading_streak_requirement':
           '{0} giorni di lettura consecutivi richiesti',
-      'privacy_policy_content': '''
-Benvenuto su Keyra! Questa Informativa sulla Privacy spiega come raccogliamo, utilizziamo e proteggiamo le tue informazioni personali.
-
-1. Informazioni Raccolte
-- Informazioni account (email, nome)
-- Progressi di lettura e preferenze
-- Statistiche di studio e parole salvate
-- Informazioni dispositivo
-
-2. Utilizzo delle Informazioni
-- Per fornire esperienza personalizzata
-- Per migliorare i nostri servizi
-- Per inviare aggiornamenti importanti
-
-3. Protezione Dati
-Implementiamo misure di sicurezza per proteggere le tue informazioni.
-
-4. I Tuoi Diritti
-Hai il diritto di:
-- Accedere ai tuoi dati
-- Richiedere correzioni
-- Eliminare l'account
-- Rifiutare comunicazioni
-
-5. Contattaci
-Per domande, contattaci tramite l'app.
-''',
-      'terms_of_service_content': '''
-Termini di Servizio
-
-1. Accettazione dei Termini
-Usando Keyra, accetti questi termini.
-
-2. Account Utente
-- Responsabile della sicurezza
-- Fornire informazioni accurate
-- Un account per utente
-
-3. Uso Accettabile
-- Solo uso personale
-- Non condividere accesso
-- Non abusare del servizio
-
-4. Contenuti
-- Possediamo contenuti dell'app
-- Tu possiedi i tuoi dati
-- Rispettare copyright
-
-5. Terminazione
-Possiamo sospendere account violatori.
-
-6. Modifiche
-Possiamo aggiornare questi termini.
-
-7. Disclaimer
-Servizio fornito "così com'è".
-''',
+      'premium_access_title': 'Ottieni l\'accesso Premium a tutti i libri e le funzionalità',
+      'premium_access_subtitle': 'Questo accesso ti darà accesso speciale a tutta la nostra biblioteca di libri e funzionalità premium. Tutti i benefici dell\'accesso Premium sono elencati di seguito:',
+      'premium_feature_1': 'Accesso illimitato a tutti i libri',
+      'premium_feature_2': 'Nuovi libri pubblicati ogni settimana',
+      'premium_feature_3': 'Crea e studia schede di memoria',
+      'premium_feature_4': 'Modalità di revisione di studio',
+      'premium_feature_5': 'Accesso a nuove funzionalità emozionanti',
+      'select_subscription': 'Seleziona la tua sottoscrizione',
+      'premium_yearly': 'Premium - 12 Mesi',
+      'premium_monthly': 'Premium - Mensile',
+      'premium_lifetime': 'Premium - Vita',
+      'best_value': 'Miglior Valore',
+      'price_yearly': '79,99 €',
+      'price_monthly': '7,99 €',
+      'price_lifetime': '149,99 €',
     },
     'de': {
       // Navigation & Controls
@@ -1019,63 +910,21 @@ Servizio fornito "così com'è".
       'books_read_requirement': '{0} gelesene Bücher erforderlich',
       'favorite_books_requirement': '{0} Lieblingsbücher erforderlich',
       'reading_streak_requirement': '{0} Tage Lesefolge erforderlich',
-      'privacy_policy_content': '''
-Willkommen bei Keyra! Diese Datenschutzerklärung erläutert, wie wir Ihre persönlichen Daten sammeln, nutzen und schützen.
-
-1. Gesammelte Informationen
-- Kontoinformationen (E-Mail, Name)
-- Lesefortschritt und Präferenzen
-- Lernstatistiken und gespeicherte Wörter
-- Geräteinformationen
-
-2. Verwendung der Daten
-- Für personalisiertes Lernen
-- Zur Verbesserung unserer Dienste
-- Für wichtige Updates
-
-3. Datenschutz
-Wir implementieren Sicherheitsmaßnahmen zum Schutz Ihrer Daten.
-
-4. Ihre Rechte
-Sie haben das Recht:
-- Auf Datenzugriff
-- Korrekturen anzufordern
-- Konto zu löschen
-- Kommunikation abzulehnen
-
-5. Kontakt
-Bei Fragen kontaktieren Sie uns über die App.
-''',
-      'terms_of_service_content': '''
-Nutzungsbedingungen
-
-1. Annahme der Bedingungen
-Mit Nutzung von Keyra akzeptieren Sie diese.
-
-2. Benutzerkonto
-- Verantwortlich für Sicherheit
-- Korrekte Informationen angeben
-- Ein Konto pro Benutzer
-
-3. Akzeptable Nutzung
-- Nur persönliche Nutzung
-- Keine Zugangsweitergabe
-- Kein Missbrauch
-
-4. Inhalte
-- App-Inhalte gehören uns
-- Ihre Daten gehören Ihnen
-- Urheberrecht beachten
-
-5. Kündigung
-Wir können Konten bei Verstößen sperren.
-
-6. Änderungen
-Bedingungen können aktualisiert werden.
-
-7. Haftungsausschluss
-Dienst "wie besehen" ohne Garantien.
-''',
+      'premium_access_title': 'Erhalte Premium-Zugang zu allen Büchern und Funktionen',
+      'premium_access_subtitle': 'Dieser Zugang gewährt dir speziellen Zugang zu unserer gesamten Bibliothek von Büchern und Premium-Funktionen. Alle Vorteile des Premium-Zugangs sind unten aufgelistet:',
+      'premium_feature_1': 'Unbegrenzter Zugang zu allen Büchern',
+      'premium_feature_2': 'Neue Bücher werden jede Woche veröffentlicht',
+      'premium_feature_3': 'Erstelle und lerne Karteikarten',
+      'premium_feature_4': 'Lern-Überprüfungsmodus',
+      'premium_feature_5': 'Zugang zu neuen aufregenden Funktionen',
+      'select_subscription': 'Wähle dein Abonnement',
+      'premium_yearly': 'Premium - 12 Monate',
+      'premium_monthly': 'Premium - Monatlich',
+      'premium_lifetime': 'Premium - Lebenslang',
+      'best_value': 'Beste Wertigkeit',
+      'price_yearly': '79,99 €',
+      'price_monthly': '7,99 €',
+      'price_lifetime': '149,99 €',
     },
     'ja': {
       // Navigation & Controls
@@ -1220,63 +1069,21 @@ Dienst "wie besehen" ohne Garantien.
       'books_read_requirement': '{0}冊の本を読む必要があります',
       'favorite_books_requirement': '{0}冊のお気に入りの本が必要です',
       'reading_streak_requirement': '{0}日間の連続読書が必要です',
-      'privacy_policy_content': '''
-Keyraへようこそ！このプライバシーポリシーでは、個人情報の収集、使用、保護方法について説明します。
-
-1. 収集する情報
-- アカウント情報（メール、名前）
-- 読書の進捗と設定
-- 学習統計と保存した単語
-- デバイス情報
-
-2. 情報の使用方法
-- パーソナライズされた学習体験の提供
-- サービスの改善
-- 重要な更新の送信
-
-3. データ保護
-個人情報を保護するためのセキュリティ対策を実施しています。
-
-4. あなたの権利
-次の権利があります：
-- 個人データへのアクセス
-- 訂正の要求
-- アカウントの削除
-- 通信のオプトアウト
-
-5. お問い合わせ
-ご質問はアプリ内でお問い合わせください。
-''',
-      'terms_of_service_content': '''
-利用規約
-
-1. 規約の同意
-Keyraを使用することで、この規約に同意したことになります。
-
-2. ユーザーアカウント
-- セキュリティの責任
-- 正確な情報の提供
-- 1人1アカウント
-
-3. 適切な使用
-- 個人学習のみ
-- アクセス共有禁止
-- サービスの悪用禁止
-
-4. コンテンツ
-- アプリのコンテンツは当社所有
-- 個人データはユーザー所有
-- 著作権法の遵守
-
-5. 利用停止
-規約違反でアカウント停止の可能性。
-
-6. 規約の変更
-規約は更新される場合があります。
-
-7. 免責事項
-サービスは「現状のまま」提供。
-''',
+      'premium_access_title': 'プレミアムアクセスをすべての本と機能に取得',
+      'premium_access_subtitle': 'このアクセスにより、すべての本とプレミアム機能に特別なアクセス権が与えられます。プレミアムアクセスのすべての利点は以下にリストされています。',
+      'premium_feature_1': 'すべての本への無制限アクセス',
+      'premium_feature_2': '毎週新しい本が公開されます',
+      'premium_feature_3': '単語カードを作成して学習する',
+      'premium_feature_4': '学習の復習モード',
+      'premium_feature_5': '新しい機能へのアクセス',
+      'select_subscription': 'サブスクリプションを選択',
+      'premium_yearly': 'プレミアム - 年間',
+      'premium_monthly': 'プレミアム - 月額',
+      'premium_lifetime': 'プレミアム - ライフタイム',
+      'best_value': '最高の価値',
+      'price_yearly': '¥79,990',
+      'price_monthly': '¥7,990',
+      'price_lifetime': '¥149,990',
     }
   };
 }

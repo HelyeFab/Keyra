@@ -17,7 +17,7 @@ class BubblePainter extends CustomPainter {
     if (drawShadow) {
       // Draw shadow
       final shadowPaint = Paint()
-        ..color = Colors.black.withOpacity(0.08)
+        ..color = AppColors.splashBubbleShadow
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2);
 
       final shadowRect = RRect.fromRectAndRadius(
@@ -222,21 +222,8 @@ class _SplashScreenState extends State<SplashScreen>
 
           if (!mounted) return;
 
-          if (user != null) {
-            Navigator.pushReplacementNamed(context, '/navigation');
-          } else if (widget.isFirstLaunch) {
-            Navigator.pushReplacementNamed(context, '/onboarding');
-          } else {
-            final hasSeenOnboarding =
-                widget.preferencesService.hasSeenOnboarding;
-            if (!mounted) return;
-
-            if (hasSeenOnboarding) {
-              Navigator.pushReplacementNamed(context, '/navigation');
-            } else {
-              Navigator.pushReplacementNamed(context, '/onboarding');
-            }
-          }
+          // Always navigate to navigation page which handles auth state
+          Navigator.pushReplacementNamed(context, '/navigation');
         }
       },
     );
@@ -318,7 +305,7 @@ class _SplashScreenState extends State<SplashScreen>
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
+                            color: AppColors.splashBoxShadow,
                             blurRadius: 10,
                             offset: const Offset(0, -5),
                           ),
@@ -340,7 +327,7 @@ class _SplashScreenState extends State<SplashScreen>
                                 fontFamily: 'Poppins',
                                 fontSize: screenHeight * 0.028,
                                 fontWeight: FontWeight.w400,
-                                color: Colors.white,
+                                color: AppColors.splashWelcomeText,
                               ),
                             ),
                             Text(
@@ -354,22 +341,22 @@ class _SplashScreenState extends State<SplashScreen>
                                   // Create border effect with 4 shadows
                                   Shadow(
                                     offset: Offset(-1.5, -1.5),
-                                    color: Color.fromARGB(255, 250, 248, 248),
+                                    color: AppColors.splashKeyraTextShadow,
                                     blurRadius: 0,
                                   ),
                                   Shadow(
                                     offset: Offset(1.5, -1.5),
-                                    color: Color.fromARGB(255, 227, 224, 224),
+                                    color: AppColors.splashKeyraTextShadow,
                                     blurRadius: 0,
                                   ),
                                   Shadow(
                                     offset: Offset(-1.5, 1.5),
-                                    color: Color.fromARGB(255, 227, 224, 224),
+                                    color: AppColors.splashKeyraTextShadow,
                                     blurRadius: 0,
                                   ),
                                   Shadow(
                                     offset: Offset(1.5, 1.5),
-                                    color: Color.fromARGB(255, 227, 224, 224),
+                                    color: AppColors.splashKeyraTextShadow,
                                     blurRadius: 0,
                                   ),
                                 ],

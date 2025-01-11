@@ -16,4 +16,7 @@ class AuthBlocEvent with _$AuthBlocEvent {
   const factory AuthBlocEvent.authStateChanged(dynamic user) = AuthStateChanged;
   const factory AuthBlocEvent.appleSignInRequested() = AppleSignInRequested;
   const factory AuthBlocEvent.startAuthListening() = StartAuthListening;
+  const factory AuthBlocEvent.passwordResetRequested({
+    required String email,
+  }) = PasswordResetRequested;
 }

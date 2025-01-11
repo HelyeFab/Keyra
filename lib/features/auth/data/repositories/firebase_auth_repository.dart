@@ -155,4 +155,12 @@ class FirebaseAuthRepository implements IAuthRepository {
       throw Exception('Failed to sign out: ${e.toString()}');
     }
   }
+
+  Future<void> sendPasswordResetEmail({required String email}) async {
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+    } catch (e) {
+      throw Exception('Failed to send password reset email: ${e.toString()}');
+    }
+  }
 }

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/color_schemes.dart';
+import '../../../../core/ui_language/translations/ui_translations.dart';
 
 class SubscriptionCard extends StatelessWidget {
   final String title;
@@ -20,97 +23,105 @@ class SubscriptionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: isPremium ? 4 : 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: isPremium
-            ? BorderSide(color: Theme.of(context).colorScheme.primary, width: 2)
-            : BorderSide.none,
+    final translations = UiTranslations.of(context);
+    final cardColor = AppColors.subscriptionCardLight;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+        border: Border.all(
+          color: isPremium ? AppColors.subscriptionBorder : Colors.transparent,
+          width: 2,
+        ),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: isPremium
-                            ? Theme.of(context).colorScheme.primary
-                            : null,
-                      ),
-                ),
-                if (isPremium)
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary,
-                      borderRadius: BorderRadius.circular(12),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: isCurrentPlan ? null : onSubscribe,
+          borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+          child: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(AppSpacing.md),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      children: [
+                        if (isPremium) ...[
+                          Icon(
+                            Icons.star_rounded,
+                            color: AppColors.subscriptionStar,
+                            size: AppSpacing.badgeSize,
+                          ),
+                          const SizedBox(width: AppSpacing.xs),
+                        ],
+                        Text(
+                          title,
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.subscriptionText,
+                              ),
+                        ),
+                      ],
                     ),
-                    child: Text(
-                      'Best Value',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      price,
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.subscriptionText,
+                          ),
                     ),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              price,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-            ),
-            const SizedBox(height: 16),
-            ...features.map((feature) => Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.check_circle,
-                        color: Theme.of(context).colorScheme.primary,
-                        size: 20,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
+                    const SizedBox(height: AppSpacing.sm),
+                    ...features.map((feature) => Padding(
+                          padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+                          child: Text(
+                            feature,
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  color: AppColors.subscriptionSubtext,
+                                ),
+                          ),
+                        )),
+                    if (isCurrentPlan)
+                      Padding(
+                        padding: const EdgeInsets.only(top: AppSpacing.xs),
                         child: Text(
-                          feature,
-                          style: Theme.of(context).textTheme.bodyMedium,
+                          'Current Plan',
+                          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                                color: AppColors.subscriptionHighlight,
+                                fontWeight: FontWeight.bold,
+                              ),
                         ),
                       ),
-                    ],
-                  ),
-                )),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: isCurrentPlan ? null : onSubscribe,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: isPremium
-                    ? Theme.of(context).colorScheme.primary
-                    : null,
-                foregroundColor: isPremium
-                    ? Theme.of(context).colorScheme.onPrimary
-                    : null,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-              ),
-              child: Text(
-                isCurrentPlan ? 'Current Plan' : 'Subscribe',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
+                  ],
                 ),
               ),
-            ),
-          ],
+              if (isPremium && title.contains('12'))
+                Positioned(
+                  bottom: 12,
+                  right: 12,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.sm,
+                      vertical: AppSpacing.xxs,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.subscriptionHighlight,
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
+                    ),
+                    child: Text(
+                      translations.translate('best_value'),
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );

@@ -1,81 +1,107 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/color_schemes.dart';
+import '../../../../core/ui_language/translations/ui_translations.dart';
 import '../../domain/entities/subscription_enums.dart';
 import '../bloc/subscription_bloc.dart';
 import '../bloc/subscription_event.dart';
 import '../bloc/subscription_state.dart';
+import '../widgets/subscription_card.dart';
 
 class SubscriptionPage extends StatelessWidget {
   const SubscriptionPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final translations = UiTranslations.of(context);
+
     return BlocBuilder<SubscriptionBloc, SubscriptionState>(
       builder: (context, state) {
         return state.when(
-          initial: () => const Center(child: Text('Loading...')),
+          initial: () => const Center(child: CircularProgressIndicator()),
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (message) => Center(child: Text('Error: $message')),
-          loaded: (subscription) => Padding(
-            padding: const EdgeInsets.all(16.0),
+          loaded: (subscription) => SingleChildScrollView(
+            padding: const EdgeInsets.all(AppSpacing.md),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Current Plan',
-                  style: Theme.of(context).textTheme.headlineSmall,
-                ),
-                const SizedBox(height: 16),
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                // Features list
+                ...List.generate(5, (index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                    child: Row(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              subscription.tier == SubscriptionTier.premium
-                                  ? 'Premium'
-                                  : 'Free',
-                              style: Theme.of(context).textTheme.titleLarge,
-                            ),
-                            if (subscription.status == SubscriptionStatus.active)
-                              TextButton(
-                                onPressed: () {
-                                  context.read<SubscriptionBloc>().add(
-                                    const SubscriptionEvent.cancelled(),
-                                  );
-                                },
-                                child: const Text('Cancel'),
-                              ),
-                          ],
+                        Container(
+                          padding: const EdgeInsets.all(AppSpacing.xxs),
+                          decoration: BoxDecoration(
+                            color: AppColors.subscriptionHighlight.withOpacity(0.2),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.check,
+                            size: 16,
+                            color: AppColors.subscriptionHighlight,
+                          ),
                         ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Status: ${subscription.status == SubscriptionStatus.active ? 'Active' : 'Cancelled'}',
-                          style: Theme.of(context).textTheme.bodyLarge,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Expires: ${subscription.endDate.toLocal().toString().split(' ')[0]}',
-                          style: Theme.of(context).textTheme.bodyLarge,
+                        const SizedBox(width: AppSpacing.xs),
+                        Expanded(
+                          child: Text(
+                            translations.translate('premium_feature_${index + 1}'),
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  color: Theme.of(context).colorScheme.onBackground,
+                                ),
+                          ),
                         ),
                       ],
                     ),
-                  ),
+                  );
+                }),
+                const SizedBox(height: AppSpacing.lg),
+                Text(
+                  translations.translate('select_subscription'),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onBackground,
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
-                const SizedBox(height: 32),
-                if (subscription.tier == SubscriptionTier.free)
-                  ElevatedButton(
-                    onPressed: () {
-                      context.read<SubscriptionBloc>().add(
+                const SizedBox(height: AppSpacing.md),
+                // Subscription cards
+                SubscriptionCard(
+                  title: translations.translate('premium_yearly'),
+                  price: translations.translate('price_yearly'),
+                  isPremium: true,
+                  isCurrentPlan: subscription.tier == SubscriptionTier.premium && 
+                                subscription.status == SubscriptionStatus.active,
+                  features: const ['Best Value', '12 Months Access'],
+                  onSubscribe: () => context.read<SubscriptionBloc>().add(
                         const SubscriptionEvent.upgraded(),
-                      );
-                    },
-                    child: const Text('Upgrade to Premium'),
-                  ),
+                      ),
+                ),
+                const SizedBox(height: AppSpacing.md),
+                SubscriptionCard(
+                  title: translations.translate('premium_monthly'),
+                  price: translations.translate('price_monthly'),
+                  isPremium: false,
+                  isCurrentPlan: false,
+                  features: const ['Monthly Access'],
+                  onSubscribe: () => context.read<SubscriptionBloc>().add(
+                        const SubscriptionEvent.upgraded(),
+                      ),
+                ),
+                const SizedBox(height: AppSpacing.md),
+                SubscriptionCard(
+                  title: translations.translate('premium_lifetime'),
+                  price: translations.translate('price_lifetime'),
+                  isPremium: true,
+                  isCurrentPlan: false,
+                  features: const ['Lifetime Access', 'One-time Payment'],
+                  onSubscribe: () => context.read<SubscriptionBloc>().add(
+                        const SubscriptionEvent.upgraded(),
+                      ),
+                ),
+                const SizedBox(height: AppSpacing.md),
               ],
             ),
           ),

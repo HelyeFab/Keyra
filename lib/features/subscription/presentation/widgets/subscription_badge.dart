@@ -4,6 +4,7 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../domain/entities/subscription_enums.dart';
 import '../bloc/subscription_bloc.dart';
 import '../bloc/subscription_state.dart';
+import '../pages/subscription_page.dart';
 
 class SubscriptionBadge extends StatelessWidget {
   const SubscriptionBadge({
@@ -23,33 +24,64 @@ class SubscriptionBadge extends StatelessWidget {
                 : 'assets/subscription/free.png';
             final String displayText = isPremium ? 'Premium' : 'Free';
 
-            return Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.primary,
-                      width: 1,
+            return GestureDetector(
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (context) => DraggableScrollableSheet(
+                    initialChildSize: 0.9,
+                    minChildSize: 0.5,
+                    maxChildSize: 0.9,
+                    expand: false,
+                    builder: (context, scrollController) => Column(
+                      children: [
+                        AppBar(
+                          title: const Text('Subscription'),
+                          leading: IconButton(
+                            icon: const Icon(Icons.close),
+                            onPressed: () => Navigator.of(context).pop(),
+                          ),
+                        ),
+                        Expanded(
+                          child: SingleChildScrollView(
+                            controller: scrollController,
+                            child: const SubscriptionPage(),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  child: Image.asset(
-                    assetPath,
-                    width: AppSpacing.badgeSize,
-                    height: AppSpacing.badgeSize,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  displayText,
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface,
-                        fontSize: 10,
+                );
+              },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Theme.of(context).colorScheme.primary,
+                        width: 1,
                       ),
-                ),
-              ],
+                    ),
+                    child: Image.asset(
+                      assetPath,
+                      width: AppSpacing.badgeSize,
+                      height: AppSpacing.badgeSize,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    displayText,
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface,
+                          fontSize: 10,
+                        ),
+                  ),
+                ],
+              ),
             );
           },
           orElse: () => const SizedBox.shrink(),

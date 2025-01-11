@@ -22,6 +22,7 @@ class AuthBloc extends Bloc<AuthBlocEvent, AuthState> {
     on<EmailSignUpRequested>(_onEmailSignUpRequested);
     on<StartAuthListening>(_onStartAuthListening);
     on<EmailSignInRequested>(_onEmailSignInRequested);
+    on<PasswordResetRequested>(_onPasswordResetRequested);
   }
 
   void _onStartAuthListening(
@@ -118,6 +119,19 @@ class AuthBloc extends Bloc<AuthBlocEvent, AuthState> {
       emit(AuthState.authenticated(user.uid));
     } else {
       emit(const AuthState.unauthenticated());
+    }
+  }
+
+  void _onPasswordResetRequested(
+    PasswordResetRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    try {
+      emit(const AuthState.loading());
+      await _authRepository.sendPasswordResetEmail(email: event.email);
+      emit(const AuthState.unauthenticated());
+    } catch (e) {
+      emit(AuthState.error(e.toString()));
     }
   }
 

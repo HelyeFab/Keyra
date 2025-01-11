@@ -103,6 +103,16 @@ class AppColors {
   static const flashcardGoodDark = Color(0xFF0277BD);
   static const flashcardEasyLight = Color(0xFFB9F6CA);
   static const flashcardEasyDark = Color(0xFF1B5E20);
+
+  // Subscription colors
+  static const Color subscriptionCardLight = Color(0xFF1E2A38); // Dark blue
+  static const Color subscriptionCardDark = Color(0xFF1E2A38); // Same dark blue
+  static const Color subscriptionHighlight = Color(0xFF00E5C3); // Bright aqua
+  static const Color subscriptionStar = Color(0xFFFFD700); // Gold for star icon
+  static const Color subscriptionBorder = Color(0xFF00E5C3); // Aqua for border
+  static const Color subscriptionText = Color(0xFFFFFFFF); // White text
+  static const Color subscriptionSubtext = Color(0xFF8E9BAE); // Muted text
+
 }
 
 const lightColorScheme = ColorScheme(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:Keyra/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:Keyra/features/auth/presentation/widgets/password_reset_dialog.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -35,7 +36,38 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthBloc, AuthState>(
+    return BlocConsumer<AuthBloc, AuthState>(
+      listener: (context, state) {
+        state.maybeWhen(
+          error: (message) {
+            // Show error in dialog if it's a password reset error
+            if (message.toLowerCase().contains('password') || 
+                message.toLowerCase().contains('email')) {
+              showDialog(
+                context: context,
+                builder: (context) => PasswordResetDialog(
+                  title: 'Error',
+                  message: message,
+                  icon: Icons.error_outline,
+                  iconColor: Colors.red,
+                ),
+              );
+            } else {
+              // Show other errors in snackbar
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(message)),
+              );
+            }
+          },
+          unauthenticated: () {
+            // Show success message for password reset email
+            if (_emailController.text.isNotEmpty) {
+              PasswordResetDialog.showResetEmailSent(context);
+            }
+          },
+          orElse: () {},
+        );
+      },
       builder: (context, state) {
         return Form(
           key: _formKey,
@@ -100,7 +132,31 @@ class _LoginFormState extends State<LoginForm> {
                   return null;
                 },
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.center,
+                child: TextButton(
+                  onPressed: () {
+                    if (_emailController.text.isEmpty) {
+                      PasswordResetDialog.showEmailRequired(context);
+                    } else {
+                      context.read<AuthBloc>().add(
+                            AuthBlocEvent.passwordResetRequested(
+                              email: _emailController.text,
+                            ),
+                          );
+                    }
+                  },
+                  child: const Text(
+                    'Forgot Password?',
+                    style: TextStyle(
+                      color: Colors.black87,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
               SizedBox(
                 height: 50,
                 child: ElevatedButton(
