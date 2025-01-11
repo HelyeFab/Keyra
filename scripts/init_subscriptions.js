@@ -28,22 +28,6 @@ async function initializeSubscriptions() {
     // Set admin claim
     await admin.auth().setCustomUserClaims(adminUser.uid, { admin: true });
     console.log('Set admin claim for user');
-
-    // Create Firestore indexes
-    const db = admin.firestore();
-    
-    // Create compound index for subscriptions
-    await db.collection('subscriptions').doc('__indexes__').set({
-      'userId_createdAt': {
-        fields: [
-          { fieldPath: 'userId', order: 'ASCENDING' },
-          { fieldPath: 'createdAt', order: 'DESCENDING' }
-        ]
-      }
-    });
-
-    console.log('Successfully initialized subscription system');
-    console.log('Admin user email: admin@keyra.app');
     
     // Get ID token for testing
     const customToken = await admin.auth().createCustomToken(adminUser.uid, { admin: true });
@@ -51,9 +35,8 @@ async function initializeSubscriptions() {
     console.log(customToken);
     
     console.log('\nNext steps:');
-    console.log('1. Use this token with the Firebase Auth REST API to get an ID token');
-    console.log('2. Use the ID token to call the initializeExistingUsersSubscriptions function');
-    console.log(`3. Function URL: https://us-central1-keyra-93667.cloudfunctions.net/initializeExistingUsersSubscriptions`);
+    console.log('1. Run the test script with this token:');
+    console.log(`   node test_subscription.js "${customToken}"`);
 
   } catch (error) {
     console.error('Error initializing subscriptions:', error);

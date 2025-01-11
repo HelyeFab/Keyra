@@ -1,17 +1,39 @@
+import 'package:shared_preferences/shared_preferences.dart';
+
 class PreferencesService {
-  final String appLanguage;
+  static const String _isFirstLaunchKey = 'isFirstLaunch';
+  static const String _hasSeenOnboardingKey = 'hasSeenOnboarding';
+  static const String _appLanguageKey = 'appLanguage';
+
+  final SharedPreferences _prefs;
+  String appLanguage;
   bool hasSeenOnboarding;
 
-  PreferencesService({
-    this.appLanguage = 'en',
-    this.hasSeenOnboarding = false,
-  });
+  PreferencesService._({
+    required SharedPreferences prefs,
+    required this.appLanguage,
+    required this.hasSeenOnboarding,
+  }) : _prefs = prefs;
 
   static Future<PreferencesService> init() async {
-    return PreferencesService();
+    final prefs = await SharedPreferences.getInstance();
+    final isFirstLaunch = prefs.getBool(_isFirstLaunchKey) ?? true;
+    
+    if (isFirstLaunch) {
+      await prefs.setBool(_isFirstLaunchKey, false);
+    }
+
+    return PreferencesService._(
+      prefs: prefs,
+      appLanguage: prefs.getString(_appLanguageKey) ?? 'en',
+      hasSeenOnboarding: prefs.getBool(_hasSeenOnboardingKey) ?? false,
+    );
   }
 
   Future<void> setHasSeenOnboarding(bool value) async {
     hasSeenOnboarding = value;
+    await _prefs.setBool(_hasSeenOnboardingKey, value);
   }
+
+  bool get isFirstLaunch => _prefs.getBool(_isFirstLaunchKey) ?? true;
 }

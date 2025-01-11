@@ -1,10 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import '../../domain/repositories/i_auth_repository.dart';
 import '../../../dashboard/data/repositories/user_stats_repository.dart';
 import '../../../subscription/application/subscription_service.dart';
 import 'package:flutter/services.dart';
 
-class FirebaseAuthRepository {
+class FirebaseAuthRepository implements IAuthRepository {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
   final UserStatsRepository _userStatsRepository;
@@ -14,16 +15,19 @@ class FirebaseAuthRepository {
     FirebaseAuth? firebaseAuth,
     GoogleSignIn? googleSignIn,
     UserStatsRepository? userStatsRepository,
-    SubscriptionService? subscriptionService,
+    required SubscriptionService subscriptionService,
   })  : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
         _googleSignIn = googleSignIn ?? GoogleSignIn(),
         _userStatsRepository = userStatsRepository ?? UserStatsRepository(),
-        _subscriptionService = subscriptionService ?? SubscriptionService();
+        _subscriptionService = subscriptionService;
 
+  @override
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
+  @override
   User? get currentUser => _firebaseAuth.currentUser;
 
+  @override
   Future<UserCredential> signInWithGoogle() async {
     try {
       print('Starting Google Sign In...');
@@ -91,6 +95,7 @@ class FirebaseAuthRepository {
     }
   }
 
+  @override
   Future<UserCredential> signInWithEmailAndPassword({
     required String email,
     required String password,
@@ -110,6 +115,7 @@ class FirebaseAuthRepository {
     }
   }
 
+  @override
   Future<UserCredential> createUserWithEmailAndPassword({
     required String email,
     required String password,
@@ -138,6 +144,7 @@ class FirebaseAuthRepository {
     }
   }
 
+  @override
   Future<void> signOut() async {
     try {
       await Future.wait([

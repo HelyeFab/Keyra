@@ -9,7 +9,7 @@
     "init-subscriptions": "node init_subscriptions.js"
   },
   "dependencies": {
-    "firebase": "^10.8.0",
+    "firebase": "^10.14.1",
     "firebase-admin": "^11.8.0",
     "node-fetch": "^2.6.1"
   }

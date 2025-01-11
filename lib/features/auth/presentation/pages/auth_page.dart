@@ -24,7 +24,7 @@ class _AuthPageState extends State<AuthPage> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         state.maybeWhen(
-          authenticated: (_) {
+          authenticated: (uid) {
             // Navigate to NavigationPage when authenticated
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(

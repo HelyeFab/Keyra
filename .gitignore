@@ -63,6 +63,19 @@ key.properties
 firebase_options.dart
 .firebase/
 firebase-debug.log
+**/functions/lib/
+**/functions/node_modules/
+
+# Node.js related
+**/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Scripts output and logs
+**/scripts/logs/
+**/scripts/output/
 
 # Other sensitive information
 **/secrets.json

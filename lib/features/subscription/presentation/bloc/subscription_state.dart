@@ -1,53 +1,12 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../domain/entities/subscription.dart';
 
-abstract class SubscriptionState extends Equatable {
-  const SubscriptionState();
+part 'subscription_state.freezed.dart';
 
-  @override
-  List<Object?> get props => [];
-}
-
-class SubscriptionInitial extends SubscriptionState {}
-
-class SubscriptionLoading extends SubscriptionState {}
-
-class SubscriptionLoaded extends SubscriptionState {
-  final Subscription subscription;
-
-  const SubscriptionLoaded(this.subscription);
-
-  @override
-  List<Object?> get props => [subscription];
-}
-
-class SubscriptionError extends SubscriptionState {
-  final String message;
-
-  const SubscriptionError(this.message);
-
-  @override
-  List<Object?> get props => [message];
-}
-
-class SubscriptionHistoryLoaded extends SubscriptionState {
-  final List<Subscription> subscriptions;
-
-  const SubscriptionHistoryLoaded(this.subscriptions);
-
-  @override
-  List<Object?> get props => [subscriptions];
-}
-
-class SubscriptionAccessChecked extends SubscriptionState {
-  final bool hasAccess;
-  final SubscriptionTier requiredTier;
-
-  const SubscriptionAccessChecked({
-    required this.hasAccess,
-    required this.requiredTier,
-  });
-
-  @override
-  List<Object?> get props => [hasAccess, requiredTier];
+@freezed
+class SubscriptionState with _$SubscriptionState {
+  const factory SubscriptionState.initial() = _Initial;
+  const factory SubscriptionState.loading() = _Loading;
+  const factory SubscriptionState.loaded(Subscription subscription) = _Loaded;
+  const factory SubscriptionState.error(String message) = _Error;
 }

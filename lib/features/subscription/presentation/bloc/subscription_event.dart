@@ -1,58 +1,11 @@
-import 'package:equatable/equatable.dart';
-import '../../domain/entities/subscription.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-abstract class SubscriptionEvent extends Equatable {
-  const SubscriptionEvent();
+part 'subscription_event.freezed.dart';
 
-  @override
-  List<Object?> get props => [];
-}
-
-class LoadCurrentSubscription extends SubscriptionEvent {
-  final String userId;
-
-  const LoadCurrentSubscription(this.userId);
-
-  @override
-  List<Object?> get props => [userId];
-}
-
-class UpdateSubscription extends SubscriptionEvent {
-  final Subscription subscription;
-
-  const UpdateSubscription(this.subscription);
-
-  @override
-  List<Object?> get props => [subscription];
-}
-
-class CancelSubscription extends SubscriptionEvent {
-  final String subscriptionId;
-
-  const CancelSubscription(this.subscriptionId);
-
-  @override
-  List<Object?> get props => [subscriptionId];
-}
-
-class LoadSubscriptionHistory extends SubscriptionEvent {
-  final String userId;
-
-  const LoadSubscriptionHistory(this.userId);
-
-  @override
-  List<Object?> get props => [userId];
-}
-
-class CheckSubscriptionAccess extends SubscriptionEvent {
-  final String userId;
-  final SubscriptionTier requiredTier;
-
-  const CheckSubscriptionAccess({
-    required this.userId,
-    required this.requiredTier,
-  });
-
-  @override
-  List<Object?> get props => [userId, requiredTier];
+@freezed
+class SubscriptionEvent with _$SubscriptionEvent {
+  const factory SubscriptionEvent.started() = _Started;
+  const factory SubscriptionEvent.upgraded() = _Upgraded;
+  const factory SubscriptionEvent.cancelled() = _Cancelled;
+  const factory SubscriptionEvent.renewed() = _Renewed;
 }

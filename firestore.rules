@@ -18,18 +18,56 @@ service cloud.firestore {
     match /subscriptions/{subscriptionId} {
       // Users can read their own subscriptions
       allow read: if isSignedIn() && 
-        resource.data.userId == request.auth.uid;
+        (resource == null || resource.data.userId == request.auth.uid);
       
       // Only Cloud Functions can create/update subscriptions
       allow create, update: if false;
       
       // No one can delete subscriptions (use status field instead)
       allow delete: if false;
+
+      // Allow access to subscription history
+      match /history/{historyId} {
+        allow read: if isSignedIn() && 
+          get(/databases/$(database)/documents/subscriptions/$(subscriptionId)).data.userId == request.auth.uid;
+      }
     }
 
-    // Allow Cloud Functions to manage subscriptions
-    match /subscriptions/{subscriptionId} {
-      allow read, write: if request.auth.token.firebase.sign_in_provider == 'google.com';
+    // User-specific collections
+    match /users/{userId} {
+      // Allow users to access their own data
+      allow read, write: if isSignedIn() && request.auth.uid == userId;
+
+      // User's saved words
+      match /saved_words/{wordId} {
+        allow read, write: if isSignedIn() && request.auth.uid == userId;
+      }
+
+      // User's books
+      match /books/{bookId} {
+        allow read, write: if isSignedIn() && request.auth.uid == userId;
+      }
+
+      // User's stats
+      match /stats/{statsId} {
+        allow read, write: if isSignedIn() && request.auth.uid == userId;
+      }
+
+      // User's favorites
+      match /favorites/{favoriteId} {
+        allow read, write: if isSignedIn() && request.auth.uid == userId;
+      }
+    }
+
+    // User stats collection (for backward compatibility)
+    match /user_stats/{userId} {
+      allow read, write: if isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Global books collection (read-only for authenticated users)
+    match /books/{bookId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
     }
   }
 }

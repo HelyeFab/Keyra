@@ -8,7 +8,9 @@ class BubblePainter extends CustomPainter {
   final Color color;
   final bool drawShadow;
 
-  BubblePainter({this.color = AppColors.darkPrimary, this.drawShadow = true});
+  BubblePainter({this.color = AppColors.splashKeyraText, this.drawShadow = true});
+
+  // BubblePainter({this.color = AppColors.darkPrimary, this.drawShadow = true});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -309,7 +311,7 @@ class _SplashScreenState extends State<SplashScreen>
                     child: Container(
                       height: bottomAreaHeight,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: AppColors.darkSurface,
                         borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(30),
                           topRight: Radius.circular(30),
@@ -338,7 +340,7 @@ class _SplashScreenState extends State<SplashScreen>
                                 fontFamily: 'Poppins',
                                 fontSize: screenHeight * 0.028,
                                 fontWeight: FontWeight.w400,
-                                color: Colors.black45,
+                                color: Colors.white,
                               ),
                             ),
                             Text(
@@ -352,22 +354,22 @@ class _SplashScreenState extends State<SplashScreen>
                                   // Create border effect with 4 shadows
                                   Shadow(
                                     offset: Offset(-1.5, -1.5),
-                                    color: AppColors.splashKeyraBorder,
+                                    color: Color.fromARGB(255, 250, 248, 248),
                                     blurRadius: 0,
                                   ),
                                   Shadow(
                                     offset: Offset(1.5, -1.5),
-                                    color: AppColors.splashKeyraBorder,
+                                    color: Color.fromARGB(255, 227, 224, 224),
                                     blurRadius: 0,
                                   ),
                                   Shadow(
                                     offset: Offset(-1.5, 1.5),
-                                    color: AppColors.splashKeyraBorder,
+                                    color: Color.fromARGB(255, 227, 224, 224),
                                     blurRadius: 0,
                                   ),
                                   Shadow(
                                     offset: Offset(1.5, 1.5),
-                                    color: AppColors.splashKeyraBorder,
+                                    color: Color.fromARGB(255, 227, 224, 224),
                                     blurRadius: 0,
                                   ),
                                 ],
@@ -381,7 +383,7 @@ class _SplashScreenState extends State<SplashScreen>
                                 fontFamily: 'Poppins',
                                 fontSize: screenHeight * 0.020,
                                 fontWeight: FontWeight.w400,
-                                color: Colors.black45,
+                                color: Colors.white,
                               ),
                             ),
                           ],

@@ -1,0 +1,35 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return request.auth != null && request.auth.token.admin == true;
+    }
+    
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    // Subscriptions collection
+    match /subscriptions/{subscriptionId} {
+      // Users can read their own subscriptions
+      allow read: if isSignedIn() && 
+        resource.data.userId == request.auth.uid;
+      
+      // Only Cloud Functions can create/update subscriptions
+      allow create, update: if false;
+      
+      // No one can delete subscriptions (use status field instead)
+      allow delete: if false;
+    }
+
+    // Allow Cloud Functions to manage subscriptions
+    match /subscriptions/{subscriptionId} {
+      allow read, write: if request.auth.token.firebase.sign_in_provider == 'google.com';
+    }
+  }
+}

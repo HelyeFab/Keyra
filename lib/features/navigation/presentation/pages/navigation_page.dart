@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import '../../../../core/widgets/keyra_scaffold.dart';
+import '../../../../core/ui_language/bloc/ui_language_bloc.dart';
+import '../../../../core/presentation/bloc/language_bloc.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../subscription/presentation/bloc/subscription_bloc.dart';
+import '../../../subscription/presentation/bloc/subscription_event.dart';
+import '../../../subscription/presentation/bloc/subscription_state.dart';
+import '../../../subscription/data/repositories/subscription_repository.dart';
+import '../../../subscription/domain/entities/subscription_enums.dart' show SubscriptionStatus, SubscriptionTier;
 import '../../../auth/presentation/pages/auth_page.dart';
 import '../../../study/presentation/pages/study_page.dart';
 import '../../../dashboard/presentation/pages/dashboard_page.dart';
@@ -31,12 +39,12 @@ class _NavigationPageState extends State<NavigationPage> {
     _currentIndex = widget.initialIndex ?? 0;
   }
 
-  final List<Widget> _pages = const [
-    HomePage(),
-    LibraryPage(),
-    StudyPage(),
-    DashboardPage(),
-    ProfilePage(),
+  List<Widget> get _pages => [
+    const HomePage(),
+    const LibraryPage(),
+    const StudyPage(),
+    const DashboardPage(),
+    const ProfilePage(),
   ];
 
   void _onNavigationChanged(int index) {
@@ -54,7 +62,20 @@ class _NavigationPageState extends State<NavigationPage> {
             // Silently navigate to auth page without showing error message
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
-                builder: (context) => const AuthPage(),
+                builder: (context) => MultiBlocProvider(
+                  providers: [
+                    BlocProvider.value(
+                      value: context.read<UiLanguageBloc>(),
+                    ),
+                    BlocProvider.value(
+                      value: context.read<LanguageBloc>(),
+                    ),
+                    BlocProvider.value(
+                      value: context.read<AuthBloc>(),
+                    ),
+                  ],
+                  child: const AuthPage(),
+                ),
               ),
               (route) => false, // Remove all previous routes from the stack
             );
@@ -62,8 +83,11 @@ class _NavigationPageState extends State<NavigationPage> {
           orElse: () {},
         );
       },
-      child: MultiBlocProvider(
+      child: MultiProvider(
         providers: [
+          Provider<SavedWordsRepository>(
+            create: (_) => SavedWordsRepository(),
+          ),
           BlocProvider<DashboardBloc>(
             create: (context) => DashboardBloc(
               userStatsRepository: UserStatsRepository(),
@@ -76,11 +100,37 @@ class _NavigationPageState extends State<NavigationPage> {
               userStatsRepository: UserStatsRepository(),
             ),
           ),
+          BlocProvider.value(
+            value: context.read<UiLanguageBloc>(),
+          ),
+          BlocProvider.value(
+            value: context.read<LanguageBloc>(),
+          ),
+          BlocProvider<SubscriptionBloc>(
+            create: (context) => SubscriptionBloc(
+              subscriptionRepository: SubscriptionRepository(),
+            )..add(const SubscriptionEvent.started()),
+          ),
         ],
-        child: KeyraScaffold(
-          currentIndex: _currentIndex,
-          onNavigationChanged: _onNavigationChanged,
-          child: _pages[_currentIndex],
+        child: BlocListener<SubscriptionBloc, SubscriptionState>(
+          listener: (context, state) {
+            state.maybeWhen(
+              loaded: (subscription) {
+                final bool isActive = subscription.status == SubscriptionStatus.active && 
+                    subscription.endDate.isAfter(DateTime.now());
+                final String tierStatus = subscription.tier == SubscriptionTier.premium ? 'PREMIUM' : 'FREE';
+                final String activeStatus = isActive ? 'ACTIVE' : 'INACTIVE';
+                
+                print('Current User Subscription Status: ${subscription.tier == SubscriptionTier.premium ? "PREMIUM" : "FREE"}');
+              },
+              orElse: () {},
+            );
+          },
+          child: KeyraScaffold(
+            currentIndex: _currentIndex,
+            onNavigationChanged: _onNavigationChanged,
+            child: _pages[_currentIndex],
+          ),
         ),
       ),
     );
