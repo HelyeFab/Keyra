@@ -1,9 +1,16 @@
 {
   "name": "keyra-scripts",
   "version": "1.0.0",
-  "description": "Admin scripts for Keyra",
-  "main": "init_user_stats.js",
+  "description": "Scripts for Keyra app management",
+  "main": "init_subscriptions.js",
+  "scripts": {
+    "setup-admin": "node setup_admin.js",
+    "get-token": "node get_id_token.js",
+    "init-subscriptions": "node init_subscriptions.js"
+  },
   "dependencies": {
-    "firebase-admin": "^11.11.0"
+    "firebase": "^10.8.0",
+    "firebase-admin": "^11.8.0",
+    "node-fetch": "^2.6.1"
   }
 }

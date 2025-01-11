@@ -1,20 +1,24 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../../../dashboard/data/repositories/user_stats_repository.dart';
+import '../../../subscription/application/subscription_service.dart';
 import 'package:flutter/services.dart';
 
 class FirebaseAuthRepository {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
   final UserStatsRepository _userStatsRepository;
+  final SubscriptionService _subscriptionService;
 
   FirebaseAuthRepository({
     FirebaseAuth? firebaseAuth,
     GoogleSignIn? googleSignIn,
     UserStatsRepository? userStatsRepository,
+    SubscriptionService? subscriptionService,
   })  : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
         _googleSignIn = googleSignIn ?? GoogleSignIn(),
-        _userStatsRepository = userStatsRepository ?? UserStatsRepository();
+        _userStatsRepository = userStatsRepository ?? UserStatsRepository(),
+        _subscriptionService = subscriptionService ?? SubscriptionService();
 
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
@@ -67,6 +71,11 @@ class FirebaseAuthRepository {
       
       // Initialize user stats after successful sign in
       await _userStatsRepository.getUserStats();
+
+      // Create subscription for new Google sign-in users
+      if (userCredential.additionalUserInfo?.isNewUser == true && userCredential.user != null) {
+        await _subscriptionService.createSubscriptionForUser(userCredential.user!);
+      }
       
       return userCredential;
     } catch (e, stackTrace) {
@@ -117,6 +126,11 @@ class FirebaseAuthRepository {
       
       // Initialize user stats for new user
       await _userStatsRepository.getUserStats();
+
+      // Create subscription for new user
+      if (userCredential.user != null) {
+        await _subscriptionService.createSubscriptionForUser(userCredential.user!);
+      }
       
       return userCredential;
     } catch (e) {
