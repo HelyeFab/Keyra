@@ -277,11 +277,11 @@ class _LibraryPageState extends State<LibraryPage> {
     return GridView.builder(
       padding: const EdgeInsets.fromLTRB(
           AppSpacing.lg, AppSpacing.lg, AppSpacing.lg, 120),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 0.55, // Adjusted to account for 0.75 image ratio + title height
-        crossAxisSpacing: AppSpacing.lg,
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 200,
         mainAxisSpacing: AppSpacing.lg,
+        crossAxisSpacing: AppSpacing.lg,
+        mainAxisExtent: 360, // Approximate height that works well with the content
       ),
       itemCount: books.length,
       itemBuilder: (context, index) {

@@ -93,14 +93,22 @@ class BookCard extends StatelessWidget {
                 ),
               ],
             ),
-            Container(
-              height: 80,
+            Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
-              child: Text(
-                title,
-                style: Theme.of(context).textTheme.titleMedium,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: Theme.of(context).textTheme.titleMedium,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  // Space reserved for future additions:
+                  // - Reading time
+                  // - Genre
+                ],
               ),
             ),
           ],

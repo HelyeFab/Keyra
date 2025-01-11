@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/keyra_scaffold.dart';
 import '../../../../core/presentation/bloc/language_bloc.dart';
@@ -21,6 +22,8 @@ import '../../../../features/badges/presentation/widgets/badge_display.dart';
 import '../../../../features/badges/presentation/bloc/badge_bloc.dart';
 import '../../../../features/badges/presentation/bloc/badge_state.dart';
 import '../../../../features/badges/presentation/bloc/badge_event.dart';
+import '../../../common/presentation/widgets/no_internet_dialog.dart';
+import '../../../../features/books/data/services/book_cover_cache_manager.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -90,15 +93,32 @@ class _HomePageState extends State<HomePage> {
 
   void _loadBooks() async {
     print('HomePage: Starting to load books');
+    if (!mounted) return;
+    
     setState(() {
       _isLoadingAll = true;
     });
-    
+
     try {
-      if (!await ConnectivityUtils.checkConnectivity(context)) {
+      final hasConnectivity = await ConnectivityUtils.checkConnectivity(context);
+      if (!hasConnectivity) {
+        print('HomePage: No connectivity detected');
         setState(() {
           _isLoadingAll = false;
         });
+        if (mounted) {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (_) => const NoInternetDialog(),
+          );
+        }
+        return;
+      }
+
+      if (_bookRepository == null) {
+        print('HomePage: BookRepository not initialized, retrying...');
+        await _initializeRepository();
         return;
       }
 
@@ -172,6 +192,11 @@ class _HomePageState extends State<HomePage> {
 
   void _toggleFavorite(int index) async {
     if (!await ConnectivityUtils.checkConnectivity(context)) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => const NoInternetDialog(),
+      );
       return;
     }
 
@@ -291,7 +316,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             const SizedBox(height: AppSpacing.md),
                             SizedBox(
-                              height: 340,
+                              height: 380,
                               child: _isLoadingAll
                                   ? const Center(
                                       child: LoadingIndicator(size: 100),
@@ -368,26 +393,27 @@ class _HomePageState extends State<HomePage> {
                                                 height: 50,
                                                 child: ClipRRect(
                                                   borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
-                                                  child: Image.network(
-                                                    book.coverImage,
+                                                  child: CachedNetworkImage(
+                                                    cacheManager: BookCoverCacheManager.instance,
+                                                    imageUrl: book.coverImage,
                                                     width: 50,
                                                     height: 50,
                                                     fit: BoxFit.cover,
-                                                    cacheWidth: 100,
-                                                    cacheHeight: 100,
-                                                    errorBuilder: (context, error, stackTrace) {
+                                                    memCacheWidth: 100,
+                                                    memCacheHeight: 100,
+                                                    placeholder: (context, url) => Container(
+                                                      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                                                      child: const Center(
+                                                        child: LoadingIndicator(size: 24),
+                                                      ),
+                                                    ),
+                                                    errorWidget: (context, url, error) {
                                                       print('Error loading cover image: $error');
                                                       return Container(
                                                         color: Theme.of(context).colorScheme.surfaceContainerHighest,
                                                         child: const Center(
                                                           child: Icon(Icons.broken_image_outlined, size: 24),
                                                         ),
-                                                      );
-                                                    },
-                                                    loadingBuilder: (context, child, loadingProgress) {
-                                                      if (loadingProgress == null) return child;
-                                                      return const Center(
-                                                        child: LoadingIndicator(size: 24),
                                                       );
                                                     },
                                                   ),
