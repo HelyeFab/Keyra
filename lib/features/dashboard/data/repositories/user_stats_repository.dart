@@ -37,7 +37,7 @@ class UserStatsRepository {
         if (!newStatsSnap.exists) {
           throw Exception('Failed to initialize user stats');
         }
-        return UserStats(
+        return const UserStats(
           booksRead: 0,
           favoriteBooks: 0,
           readingStreak: 0,

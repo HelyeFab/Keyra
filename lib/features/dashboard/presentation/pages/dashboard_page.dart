@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:Keyra/core/widgets/keyra_page_background.dart';
 import 'package:Keyra/features/common/presentation/utils/connectivity_utils.dart';
-import 'package:Keyra/core/theme/color_schemes.dart';
 import 'package:Keyra/features/books/domain/models/book_language.dart';
 import 'package:Keyra/core/ui_language/service/ui_translation_service.dart';
 import 'package:Keyra/features/badges/presentation/widgets/badges_overview_card.dart';

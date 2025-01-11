@@ -348,25 +348,25 @@ class _SplashScreenState extends State<SplashScreen>
                                 fontSize: screenHeight * 0.072,
                                 fontWeight: FontWeight.w400,
                                 color: AppColors.splashKeyraText,
-                                shadows: [
+                                shadows: const [
                                   // Create border effect with 4 shadows
                                   Shadow(
-                                    offset: const Offset(-1.5, -1.5),
+                                    offset: Offset(-1.5, -1.5),
                                     color: AppColors.splashKeyraBorder,
                                     blurRadius: 0,
                                   ),
                                   Shadow(
-                                    offset: const Offset(1.5, -1.5),
+                                    offset: Offset(1.5, -1.5),
                                     color: AppColors.splashKeyraBorder,
                                     blurRadius: 0,
                                   ),
                                   Shadow(
-                                    offset: const Offset(-1.5, 1.5),
+                                    offset: Offset(-1.5, 1.5),
                                     color: AppColors.splashKeyraBorder,
                                     blurRadius: 0,
                                   ),
                                   Shadow(
-                                    offset: const Offset(1.5, 1.5),
+                                    offset: Offset(1.5, 1.5),
                                     color: AppColors.splashKeyraBorder,
                                     blurRadius: 0,
                                   ),

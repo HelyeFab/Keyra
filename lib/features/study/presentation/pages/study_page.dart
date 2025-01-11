@@ -4,7 +4,6 @@ import '../../../../core/ui_language/translations/ui_translations.dart';
 import '../../../../core/widgets/keyra_scaffold.dart';
 import '../../../common/presentation/utils/connectivity_utils.dart';
 import '../../../../core/theme/color_schemes.dart';
-import '../../../../core/theme/bloc/theme_bloc.dart';
 import '../../../../features/books/domain/models/book_language.dart';
 import '../../../navigation/presentation/pages/navigation_page.dart';
 import 'session/study_session_page.dart';

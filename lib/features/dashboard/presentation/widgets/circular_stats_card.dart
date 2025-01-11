@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/theme/bloc/theme_bloc.dart';
 
 class CircularStatsCard extends StatelessWidget {
   final String title;
