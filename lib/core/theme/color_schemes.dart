@@ -51,6 +51,10 @@ class AppColors {
   static const splashKeyraText = Colors.orange;
   static const splashKeyraBorder = Color(0xFF666666); // Medium grey for Keyra text border
   static const splashText = Color(0xFFED7769); // Coral/salmon text for splash screen
+  static const splashWelcomeText = Color(0xFFFFFFFF); // White text for "Welcome to"
+  static const splashKeyraTextShadow = Color(0xFFFAF8F8); // White shadow for Keyra text
+  static const splashBoxShadow = Color(0x1A000000); // 10% black for box shadow
+  static const splashBubbleShadow = Color(0x14000000); // 8% black for bubble shadow
 
   // Common colors
   static const Color error = Color(0xFFCF6679);

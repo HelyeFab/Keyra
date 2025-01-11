@@ -11,6 +11,7 @@ import '../../../../core/ui_language/bloc/ui_language_bloc.dart';
 import '../../../../core/ui_language/widgets/ui_language_selector_modal.dart';
 import '../../../../core/ui_language/translations/ui_translations.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../subscription/presentation/widgets/subscription_badge.dart';
 import 'privacy_policy_page.dart';
 import 'terms_of_service_page.dart';
 import 'acknowledgments_page.dart';
@@ -89,18 +90,21 @@ class ProfilePage extends StatelessWidget {
       },
       child: Column(
         children: [
-          Align(
-            alignment: Alignment.centerRight,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: IconButton(
-                icon: HugeIcon(
-                  icon: HugeIcons.strokeRoundedLogout01,
-                  color: iconColor,
-                  size: 24.0,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const SubscriptionBadge(),
+                IconButton(
+                  icon: HugeIcon(
+                    icon: HugeIcons.strokeRoundedLogout01,
+                    color: iconColor,
+                    size: 24.0,
+                  ),
+                  onPressed: () => _showLogoutConfirmation(context),
                 ),
-                onPressed: () => _showLogoutConfirmation(context),
-              ),
+              ],
             ),
           ),
           Expanded(
