@@ -79,7 +79,7 @@ class BubblePainter extends CustomPainter {
     
     // Draw top-left corner and top side
     borderPath.arcToPoint(
-      Offset(radius, 0),
+      const Offset(radius, 0),
       radius: const Radius.circular(radius),
     );
     borderPath.lineTo(size.width - radius, 0);
@@ -354,19 +354,19 @@ class _SplashScreenState extends State<SplashScreen>
                     right: 0,
                     child: Container(
                       height: bottomAreaHeight,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: AppColors.darkSurface,
-                        border: const Border(
+                        border: Border(
                           top: BorderSide(
                             color: AppColors.lightSurfaceVariant,
                             width: 1.0,
                           ),
                         ),
-                        borderRadius: const BorderRadius.only(
+                        borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(30),
                           topRight: Radius.circular(30),
                         ),
-                        boxShadow: const [
+                        boxShadow: [
                           BoxShadow(
                             color: AppColors.splashBoxShadow,
                             blurRadius: 10,
@@ -403,22 +403,22 @@ class _SplashScreenState extends State<SplashScreen>
                                 shadows: const [
                                   // Create border effect with 4 shadows
                                   Shadow(
-                                    offset: const Offset(-1.5, -1.5),
+                                    offset: Offset(-1.5, -1.5),
                                     color: AppColors.splashKeyraTextShadow,
                                     blurRadius: 0,
                                   ),
                                   Shadow(
-                                    offset: const Offset(1.5, -1.5),
+                                    offset: Offset(1.5, -1.5),
                                     color: AppColors.splashKeyraTextShadow,
                                     blurRadius: 0,
                                   ),
                                   Shadow(
-                                    offset: const Offset(-1.5, 1.5),
+                                    offset: Offset(-1.5, 1.5),
                                     color: AppColors.splashKeyraTextShadow,
                                     blurRadius: 0,
                                   ),
                                   Shadow(
-                                    offset: const Offset(1.5, 1.5),
+                                    offset: Offset(1.5, 1.5),
                                     color: AppColors.splashKeyraTextShadow,
                                     blurRadius: 0,
                                   ),

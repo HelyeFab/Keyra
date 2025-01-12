@@ -316,7 +316,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             const SizedBox(height: AppSpacing.md),
                             SizedBox(
-                              height: 380,
+                              height: 200,
                               child: _isLoadingAll
                                   ? const Center(
                                       child: LoadingIndicator(size: 100),
@@ -330,13 +330,15 @@ class _HomePageState extends State<HomePage> {
                                         return Padding(
                                           padding: const EdgeInsets.only(right: AppSpacing.md),
                                           child: SizedBox(
-                                            width: 180,
+                                            width: 200,
                                             child: BookCard(
                                               title: book.getTitle(languageState.selectedLanguage),
                                               coverImagePath: book.coverImage,
                                               isFavorite: book.isFavorite,
                                               onFavoriteTap: () => _toggleFavorite(index),
                                               onTap: () => _onBookTap(book),
+                                              category: book.categories.isNotEmpty ? book.categories.first : null,
+                                              totalPages: book.totalPages,
                                             ),
                                           ),
                                         );

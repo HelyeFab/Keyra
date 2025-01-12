@@ -57,7 +57,7 @@ class SubscriptionPage extends StatelessWidget {
                             color: AppColors.subscriptionHighlight.withOpacity(0.2),
                             shape: BoxShape.circle,
                           ),
-                          child: Icon(
+                          child: const Icon(
                             Icons.check,
                             size: 16,
                             color: AppColors.subscriptionHighlight,
@@ -68,7 +68,7 @@ class SubscriptionPage extends StatelessWidget {
                           child: Text(
                             translations.translate('premium_feature_${index + 1}'),
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: Theme.of(context).colorScheme.onBackground,
+                                  color: Theme.of(context).colorScheme.onSurface,
                                 ),
                           ),
                         ),
@@ -80,7 +80,7 @@ class SubscriptionPage extends StatelessWidget {
                 Text(
                   translations.translate('select_subscription'),
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onBackground,
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontWeight: FontWeight.bold,
                       ),
                 ),

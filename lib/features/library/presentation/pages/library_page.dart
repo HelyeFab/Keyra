@@ -277,12 +277,11 @@ class _LibraryPageState extends State<LibraryPage> {
     return GridView.builder(
       padding: const EdgeInsets.fromLTRB(
           AppSpacing.lg, AppSpacing.lg, AppSpacing.lg, 120),
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 200,
         mainAxisSpacing: AppSpacing.lg,
         crossAxisSpacing: AppSpacing.lg,
-        mainAxisExtent:
-            360, // Approximate height that works well with the content
+        mainAxisExtent: 200,
       ),
       itemCount: books.length,
       itemBuilder: (context, index) {
@@ -294,6 +293,8 @@ class _LibraryPageState extends State<LibraryPage> {
           isFavorite: book.isFavorite,
           onFavoriteTap: () => _toggleFavorite(index),
           onTap: () => _onBookTap(book),
+          category: book.categories.isNotEmpty ? book.categories.first : null,
+          totalPages: book.totalPages,
         );
       },
     );

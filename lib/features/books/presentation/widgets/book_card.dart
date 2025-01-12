@@ -10,6 +10,8 @@ class BookCard extends StatelessWidget {
   final bool isFavorite;
   final VoidCallback onFavoriteTap;
   final VoidCallback onTap;
+  final String? category;
+  final int? totalPages;
 
   const BookCard({
     super.key,
@@ -18,16 +20,17 @@ class BookCard extends StatelessWidget {
     required this.isFavorite,
     required this.onFavoriteTap,
     required this.onTap,
+    this.category,
+    this.totalPages,
   });
 
   @override
   Widget build(BuildContext context) {
-    const cardSize = 240.0;
     return GestureDetector(
       onTap: onTap,
       child: SizedBox(
-        width: 150,
-        height: 220,
+        width: 200,
+        height: 200,
         child: Card(
           elevation: 4,
           color: Theme.of(context).colorScheme.surfaceContainerLowest,
@@ -37,7 +40,7 @@ class BookCard extends StatelessWidget {
           child: Column(
             children: [
               SizedBox(
-                height: 150,
+                height: 120,
                 child: Stack(
                   children: [
                     ClipRRect(
@@ -52,7 +55,9 @@ class BookCard extends StatelessWidget {
                         height: double.infinity,
                         fit: BoxFit.cover,
                         placeholder: (context, url) => Container(
-                          color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .surfaceContainerHighest,
                           child: const Center(
                             child: LoadingIndicator(size: 30),
                           ),
@@ -62,9 +67,12 @@ class BookCard extends StatelessWidget {
                         errorWidget: (context, url, error) {
                           print('Error loading cover image: $error');
                           return Container(
-                            color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .surfaceContainerHighest,
                             child: const Center(
-                              child: Icon(Icons.broken_image_outlined, size: 40),
+                              child:
+                                  Icon(Icons.broken_image_outlined, size: 40),
                             ),
                           );
                         },
@@ -79,15 +87,29 @@ class BookCard extends StatelessWidget {
                           onTap: onFavoriteTap,
                           borderRadius: BorderRadius.circular(20),
                           child: Container(
-                            padding: const EdgeInsets.all(8),
+                            padding: const EdgeInsets.all(6),
                             decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.surface.withOpacity(0.8),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .surface
+                                  .withOpacity(0.7),
                               shape: BoxShape.circle,
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.2),
+                                width: 1,
+                              ),
                             ),
                             child: Icon(
-                              isFavorite ? Icons.favorite : Icons.favorite_border,
-                              color: isFavorite ? Colors.red : Colors.grey,
-                              size: 20,
+                              isFavorite
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              color: isFavorite
+                                  ? Theme.of(context).colorScheme.error
+                                  : Theme.of(context)
+                                      .colorScheme
+                                      .onSurface
+                                      .withOpacity(0.7),
+                              size: 18,
                             ),
                           ),
                         ),
@@ -98,30 +120,45 @@ class BookCard extends StatelessWidget {
               ),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.md),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
+                  padding: const EdgeInsets.all(AppSpacing.xs),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            title,
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 13,
+                                ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: AppSpacing.md),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Space for additional book details
-                            // Reading progress, genre, etc.
-                          ],
-                        ),
-                      ),
-                    ],
+                        const SizedBox(height: 2),
+                        if (category != null)
+                          Text(
+                            category!,
+                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        if (totalPages != null) ...[
+                          const SizedBox(height: 1),
+                          Text(
+                            '$totalPages pages',
+                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
                   ),
                 ),
               ),

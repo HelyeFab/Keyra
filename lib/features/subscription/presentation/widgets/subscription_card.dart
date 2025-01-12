@@ -26,7 +26,7 @@ class SubscriptionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final translations = UiTranslations.of(context);
-    final cardColor = AppColors.subscriptionCardLight;
+    const cardColor = AppColors.subscriptionCardLight;
 
     return Container(
       decoration: BoxDecoration(
@@ -52,7 +52,7 @@ class SubscriptionCard extends StatelessWidget {
                     Row(
                       children: [
                         if (isPremium) ...[
-                          Icon(
+                          const Icon(
                             Icons.star_rounded,
                             color: AppColors.subscriptionStar,
                             size: AppSpacing.badgeSize,
