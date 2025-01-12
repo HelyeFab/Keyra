@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:Keyra/core/theme/app_spacing.dart';
 import 'package:Keyra/core/widgets/loading_indicator.dart';
 import 'package:Keyra/features/books/data/services/book_cover_cache_manager.dart';
+import 'package:Keyra/core/ui_language/translations/ui_translations.dart';
 
 class BookCard extends StatelessWidget {
   final String title;
@@ -151,7 +152,7 @@ class BookCard extends StatelessWidget {
                         if (totalPages != null) ...[
                           const SizedBox(height: 1),
                           Text(
-                            '$totalPages pages',
+                            '$totalPages ${UiTranslations.of(context).translate('pages')}',
                             style: Theme.of(context).textTheme.labelSmall?.copyWith(
                               color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                             ),

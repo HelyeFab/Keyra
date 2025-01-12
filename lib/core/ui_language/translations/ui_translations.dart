@@ -270,6 +270,7 @@ Service provided "as is" without warranties.
       'monthly_access': 'Monthly Access',
       'lifetime_access': 'Lifetime Access',
       'one_time_payment': 'One-time Payment',
+      'pages': 'Pages',
     },
     'fr': {
       // Navigation & Controls
@@ -441,6 +442,7 @@ Service provided "as is" without warranties.
       'monthly_access': 'Accès mensuel',
       'lifetime_access': 'Accès à vie',
       'one_time_payment': 'Paiement unique',
+      'pages': 'Pages',
     },
     'es': {
       // Navigation & Controls
@@ -612,6 +614,7 @@ Service provided "as is" without warranties.
       'monthly_access': 'Acceso mensual',
       'lifetime_access': 'Acceso de por vida',
       'one_time_payment': 'Pago único',
+      'pages': 'Páginas',
     },
     'it': {
       // Navigation & Controls
@@ -784,6 +787,7 @@ Service provided "as is" without warranties.
       'monthly_access': 'Accesso mensile',
       'lifetime_access': 'Accesso a vita',
       'one_time_payment': 'Pagamento unico',
+      'pages': 'Pagine',
     },
     'de': {
       // Navigation & Controls
@@ -955,6 +959,7 @@ Service provided "as is" without warranties.
       'monthly_access': 'Monatlicher Zugang',
       'lifetime_access': 'Lebenslanger Zugang',
       'one_time_payment': 'Einmalzahlung',
+      'pages': 'Seiten',
     },
     'ja': {
       // Navigation & Controls
@@ -1120,6 +1125,7 @@ Service provided "as is" without warranties.
       'monthly_access': '月間アクセス',
       'lifetime_access': '永久アクセス',
       'one_time_payment': '一括払い',
+      'pages': 'ページ',
     },
     'pt': {
       'premium_access_title': 'Acesso Premium',
@@ -1143,6 +1149,7 @@ Service provided "as is" without warranties.
       'monthly_access': 'Acesso mensal',
       'lifetime_access': 'Acesso vitalício',
       'one_time_payment': 'Pagamento único',
+      'pages': 'Páginas',
     }
   };
 }
