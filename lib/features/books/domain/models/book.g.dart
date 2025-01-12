@@ -33,13 +33,14 @@ class BookAdapter extends TypeAdapter<Book> {
       isAudioPlaying: fields[13] as bool,
       lastReadAt: fields[14] as DateTime?,
       readingProgress: fields[15] as double,
+      isRecent: fields[16] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, Book obj) {
     writer
-      ..writeByte(16)
+      ..writeByte(17)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -71,7 +72,9 @@ class BookAdapter extends TypeAdapter<Book> {
       ..writeByte(14)
       ..write(obj.lastReadAt)
       ..writeByte(15)
-      ..write(obj.readingProgress);
+      ..write(obj.readingProgress)
+      ..writeByte(16)
+      ..write(obj.isRecent);
   }
 
   @override

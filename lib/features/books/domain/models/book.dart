@@ -40,6 +40,8 @@ class Book extends Equatable {
   final DateTime? lastReadAt;
   @HiveField(15)
   final double readingProgress;
+  @HiveField(16)
+  final bool isRecent;
 
   const Book({
     required this.id,
@@ -58,6 +60,7 @@ class Book extends Equatable {
     this.isAudioPlaying = false,
     this.lastReadAt,
     this.readingProgress = 0.0,
+    this.isRecent = false,
   });
 
   String getTitle(BookLanguage language) {
@@ -92,6 +95,7 @@ class Book extends Equatable {
     bool? isAudioPlaying,
     DateTime? lastReadAt,
     double? readingProgress,
+    bool? isRecent,
   }) {
     return Book(
       id: id ?? this.id,
@@ -110,6 +114,7 @@ class Book extends Equatable {
       isAudioPlaying: isAudioPlaying ?? this.isAudioPlaying,
       lastReadAt: lastReadAt ?? this.lastReadAt,
       readingProgress: readingProgress ?? this.readingProgress,
+      isRecent: isRecent ?? this.isRecent,
     );
   }
 
@@ -131,6 +136,7 @@ class Book extends Equatable {
       'isAudioPlaying': isAudioPlaying,
       'lastReadAt': lastReadAt?.toIso8601String(),
       'readingProgress': readingProgress,
+      'isRecent': isRecent,
     };
   }
 
@@ -152,6 +158,7 @@ class Book extends Equatable {
       'isAudioPlaying': isAudioPlaying,
       'lastReadAt': lastReadAt != null ? Timestamp.fromDate(lastReadAt!) : null,
       'readingProgress': readingProgress,
+      'isRecent': isRecent,
     };
   }
 
@@ -183,6 +190,7 @@ class Book extends Equatable {
               : DateTime.parse(json['lastReadAt'] as String)
           : null,
       readingProgress: json['readingProgress'] as double,
+      isRecent: json['isRecent'] as bool? ?? false,
     );
   }
 
@@ -214,6 +222,7 @@ class Book extends Equatable {
           ? (map['lastReadAt'] as Timestamp).toDate()
           : null,
       readingProgress: (map['readingProgress'] as num?)?.toDouble() ?? 0.0,
+      isRecent: map['isRecent'] as bool? ?? false,
     );
   }
 
@@ -235,5 +244,6 @@ class Book extends Equatable {
         isAudioPlaying,
         lastReadAt,
         readingProgress,
+        isRecent,
       ];
 }

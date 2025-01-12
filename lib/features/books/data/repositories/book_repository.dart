@@ -56,10 +56,19 @@ class BookRepository {
     }
   }
 
+  bool _isCacheInitialized() {
+    try {
+      return _cacheService.hasCache;
+    } catch (e) {
+      print('BookRepository: Cache not initialized: $e');
+      return false;
+    }
+  }
+
   // Get books that are in progress (started but not finished)
   Stream<List<Book>> getInProgressBooks() async* {
     print('BookRepository: Starting getInProgressBooks');
-    
+
     try {
       final user = _auth.currentUser;
       if (user == null) {
@@ -73,12 +82,14 @@ class BookRepository {
           .collection('users')
           .doc(user.uid)
           .collection('books')
-          .where('isCompleted', isEqualTo: false)  // Books that aren't completed
-          .orderBy('lastUpdated', descending: true);  // Most recently updated first
+          .where('isCompleted', isEqualTo: false) // Books that aren't completed
+          .orderBy('lastUpdated',
+              descending: true); // Most recently updated first
 
       await for (final userBooksSnapshot in userBooksQuery.snapshots()) {
-        print('BookRepository: Received user books update with ${userBooksSnapshot.docs.length} books');
-        
+        print(
+            'BookRepository: Received user books update with ${userBooksSnapshot.docs.length} books');
+
         if (userBooksSnapshot.docs.isEmpty) {
           print('BookRepository: No in-progress books found');
           yield [];
@@ -87,19 +98,19 @@ class BookRepository {
 
         // Get current stats to check lastBookId
         final stats = await _userStatsRepository.getUserStats();
-        
+
         // Get all book IDs that are not completed
-        final inProgressBookIds = userBooksSnapshot.docs
-            .map((doc) => doc.id)
-            .toSet();
-        
+        final inProgressBookIds =
+            userBooksSnapshot.docs.map((doc) => doc.id).toSet();
+
         // Get the full book data from the global books collection
         final booksSnapshot = await _firestore
             .collection('books')
             .where(FieldPath.documentId, whereIn: inProgressBookIds.toList())
             .get();
 
-        print('BookRepository: Fetched ${booksSnapshot.docs.length} books from global collection');
+        print(
+            'BookRepository: Fetched ${booksSnapshot.docs.length} books from global collection');
 
         // Get user's favorites
         Set<String> favoriteBookIds = {};
@@ -121,21 +132,22 @@ class BookRepository {
             // Get the user's progress data for this book
             final userBookDoc = userBooksSnapshot.docs
                 .firstWhere((doc) => doc.id == bookDoc.id);
-            
+
             // Create book with metadata from global collection
             final book = Book.fromMap(bookDoc.data(), docId: bookDoc.id);
-            
+
             // Add user-specific data
             final userBookData = userBookDoc.data();
             final isFavorite = favoriteBookIds.contains(book.id);
-            
+
             inProgressBooks.add(book.copyWith(
               currentPage: userBookData['currentPage'] as int? ?? 0,
-              lastReadAt: userBookData['lastReadAt'] != null 
+              lastReadAt: userBookData['lastReadAt'] != null
                   ? (userBookData['lastReadAt'] as Timestamp).toDate()
                   : null,
-              currentLanguage: userBookData['currentLanguage'] != null 
-                  ? BookLanguage.fromCode(userBookData['currentLanguage'] as String)
+              currentLanguage: userBookData['currentLanguage'] != null
+                  ? BookLanguage.fromCode(
+                      userBookData['currentLanguage'] as String)
                   : book.defaultLanguage,
               isFavorite: isFavorite,
             ));
@@ -154,7 +166,8 @@ class BookRepository {
 
         print('BookRepository: In-progress books sorted by last update');
 
-        print('BookRepository: Yielding ${inProgressBooks.length} in-progress books');
+        print(
+            'BookRepository: Yielding ${inProgressBooks.length} in-progress books');
         yield inProgressBooks;
       }
     } catch (e) {
@@ -163,20 +176,69 @@ class BookRepository {
     }
   }
 
+  // Get recent books
+  Stream<List<Book>> getRecentBooks() async* {
+    print('BookRepository: Starting getRecentBooks');
+
+    try {
+      await for (final snapshot in _firestore
+          .collection('books')
+          .where('isRecent', isEqualTo: true)
+          .snapshots()) {
+        print('BookRepository: Received ${snapshot.docs.length} recent books');
+
+        final user = _auth.currentUser;
+        List<Book> books = [];
+        Set<String> favoriteBookIds = {};
+
+        if (user != null) {
+          try {
+            final userFavoritesDoc = await _firestore
+                .collection('users')
+                .doc(user.uid)
+                .collection('favorites')
+                .get();
+            favoriteBookIds =
+                userFavoritesDoc.docs.map((doc) => doc.id).toSet();
+          } catch (e) {
+            print('BookRepository: Error fetching favorites: $e');
+          }
+        }
+
+        for (var doc in snapshot.docs) {
+          try {
+            final book = Book.fromMap(doc.data(), docId: doc.id);
+            books.add(book.copyWith(
+              isFavorite: favoriteBookIds.contains(book.id),
+            ));
+          } catch (e) {
+            print('BookRepository: Error processing recent book ${doc.id}: $e');
+            continue;
+          }
+        }
+
+        yield books;
+      }
+    } catch (e) {
+      print('BookRepository: Error in getRecentBooks: $e');
+      yield [];
+    }
+  }
+
   // Get all books
   Stream<List<Book>> getAllBooks() async* {
     print('BookRepository: Starting getAllBooks');
-    
+
     final user = _auth.currentUser;
     try {
       // Ensure cache service is initialized
       await _initCacheService();
-      
+
       // First, check and return cached books if available
-      if (_cacheService.hasCache) {
+      if (_isCacheInitialized() && _cacheService.hasCache) {
         final cachedBooks = _cacheService.getCachedBooks();
         print('BookRepository: Returning ${cachedBooks.length} cached books');
-        
+
         // Get user's favorites to merge with cached books
         if (user != null) {
           try {
@@ -185,22 +247,25 @@ class BookRepository {
                 .doc(user.uid)
                 .collection('favorites')
                 .get();
-            final favoriteBookIds = userFavoritesDoc.docs.map((doc) => doc.id).toSet();
-            
+            final favoriteBookIds =
+                userFavoritesDoc.docs.map((doc) => doc.id).toSet();
+
             // Update cached books with favorite status
-            final updatedCachedBooks = cachedBooks.map((book) => 
-              book.copyWith(isFavorite: favoriteBookIds.contains(book.id))
-            ).toList();
-            
+            final updatedCachedBooks = cachedBooks
+                .map((book) => book.copyWith(
+                    isFavorite: favoriteBookIds.contains(book.id)))
+                .toList();
+
             yield updatedCachedBooks;
           } catch (e) {
-            print('BookRepository: Error fetching favorites for cached books: $e');
+            print(
+                'BookRepository: Error fetching favorites for cached books: $e');
             yield cachedBooks;
           }
         } else {
           yield cachedBooks;
         }
-        
+
         // Add delay before starting Firestore stream to allow cached images to load
         await Future.delayed(const Duration(milliseconds: 500));
       }
@@ -208,13 +273,15 @@ class BookRepository {
       print('BookRepository: Error accessing cache: $e');
       // Continue without cache
     }
-    print('BookRepository: User authentication status - ${user != null ? 'Logged in' : 'Not logged in'}');
+    print(
+        'BookRepository: User authentication status - ${user != null ? 'Logged in' : 'Not logged in'}');
 
     try {
       // Listen to Firestore updates
       await for (final snapshot in _firestore.collection('books').snapshots()) {
-        print('BookRepository: Received Firestore update with ${snapshot.docs.length} books');
-        
+        print(
+            'BookRepository: Received Firestore update with ${snapshot.docs.length} books');
+
         List<Book> books = [];
         Set<String> favoriteBookIds = {};
 
@@ -228,8 +295,10 @@ class BookRepository {
                 .doc(user.uid)
                 .collection('favorites')
                 .get();
-            favoriteBookIds = userFavoritesDoc.docs.map((doc) => doc.id).toSet();
-            print('BookRepository: Fetched ${favoriteBookIds.length} favorites for user');
+            favoriteBookIds =
+                userFavoritesDoc.docs.map((doc) => doc.id).toSet();
+            print(
+                'BookRepository: Fetched ${favoriteBookIds.length} favorites for user');
 
             // Get user's reading progress for all books
             final userBooksDoc = await _firestore
@@ -237,10 +306,9 @@ class BookRepository {
                 .doc(user.uid)
                 .collection('books')
                 .get();
-            userBookDocs = {
-              for (var doc in userBooksDoc.docs) doc.id: doc
-            };
-            print('BookRepository: Fetched reading progress for ${userBookDocs.length} books');
+            userBookDocs = {for (var doc in userBooksDoc.docs) doc.id: doc};
+            print(
+                'BookRepository: Fetched reading progress for ${userBookDocs.length} books');
           } catch (e) {
             print('BookRepository: Error fetching user data: $e');
             // Continue with empty user data
@@ -251,21 +319,25 @@ class BookRepository {
         for (var doc in snapshot.docs) {
           try {
             print('BookRepository: Processing book ${doc.id}');
-            final book = Book.fromMap(doc.data(), docId: doc.id);
+            final data = doc.data();
+            print('BookRepository: Book data - isRecent: ${data['isRecent']}');
+            final book = Book.fromMap(data, docId: doc.id);
+            print('BookRepository: Processed book isRecent: ${book.isRecent}');
             final isFavorite = favoriteBookIds.contains(book.id);
-            
+
             // Get user's reading progress for this book
             final userBookDoc = userBookDocs[doc.id];
             final userData = userBookDoc?.data() as Map<String, dynamic>?;
-            
+
             // Add to books list with user-specific data
             books.add(book.copyWith(
               currentPage: userData?['currentPage'] as int? ?? 0,
-              lastReadAt: userData?['lastReadAt'] != null 
+              lastReadAt: userData?['lastReadAt'] != null
                   ? (userData!['lastReadAt'] as Timestamp).toDate()
                   : null,
-              currentLanguage: userData?['currentLanguage'] != null 
-                  ? BookLanguage.fromCode(userData!['currentLanguage'] as String)
+              currentLanguage: userData?['currentLanguage'] != null
+                  ? BookLanguage.fromCode(
+                      userData!['currentLanguage'] as String)
                   : book.defaultLanguage,
               isFavorite: isFavorite,
             ));
@@ -323,7 +395,7 @@ class BookRepository {
           .doc(user.uid)
           .collection('books')
           .doc(id);
-      
+
       final userBookDoc = await userBookRef.get();
 
       // Initialize book progress if it doesn't exist
@@ -354,10 +426,10 @@ class BookRepository {
       // Merge user-specific data
       return book.copyWith(
         currentPage: userData?['currentPage'] as int? ?? 0,
-        lastReadAt: userData?['lastReadAt'] != null 
+        lastReadAt: userData?['lastReadAt'] != null
             ? (userData!['lastReadAt'] as Timestamp).toDate()
             : null,
-        currentLanguage: currentLanguageCode != null 
+        currentLanguage: currentLanguageCode != null
             ? BookLanguage.fromCode(currentLanguageCode)
             : book.defaultLanguage,
         isFavorite: userFavoriteDoc.exists,
@@ -406,6 +478,7 @@ class BookRepository {
       'description': updatedBook.description,
       'categories': updatedBook.categories,
       'createdAt': Timestamp.fromDate(updatedBook.createdAt),
+      'isRecent': updatedBook.isRecent,
     };
 
     final userBookData = {
@@ -449,20 +522,24 @@ class BookRepository {
       'fileUrl': book.fileUrl,
       'description': book.description,
       'categories': book.categories,
+      'isRecent': book.isRecent,
     };
 
     // Check if book is being completed
     final isCompleting = book.currentPage >= book.pages.length - 1;
     final wasCompleted = (await _firestore
-        .collection('users')
-        .doc(user.uid)
-        .collection('books')
-        .doc(book.id)
-        .get()).data()?['isCompleted'] ?? false;
+                .collection('users')
+                .doc(user.uid)
+                .collection('books')
+                .doc(book.id)
+                .get())
+            .data()?['isCompleted'] ??
+        false;
 
     final userBookData = {
       'currentPage': book.currentPage,
-      'lastReadAt': book.lastReadAt != null ? Timestamp.fromDate(book.lastReadAt!) : null,
+      'lastReadAt':
+          book.lastReadAt != null ? Timestamp.fromDate(book.lastReadAt!) : null,
       'isCompleted': isCompleting,
       'currentLanguage': book.currentLanguage.code ?? book.defaultLanguage.code,
       'lastUpdated': FieldValue.serverTimestamp(),
@@ -474,22 +551,22 @@ class BookRepository {
       await _userStatsRepository.markBookAsRead();
     }
 
-      print('BookRepository: Saving user book data: $userBookData');
-      
-      // Update user-specific reading progress first
-      await _firestore
-          .collection('users')
-          .doc(user.uid)
-          .collection('books')
-          .doc(book.id)
-          .set(userBookData, SetOptions(merge: true));
-      
-      print('BookRepository: User book data saved successfully');
-      
-      // Update global book data
-      await _firestore.collection('books').doc(book.id).update(globalBookData);
-      
-      print('BookRepository: Global book data updated successfully');
+    print('BookRepository: Saving user book data: $userBookData');
+
+    // Update user-specific reading progress first
+    await _firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('books')
+        .doc(book.id)
+        .set(userBookData, SetOptions(merge: true));
+
+    print('BookRepository: User book data saved successfully');
+
+    // Update global book data
+    await _firestore.collection('books').doc(book.id).update(globalBookData);
+
+    print('BookRepository: Global book data updated successfully');
   }
 
   // Update book favorite status
@@ -503,14 +580,14 @@ class BookRepository {
     try {
       final idToken = await user.getIdToken(true);
       print('Got fresh ID token');
-      
+
       // Verify user is properly authenticated
       print('User auth state:');
       print('- UID: ${user.uid}');
       print('- Email: ${user.email}');
       print('- Email verified: ${user.emailVerified}');
       print('- Anonymous: ${user.isAnonymous}');
-      
+
       final bookDoc = await _firestore.collection('books').doc(book.id).get();
       if (!bookDoc.exists) {
         throw Exception('Book ${book.id} does not exist');
@@ -519,7 +596,7 @@ class BookRepository {
 
       final userRef = _firestore.collection('users').doc(user.uid);
       final userDoc = await userRef.get();
-      
+
       if (!userDoc.exists) {
         print('Creating user document for ${user.uid}');
         await userRef.set({
@@ -572,7 +649,7 @@ class BookRepository {
       await Future.wait([
         // Delete from global books collection
         _firestore.collection('books').doc(id).delete(),
-        
+
         // Delete from user's books collection
         _firestore
             .collection('users')
@@ -580,7 +657,7 @@ class BookRepository {
             .collection('books')
             .doc(id)
             .delete(),
-            
+
         // Delete from user's favorites if exists
         _firestore
             .collection('users')

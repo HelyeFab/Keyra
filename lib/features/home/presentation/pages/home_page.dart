@@ -36,9 +36,9 @@ class _HomePageState extends State<HomePage> {
   BookRepository? _bookRepository;
   final _userStatsRepository = UserStatsRepository();
   final _dictionaryService = DictionaryService();
-  List<Book> _allBooks = [];
+  List<Book> _recentBooks = [];
   List<Book> _inProgressBooks = [];
-  bool _isLoadingAll = true;
+  bool _isLoadingRecent = true;
   bool _isLoadingInProgress = true;
 
   @override
@@ -96,7 +96,7 @@ class _HomePageState extends State<HomePage> {
     if (!mounted) return;
     
     setState(() {
-      _isLoadingAll = true;
+      _isLoadingRecent = true;
     });
 
     try {
@@ -104,7 +104,7 @@ class _HomePageState extends State<HomePage> {
       if (!hasConnectivity) {
         print('HomePage: No connectivity detected');
         setState(() {
-          _isLoadingAll = false;
+          _isLoadingRecent = false;
         });
         if (mounted) {
           showDialog(
@@ -134,7 +134,7 @@ class _HomePageState extends State<HomePage> {
       }
 
       print('HomePage: Starting to listen for books from Firestore');
-      _bookRepository?.getAllBooks().listen(
+      _bookRepository?.getRecentBooks().listen(
         (loadedBooks) {
           print('HomePage: Received ${loadedBooks.length} books from Firestore');
           if (loadedBooks.isEmpty) {
@@ -148,7 +148,7 @@ class _HomePageState extends State<HomePage> {
               print('HomePage: Error populating books: $error');
               if (mounted) {
                 setState(() {
-                  _isLoadingAll = false;
+                  _isLoadingRecent = false;
                 });
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text(UiTranslations.of(context).translate('home_error_load_books'))),
@@ -159,8 +159,8 @@ class _HomePageState extends State<HomePage> {
             print('HomePage: Successfully loaded ${loadedBooks.length} books, updating state');
             if (mounted) {
               setState(() {
-                _allBooks = loadedBooks;
-                _isLoadingAll = false;
+              _recentBooks = loadedBooks;
+              _isLoadingRecent = false;
               });
             }
           }
@@ -169,7 +169,7 @@ class _HomePageState extends State<HomePage> {
           print('HomePage: Error loading books from Firestore: $error');
           if (mounted) {
             setState(() {
-              _isLoadingAll = false;
+              _isLoadingRecent = false;
             });
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(UiTranslations.of(context).translate('home_error_load_books'))),
@@ -181,7 +181,7 @@ class _HomePageState extends State<HomePage> {
       print('HomePage: Error in _loadBooks: $e');
       if (mounted) {
         setState(() {
-          _isLoadingAll = false;
+          _isLoadingRecent = false;
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(UiTranslations.of(context).translate('home_error_load_books'))),
@@ -200,11 +200,11 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-    final book = _allBooks[index];
+    final book = _recentBooks[index];
     final updatedBook = book.copyWith(isFavorite: !book.isFavorite);
     
     setState(() {
-      _allBooks[index] = updatedBook;
+      _recentBooks[index] = updatedBook;
       final inProgressIndex = _inProgressBooks.indexWhere((b) => b.id == book.id);
       if (inProgressIndex != -1) {
         _inProgressBooks[inProgressIndex] = updatedBook;
@@ -215,7 +215,7 @@ class _HomePageState extends State<HomePage> {
       await _bookRepository?.updateBookFavoriteStatus(updatedBook);
     } catch (e) {
       setState(() {
-        _allBooks[index] = book;
+        _recentBooks[index] = book;
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(UiTranslations.of(context).translate('home_error_favorite'))),
@@ -317,16 +317,16 @@ class _HomePageState extends State<HomePage> {
                             const SizedBox(height: AppSpacing.md),
                             SizedBox(
                               height: 200,
-                              child: _isLoadingAll
+                              child: _isLoadingRecent
                                   ? const Center(
                                       child: LoadingIndicator(size: 100),
                                     )
                                   : ListView.builder(
                                       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
                                       scrollDirection: Axis.horizontal,
-                                      itemCount: _allBooks.length,
+                                      itemCount: _recentBooks.length,
                                       itemBuilder: (context, index) {
-                                        final book = _allBooks[index];
+                                        final book = _recentBooks[index];
                                         return Padding(
                                           padding: const EdgeInsets.only(right: AppSpacing.md),
                                           child: SizedBox(

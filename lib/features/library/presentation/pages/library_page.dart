@@ -177,7 +177,7 @@ class _LibraryPageState extends State<LibraryPage> {
           case 'favorites':
             return matchesSearch && book.isFavorite;
           case 'recents':
-            return matchesSearch && book.categories.contains('Recents');
+            return matchesSearch && book.isRecent;
           default:
             return matchesSearch && book.categories.contains(_activeFilter);
         }
