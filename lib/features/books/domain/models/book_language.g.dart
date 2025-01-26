@@ -25,6 +25,8 @@ class BookLanguageAdapter extends TypeAdapter<BookLanguage> {
         return BookLanguage.german;
       case 5:
         return BookLanguage.japanese;
+      case 6:
+        return BookLanguage.japaneseFurigana;
       default:
         return BookLanguage.english;
     }
@@ -50,6 +52,9 @@ class BookLanguageAdapter extends TypeAdapter<BookLanguage> {
         break;
       case BookLanguage.japanese:
         writer.writeByte(5);
+        break;
+      case BookLanguage.japaneseFurigana:
+        writer.writeByte(6);
         break;
     }
   }

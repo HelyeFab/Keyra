@@ -15,7 +15,9 @@ enum BookLanguage {
   @HiveField(4)
   german('de', 'Deutsch'),
   @HiveField(5)
-  japanese('ja', '日本語');
+  japanese('ja', '日本語'),
+  @HiveField(6)
+  japaneseFurigana('ja_furigana', '日本語（ふりがな）');
 
   final String code;
   final String displayName;
@@ -35,6 +37,7 @@ enum BookLanguage {
       case BookLanguage.german:
         return 'assets/flags/germany.png';
       case BookLanguage.japanese:
+      case BookLanguage.japaneseFurigana:
         return 'assets/flags/japan.png';
     }
   }

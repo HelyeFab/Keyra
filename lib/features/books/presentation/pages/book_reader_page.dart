@@ -66,6 +66,7 @@ class _BookReaderPageState extends State<BookReaderPage> {
   static const double _baseFontSize = 20.0;
   late final TTSBloc _ttsBloc;
   final _subscriptionRepository = SubscriptionRepository();
+  bool _showFurigana = false;
 
   @override
   void initState() {
@@ -248,115 +249,13 @@ class _BookReaderPageState extends State<BookReaderPage> {
           return true;
         },
         child: Scaffold(
-          body: Stack(
-            children: [
-              // Book content
-              PageView.builder(
-                controller: _pageController,
-                onPageChanged: _onPageChanged,
-                itemCount: widget.book.pages.length,
-                itemBuilder: (context, index) {
-                  return _buildPage(context, widget.book.pages[index]);
-                },
-              ),
-
-              // Bottom navigation
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: Material(
-                  type: MaterialType.transparency,
-                  child: SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 16),
-                      child: Text(
-                        '${_currentPage + 1} / ${widget.book.pages.length}',
-                        textAlign: TextAlign.center,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-              // Top controls
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: Material(
-                  type: MaterialType.transparency,
-                  child: SafeArea(
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(25),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: [
-                                      Colors.white.withOpacity(0.15),
-                                      Colors.white.withOpacity(0.05),
-                                    ],
-                                  ),
-                                  border: Border.all(
-                                    color: Colors.white.withOpacity(0.2),
-                                    width: 0.5,
-                                  ),
-                                ),
-                                child: IconButton(
-                                  icon: HugeIcon(
-                                    icon: HugeIcons.strokeRoundedArrowLeft01,
-                                    color: Theme.of(context).brightness == Brightness.dark
-                                        ? Colors.white.withOpacity(0.9)
-                                        : Colors.black.withOpacity(0.7),
-                                    size: 24.0,
-                                  ),
-                                  onPressed: () {
-                                    _endReadingSession();
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const Spacer(),
-                        _buildFontSizeButton(
-                          icon: Icons.text_decrease,
-                          onPressed: () {
-                            setState(() {
-                              _textScale = (_textScale - 0.1).clamp(0.8, 2.0);
-                            });
-                          },
-                          isDecrease: true,
-                        ),
-                        _buildFontSizeButton(
-                          icon: Icons.text_increase,
-                          onPressed: () {
-                            setState(() {
-                              _textScale = (_textScale + 0.1).clamp(0.8, 2.0);
-                            });
-                          },
-                          isDecrease: false,
-                        ),
-                        const SizedBox(width: 8),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
+          body: PageView.builder(
+            controller: _pageController,
+            onPageChanged: _onPageChanged,
+            itemCount: widget.book.pages.length,
+            itemBuilder: (context, index) {
+              return _buildPage(context, widget.book.pages[index]);
+            },
           ),
         ),
       ),
@@ -365,30 +264,38 @@ class _BookReaderPageState extends State<BookReaderPage> {
 
   Widget _buildPage(BuildContext context, BookPage page) {
     final screenHeight = MediaQuery.of(context).size.height;
-    final text = page.getText(widget.language);
+    final text = page.getText(widget.language.code);
+    // Get furigana text if Japanese and furigana mode is on
+    final String displayText = widget.language.code == 'ja' && _showFurigana 
+        ? page.getText('ja_furigana')
+        : text;
+
+    // Debug print to check text switching
+    print('Language: ${widget.language.code}, ShowFurigana: $_showFurigana');
+    print('Display Text: $displayText');
 
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
       child: Stack(
         children: [
-          // Scrollable text content
-          ListView(
-            children: [
-              // Space for image
-              SizedBox(height: screenHeight * 0.45),
-              // Text content
-              if (text.isNotEmpty)
-                Padding(
-                  padding: AppSpacing.paddingMd,
-                  child: Column(
-                    children: [
-                      _buildTextContent(context, text),
-                      const SizedBox(
-                          height: 100), // Bottom padding for scrolling
-                    ],
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                // Space for image and some extra padding
+                SizedBox(height: screenHeight * 0.5 + 20), 
+                // Text content
+                if (displayText.isNotEmpty)
+                  Padding(
+                    padding: AppSpacing.paddingMd,
+                    child: Column(
+                      children: [
+                        _buildTextContent(context, displayText),
+                        const SizedBox(height: 100), // Bottom padding for scrolling
+                      ],
+                    ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
 
           // Fixed image section with audio player
@@ -411,12 +318,9 @@ class _BookReaderPageState extends State<BookReaderPage> {
                         errorBuilder: (context, error, stackTrace) {
                           debugPrint('Error loading image: $error');
                           return Container(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .surfaceContainerHighest,
+                            color: Theme.of(context).colorScheme.surfaceContainerHighest,
                             child: const Center(
-                              child:
-                                  Icon(Icons.broken_image_outlined, size: 48),
+                              child: Icon(Icons.broken_image_outlined, size: 48),
                             ),
                           );
                         },
@@ -428,7 +332,8 @@ class _BookReaderPageState extends State<BookReaderPage> {
                         },
                       ),
                     ),
-                    if (page.getAudioPath(widget.language) != null) ...[
+
+                    if (page.getAudioPath(widget.language.code) != null) ...[
                       Positioned(
                         left: 0,
                         right: 0,
@@ -492,9 +397,11 @@ class _BookReaderPageState extends State<BookReaderPage> {
                               ),
                             ),
                             child: IconButton(
-                              icon: const HugeIcon(
+                              icon: HugeIcon(
                                 icon: HugeIcons.strokeRoundedArrowLeft01,
-                                color: Colors.white,
+                                color: Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white.withOpacity(0.9)
+                                    : Colors.black.withOpacity(0.7),
                                 size: 24.0,
                               ),
                               onPressed: () {
@@ -507,6 +414,49 @@ class _BookReaderPageState extends State<BookReaderPage> {
                       ),
                     ),
                     const Spacer(),
+                    // Add Furigana toggle button for Japanese text
+                    if (widget.language.code == 'ja')
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(25),
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    Colors.white.withOpacity(0.15),
+                                    Colors.white.withOpacity(0.05),
+                                  ],
+                                ),
+                                border: Border.all(
+                                  color: Colors.white.withOpacity(0.2),
+                                  width: 0.5,
+                                ),
+                              ),
+                              child: IconButton(
+                                icon: Icon(
+                                  _showFurigana ? Icons.subtitles : Icons.subtitles_off,
+                                  color: Theme.of(context).brightness == Brightness.dark
+                                      ? Colors.white.withOpacity(0.9)
+                                      : Colors.black.withOpacity(0.7),
+                                  size: 24.0,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _showFurigana = !_showFurigana;
+                                  });
+                                },
+                                tooltip: _showFurigana ? 'Hide furigana' : 'Show furigana',
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     _buildFontSizeButton(
                       icon: Icons.text_decrease,
                       onPressed: () {
@@ -536,109 +486,195 @@ class _BookReaderPageState extends State<BookReaderPage> {
     );
   }
 
-  Future<List<WordReading>> _processJapaneseText(String text) async {
-    try {
-      final tokens = tokenize(text);
-      final List<WordReading> results = [];
-
-      // Track current sentence
-      var currentSentence = StringBuffer();
-
-      for (var token in tokens) {
-        final word = token.toString();
-
-        // Skip whitespace
-        if (word.trim().isEmpty) {
-          results.add(const WordReading(' ', null));
-          continue;
-        }
-
-        // Add word to current sentence
-        currentSentence.write(word);
-
-        // Handle full stops with line breaks and add translate icon
-        if (word == "。") {
-          final sentenceText = currentSentence.toString();
-          results.add(WordReading("。", null, sentenceText));
-          results.add(const WordReading(" ", null)); // Space before icon
-          results
-              .add(WordReading("", null, sentenceText, true)); // Translate icon
-          results.add(const WordReading(
-              "\n", null)); // Single line break after each sentence
-          // Reset sentence buffer
-          currentSentence.clear();
-          continue;
-        }
-
-        // Handle other punctuation and symbols directly
-        if (RegExp(r'[、！？「」『』（）・〜…]').hasMatch(word)) {
-          results.add(WordReading(word, null, currentSentence.toString()));
-          continue;
-        }
-
-        // Add the word with current sentence, with line break at start of sentence
-        if (currentSentence.isEmpty) {
-          // Add line break at start of new sentence (except for first sentence)
-          if (results.isNotEmpty) {
-            results.add(const WordReading("\n", null));
-          }
-        }
-        results.add(WordReading(word, null, currentSentence.toString()));
-      }
-
-      return results;
-    } catch (e) {
-      debugPrint('Error processing Japanese text: $e');
-      return [WordReading(text, null)];
-    }
-  }
-
-  Future<List<WordReading>> _processNonJapaneseText(String text) async {
-    final List<WordReading> results = [];
-
-    // Split text into sentences first
-    final sentences = text.split(RegExp(r'([.!?])\s+'));
-
-    for (var i = 0; i < sentences.length; i++) {
-      var sentence = sentences[i];
-      if (i < sentences.length - 1) {
-        // Add back the punctuation that was removed by split
-        sentence += text.substring(
-          text.indexOf(sentence) + sentence.length,
-          text.indexOf(sentence) + sentence.length + 1,
-        );
-      }
-
-      // Skip empty sentences
-      if (sentence.trim().isEmpty) continue;
-
-      // Split sentence into words while preserving punctuation and spaces
-      final pattern = RegExp(r'(\s+|[^\s\p{L}]+|\p{L}+)', unicode: true);
-      final matches = pattern.allMatches(sentence);
-
-      // Track current sentence text
-      var currentSentence = StringBuffer();
-
-      for (var match in matches) {
-        final word = match.group(0)!;
-        currentSentence.write(word);
-
-        // Add the word with sentence context
-        results.add(WordReading(word, null, currentSentence.toString()));
-      }
-
-      // Add translation icon and line break after each sentence
-      results.add(const WordReading(" ", null)); // Space before icon
-      results.add(WordReading(
-          "", null, currentSentence.toString(), true)); // Translate icon
-      results.add(const WordReading("\n", null)); // Line break after sentence
-    }
-
-    return results;
-  }
-
   Widget _buildTextContent(BuildContext context, String content) {
     final theme = Theme.of(context);
+    
+    if (widget.language.code == 'ja') {
+      return FutureBuilder<List<WordReading>>(
+        future: _processJapaneseText(content),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const LoadingAnimation(size: 50);
+          }
+
+          // Group words into sentences
+          List<List<WordReading>> sentences = [];
+          List<WordReading> currentSentence = [];
+
+          for (var wordReading in snapshot.data!) {
+            currentSentence.add(wordReading);
+            if (wordReading.word == "\n") {
+              if (currentSentence.isNotEmpty) {
+                sentences.add(List.from(currentSentence));
+                currentSentence = [];
+              }
+            }
+          }
+
+          if (currentSentence.isNotEmpty) {
+            sentences.add(currentSentence);
+          }
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: sentences.map((sentence) {
+              final List<InlineSpan> spans = [];
+              String? currentSentenceText;
+
+              for (var wordReading in sentence) {
+                if (wordReading.word == "\n") continue;
+
+                if (wordReading.isTranslateIcon && wordReading.sentenceText != null) {
+                  currentSentenceText = wordReading.sentenceText;
+                  spans.add(
+                    WidgetSpan(
+                      alignment: PlaceholderAlignment.middle,
+                      child: GestureDetector(
+                        onTap: () async {
+                          if (!await ConnectivityUtils.checkConnectivity(context)) {
+                            return;
+                          }
+                          try {
+                            final uiLanguageBloc = context.read<UiLanguageBloc>();
+                            final targetLanguage = uiLanguageBloc.state.languageCode;
+
+                            if (widget.language.code != targetLanguage) {
+                              final translation = await widget.translationService.translateText(
+                                wordReading.sentenceText!,
+                                widget.language,
+                                targetLanguage: targetLanguage,
+                              );
+
+                              if (context.mounted) {
+                                SentenceTranslationModal.show(
+                                  context,
+                                  wordReading.sentenceText!,
+                                  translation,
+                                  widget.language,
+                                  widget.dictionaryService,
+                                );
+                              }
+                            } else {
+                              if (context.mounted) {
+                                SentenceTranslationModal.show(
+                                  context,
+                                  wordReading.sentenceText!,
+                                  UiTranslations.of(context).translate('no_translation_needed'),
+                                  widget.language,
+                                  widget.dictionaryService,
+                                );
+                              }
+                            }
+                          } catch (e) {
+                            debugPrint('Failed to translate sentence: $e');
+                          }
+                        },
+                        child: Container(
+                          width: 24,
+                          height: 24,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.purple[100],
+                          ),
+                          child: const Icon(
+                            Icons.translate,
+                            size: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                  continue;
+                }
+
+                if (wordReading.reading != null) {
+                  spans.add(
+                    WidgetSpan(
+                      child: GestureDetector(
+                        onTap: () async {
+                          debugPrint('Tapped word: ${wordReading.word}');
+                          if (!await ConnectivityUtils.checkConnectivity(context)) {
+                            return;
+                          }
+                          if (context.mounted) {
+                            WordDefinitionModal.show(
+                              context,
+                              wordReading.word,
+                              widget.language,
+                            );
+                          }
+                        },
+                        child: _showFurigana ? Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            // Base text container to maintain proper line spacing
+                            Text(
+                              wordReading.word,
+                              style: theme.textTheme.bodyLarge?.copyWith(
+                                fontSize: _baseFontSize * _textScale,
+                                height: 2.0,
+                                color: Colors.transparent, // Hidden but maintains space
+                              ),
+                            ),
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                // Furigana text (above)
+                                Text(
+                                  wordReading.reading!,
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    fontSize: (_baseFontSize * 0.5) * _textScale,
+                                    color: Colors.blue,
+                                    height: 1.0,
+                                  ),
+                                ),
+                                // Kanji text (below)
+                                Text(
+                                  wordReading.word,
+                                  style: theme.textTheme.bodyLarge?.copyWith(
+                                    fontSize: _baseFontSize * _textScale,
+                                    height: 1.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ) : Text(
+                          wordReading.word,
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            fontSize: _baseFontSize * _textScale,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                } else {
+                  spans.add(TextSpan(
+                    text: wordReading.word,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      fontSize: _baseFontSize * _textScale,
+                      height: _showFurigana ? 2.0 : null,
+                    ),
+                  ));
+                }
+              }
+
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: SelectableText.rich(
+                  TextSpan(children: spans),
+                  textAlign: TextAlign.left,
+                ),
+              );
+            }).toList(),
+          );
+        },
+      );
+    }
+
+    // Regular text display with word processing and translation icons
     return FutureBuilder<List<WordReading>>(
       future: widget.language.code == 'ja'
           ? _processJapaneseText(content)
@@ -673,12 +709,6 @@ class _BookReaderPageState extends State<BookReaderPage> {
 
             for (var wordReading in sentence) {
               if (wordReading.word == "\n") continue;
-
-              if (wordReading.word.trim().isEmpty &&
-                  !wordReading.isTranslateIcon) {
-                textSpans.add(const TextSpan(text: ' '));
-                continue;
-              }
 
               if (wordReading.isTranslateIcon) {
                 textSpans.add(
@@ -778,9 +808,8 @@ class _BookReaderPageState extends State<BookReaderPage> {
               padding: const EdgeInsets.only(bottom: 16.0),
               child: SelectableText.rich(
                 TextSpan(children: textSpans),
-                style: theme.textTheme.bodyMedium?.copyWith(
+                style: theme.textTheme.bodyLarge?.copyWith(
                   fontSize: _baseFontSize * _textScale,
-                  fontFamily: widget.language.code == 'ja' ? null : 'Playwrite',
                   height: widget.language.code == 'ja'
                       ? AppSpacing.lineHeightLarge
                       : null,
@@ -794,13 +823,110 @@ class _BookReaderPageState extends State<BookReaderPage> {
     );
   }
 
+  Future<List<WordReading>> _processJapaneseText(String text) async {
+    final List<WordReading> results = [];
+    final List<String> sentences = text.split('。');
+    final RegExp regex = RegExp(r'\[([^\]]+)\]\{([^\}]+)\}');
+
+    for (String sentence in sentences) {
+      if (sentence.trim().isEmpty) {
+        results.add(const WordReading("\n", null));
+        continue;
+      }
+
+      final StringBuffer currentSentence = StringBuffer();
+      int lastEnd = 0;
+
+      for (var match in regex.allMatches(sentence)) {
+        // Add any text before this match
+        if (match.start > lastEnd) {
+          final plainText = sentence.substring(lastEnd, match.start);
+          results.add(WordReading(plainText, null));
+          currentSentence.write(plainText);
+        }
+
+        // Process the kanji-furigana pair
+        final kanji = match.group(1)!;
+        final furigana = match.group(2)!;
+        
+        // Add the word reading without any brackets
+        results.add(WordReading(kanji, furigana));
+        currentSentence.write(kanji);
+
+        lastEnd = match.end;
+      }
+
+      // Add any remaining text
+      if (lastEnd < sentence.length) {
+        final remainingText = sentence.substring(lastEnd);
+        results.add(WordReading(remainingText, null));
+        currentSentence.write(remainingText);
+      }
+
+      // Add the full stop, translation icon, and line break after each sentence (except last empty one)
+      if (currentSentence.isNotEmpty) {
+        results.add(const WordReading("。", null));
+        results.add(const WordReading(" ", null)); // Space before icon
+        results.add(WordReading(
+            "", null, currentSentence.toString() + "。", true)); // Translate icon with full stop
+        results.add(const WordReading("\n", null)); // Line break after sentence
+      }
+    }
+
+    return results;
+  }
+
+  Future<List<WordReading>> _processNonJapaneseText(String text) async {
+    final List<WordReading> results = [];
+
+    // Split text into sentences first
+    final sentences = text.split(RegExp(r'([.!?])\s+'));
+
+    for (var i = 0; i < sentences.length; i++) {
+      var sentence = sentences[i];
+      if (i < sentences.length - 1) {
+        // Add back the punctuation that was removed by split
+        sentence += text.substring(
+          text.indexOf(sentence) + sentence.length,
+          text.indexOf(sentence) + sentence.length + 1,
+        );
+      }
+
+      // Skip empty sentences
+      if (sentence.trim().isEmpty) continue;
+
+      // Split sentence into words while preserving punctuation and spaces
+      final pattern = RegExp(r'(\s+|[^\s\p{L}]+|\p{L}+)', unicode: true);
+      final matches = pattern.allMatches(sentence);
+
+      // Track current sentence text
+      var currentSentence = StringBuffer();
+
+      for (var match in matches) {
+        final word = match.group(0)!;
+        currentSentence.write(word);
+
+        // Add the word with sentence context
+        results.add(WordReading(word, null, currentSentence.toString()));
+      }
+
+      // Add translation icon and line break after each sentence
+      results.add(const WordReading(" ", null)); // Space before icon
+      results.add(WordReading(
+          "", null, currentSentence.toString(), true)); // Translate icon
+      results.add(const WordReading("\n", null)); // Line break after sentence
+    }
+
+    return results;
+  }
+
   Widget _buildAudioPlayer() {
     return BlocBuilder<TTSBloc, TTSState>(
       bloc: _ttsBloc,
       builder: (context, state) {
         final currentPage = widget.book.pages[_currentPage];
-        final audioPath = currentPage.getAudioPath(widget.language);
-        final text = currentPage.getText(widget.language);
+        final audioPath = currentPage.getAudioPath(widget.language.code);
+        final text = currentPage.getText(widget.language.code);
 
         if (audioPath == null || text.isEmpty) return const SizedBox.shrink();
 

@@ -19,11 +19,34 @@ class BookPage extends Equatable {
     this.imagePath,
   });
 
-  String getText(BookLanguage language) {
-    return text[language] ?? '';
+  String getText(String languageCode) {
+    // Convert language code to BookLanguage
+    final language = BookLanguage.values.firstWhere(
+      (lang) => lang.code == languageCode,
+      orElse: () => BookLanguage.english,
+    );
+
+    // Try to get text for the requested language
+    final requestedText = text[language];
+    if (requestedText != null && requestedText.isNotEmpty) {
+      return requestedText;
+    }
+
+    // If furigana was requested but not found, fall back to regular Japanese
+    if (language == BookLanguage.japaneseFurigana) {
+      return text[BookLanguage.japanese] ?? '';
+    }
+
+    // Default fallback
+    return '';
   }
 
-  String? getAudioPath(BookLanguage language) {
+  String? getAudioPath(String languageCode) {
+    // Regular language handling
+    final language = BookLanguage.values.firstWhere(
+      (lang) => lang.code == languageCode,
+      orElse: () => BookLanguage.english,
+    );
     return audioPath[language];
   }
 
