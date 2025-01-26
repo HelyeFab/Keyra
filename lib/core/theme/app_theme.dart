@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'color_schemes.dart';
 import 'text_themes.dart';
 
@@ -10,8 +9,11 @@ class AppTheme {
       useMaterial3: true,
       colorScheme: lightColorScheme,
       textTheme: textTheme,
+      scaffoldBackgroundColor: lightColorScheme.surface,
       appBarTheme: AppBarTheme(
         backgroundColor: lightColorScheme.surface,
+        surfaceTintColor: Colors.transparent,
+        shadowColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
         iconTheme: IconThemeData(color: lightColorScheme.onSurface),
@@ -26,7 +28,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
-          textStyle: GoogleFonts.nunitoSans(
+          textStyle: textTheme.labelLarge?.copyWith(
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -35,12 +37,12 @@ class AppTheme {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
         ),
-        floatingLabelStyle: GoogleFonts.nunitoSans(
+        floatingLabelStyle: textTheme.bodyMedium?.copyWith(
           color: lightColorScheme.primary,
         ),
-        labelStyle: GoogleFonts.nunitoSans(),
-        hintStyle: GoogleFonts.nunitoSans(),
-        errorStyle: GoogleFonts.nunitoSans(
+        labelStyle: textTheme.bodyMedium,
+        hintStyle: textTheme.bodyMedium,
+        errorStyle: textTheme.bodySmall?.copyWith(
           color: lightColorScheme.error,
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -61,8 +63,11 @@ class AppTheme {
       useMaterial3: true,
       colorScheme: darkColorScheme,
       textTheme: textTheme,
+      scaffoldBackgroundColor: darkColorScheme.surface,
       appBarTheme: AppBarTheme(
         backgroundColor: darkColorScheme.surface,
+        surfaceTintColor: Colors.transparent,
+        shadowColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
         iconTheme: IconThemeData(color: darkColorScheme.onSurface),
@@ -77,7 +82,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
-          textStyle: GoogleFonts.nunitoSans(
+          textStyle: textTheme.labelLarge?.copyWith(
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -86,12 +91,12 @@ class AppTheme {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
         ),
-        floatingLabelStyle: GoogleFonts.nunitoSans(
+        floatingLabelStyle: textTheme.bodyMedium?.copyWith(
           color: darkColorScheme.primary,
         ),
-        labelStyle: GoogleFonts.nunitoSans(),
-        hintStyle: GoogleFonts.nunitoSans(),
-        errorStyle: GoogleFonts.nunitoSans(
+        labelStyle: textTheme.bodyMedium,
+        hintStyle: textTheme.bodyMedium,
+        errorStyle: textTheme.bodySmall?.copyWith(
           color: darkColorScheme.error,
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

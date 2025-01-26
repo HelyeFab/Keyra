@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/theme/app_spacing.dart';
-import '../../../../core/widgets/keyra_logo.dart';
 import '../../../navigation/presentation/pages/navigation_page.dart';
 import '../bloc/auth_bloc.dart';
 import '../widgets/login_form.dart';
@@ -26,7 +24,7 @@ class _AuthPageState extends State<AuthPage> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         state.maybeWhen(
-          authenticated: (_) {
+          authenticated: (uid) {
             // Navigate to NavigationPage when authenticated
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
@@ -48,47 +46,54 @@ class _AuthPageState extends State<AuthPage> {
       child: DefaultTabController(
         length: 2,
         child: Scaffold(
+          resizeToAvoidBottomInset: true,
+          backgroundColor: Colors.white,
           body: SafeArea(
             child: Padding(
-              padding: AppSpacing.paddingLg,
+              padding: const EdgeInsets.only(top: 48.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Text(
-                    'Welcome to Keyra',
-                    style: TextStyle(
-                      fontSize: 24,
+                  Text(
+                    'Welcome to',
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Keyra',
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
-                    textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: AppSpacing.xl),
-                  TabBar(
-                    tabs: const [
-                      Tab(
-                        icon: Icon(Icons.login),
-                        text: 'Login',
-                      ),
-                      Tab(
-                        icon: Icon(Icons.person_add),
-                        text: 'Register',
-                      ),
+                  const SizedBox(height: 24),
+                  // Tab Bar
+                  const TabBar(
+                    tabs: [
+                      Tab(text: 'Login'),
+                      Tab(text: 'Register'),
                     ],
-                    labelColor: Theme.of(context).primaryColor,
-                    unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-                    indicatorColor: Theme.of(context).primaryColor,
+                    labelColor: Colors.black,
+                    unselectedLabelColor: Colors.grey,
+                    indicatorColor: Colors.black,
                   ),
-                  const SizedBox(height: AppSpacing.xl),
-                  const Expanded(
+                  // Tab Bar View
+                  Expanded(
                     child: TabBarView(
                       children: [
-                        LoginForm(),
-                        RegisterForm(),
+                        SingleChildScrollView(
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(24.0, 24.0, 24.0, MediaQuery.of(context).viewInsets.bottom + 24.0),
+                            child: const LoginForm(),
+                          ),
+                        ),
+                        SingleChildScrollView(
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(24.0, 24.0, 24.0, MediaQuery.of(context).viewInsets.bottom + 24.0),
+                            child: const RegisterForm(),
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                  const Center(child: KeyraLogo(height: 48)),
-                  const SizedBox(height: AppSpacing.lg),
                 ],
               ),
             ),

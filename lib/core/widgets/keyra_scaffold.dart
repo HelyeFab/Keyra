@@ -1,33 +1,53 @@
 import 'package:flutter/material.dart';
 import 'keyra_bottom_nav_bar.dart';
 
-class KeyraScaffold extends StatefulWidget {
-  final Widget child;
+class KeyraScaffold extends StatelessWidget {
   final int currentIndex;
-  final ValueChanged<int> onNavigationChanged;
+  final Function(int) onNavigationChanged;
+  final Widget child;
 
   const KeyraScaffold({
     super.key,
-    required this.child,
     required this.currentIndex,
     required this.onNavigationChanged,
+    required this.child,
   });
 
   @override
-  State<KeyraScaffold> createState() => _KeyraScaffoldState();
-}
-
-class _KeyraScaffoldState extends State<KeyraScaffold> {
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: widget.child,
-      ),
-      bottomNavigationBar: KeyraBottomNavBar(
-        currentIndex: widget.currentIndex,
-        onTap: widget.onNavigationChanged,
-      ),
+    return Stack(
+      children: [
+        Container(
+          height: MediaQuery.of(context).size.height,
+          color: Theme.of(context).colorScheme.surface,
+        ),
+        Scaffold(
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          body: SafeArea(
+            bottom: false,
+            child: child,
+          ),
+        ),
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: 16,
+                right: 16,
+                bottom: 8,
+              ),
+              child: KeyraBottomNavBar(
+                currentIndex: currentIndex,
+                onTap: onNavigationChanged,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

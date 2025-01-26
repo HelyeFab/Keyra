@@ -1,27 +1,47 @@
 import 'package:equatable/equatable.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hive/hive.dart';
 import 'book_language.dart';
 import 'book_page.dart';
 
+part 'book.g.dart';
+
+@HiveType(typeId: 0, adapterName: 'BookAdapter')
 class Book extends Equatable {
+  @HiveField(0)
   final String id;
+  @HiveField(1)
   final Map<BookLanguage, String> title;
+  @HiveField(2)
   final String coverImage;
+  @HiveField(3)
   final List<BookPage> pages;
+  @HiveField(4)
   final BookLanguage defaultLanguage;
+  @HiveField(5)
   final DateTime createdAt;
+  @HiveField(6)
   final bool isFavorite;
+  @HiveField(7)
   final String author;
+  @HiveField(8)
   final String fileUrl;
+  @HiveField(9)
   final String description;
+  @HiveField(10)
   final List<String> categories;
-  
-  // Reading state
+  @HiveField(11)
   final BookLanguage currentLanguage;
+  @HiveField(12)
   final int currentPage;
+  @HiveField(13)
   final bool isAudioPlaying;
+  @HiveField(14)
   final DateTime? lastReadAt;
+  @HiveField(15)
   final double readingProgress;
+  @HiveField(16)
+  final bool isRecent;
 
   const Book({
     required this.id,
@@ -40,6 +60,7 @@ class Book extends Equatable {
     this.isAudioPlaying = false,
     this.lastReadAt,
     this.readingProgress = 0.0,
+    this.isRecent = false,
   });
 
   String getTitle(BookLanguage language) {
@@ -74,6 +95,7 @@ class Book extends Equatable {
     bool? isAudioPlaying,
     DateTime? lastReadAt,
     double? readingProgress,
+    bool? isRecent,
   }) {
     return Book(
       id: id ?? this.id,
@@ -92,6 +114,7 @@ class Book extends Equatable {
       isAudioPlaying: isAudioPlaying ?? this.isAudioPlaying,
       lastReadAt: lastReadAt ?? this.lastReadAt,
       readingProgress: readingProgress ?? this.readingProgress,
+      isRecent: isRecent ?? this.isRecent,
     );
   }
 
@@ -113,6 +136,7 @@ class Book extends Equatable {
       'isAudioPlaying': isAudioPlaying,
       'lastReadAt': lastReadAt?.toIso8601String(),
       'readingProgress': readingProgress,
+      'isRecent': isRecent,
     };
   }
 
@@ -134,6 +158,7 @@ class Book extends Equatable {
       'isAudioPlaying': isAudioPlaying,
       'lastReadAt': lastReadAt != null ? Timestamp.fromDate(lastReadAt!) : null,
       'readingProgress': readingProgress,
+      'isRecent': isRecent,
     };
   }
 
@@ -165,6 +190,7 @@ class Book extends Equatable {
               : DateTime.parse(json['lastReadAt'] as String)
           : null,
       readingProgress: json['readingProgress'] as double,
+      isRecent: json['isRecent'] as bool? ?? false,
     );
   }
 
@@ -172,7 +198,11 @@ class Book extends Equatable {
     return Book(
       id: docId ?? map['id'] as String? ?? '',
       title: (map['title'] as Map<String, dynamic>).map(
-        (key, value) => MapEntry(BookLanguage.fromCode(key), value as String),
+        (key, value) {
+          // Always convert key to string first, then to BookLanguage
+          final bookLanguage = BookLanguage.fromCode(key.toString());
+          return MapEntry(bookLanguage, value as String);
+        },
       ),
       coverImage: map['coverImage'] as String? ?? '',
       pages: (map['pages'] as List<dynamic>)
@@ -192,6 +222,7 @@ class Book extends Equatable {
           ? (map['lastReadAt'] as Timestamp).toDate()
           : null,
       readingProgress: (map['readingProgress'] as num?)?.toDouble() ?? 0.0,
+      isRecent: map['isRecent'] as bool? ?? false,
     );
   }
 
@@ -213,5 +244,6 @@ class Book extends Equatable {
         isAudioPlaying,
         lastReadAt,
         readingProgress,
+        isRecent,
       ];
 }

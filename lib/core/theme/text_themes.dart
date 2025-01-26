@@ -1,74 +1,94 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'font_constants.dart';
 
 class AppTextTheme {
+  // This can be changed to test different fonts for the app title
+  static const String appTitleFont = AppFonts.paytoneOne;
+  static const String bodyFont = AppFonts.roboto;
+  static const String headlineFont = AppFonts.poppins;
+  
   static TextTheme get textTheme {
-    return TextTheme(
-      displayLarge: GoogleFonts.nunitoSans(
+    return const TextTheme(
+      displayLarge: TextStyle(
+        fontFamily: appTitleFont,
         fontSize: 57,
         fontWeight: FontWeight.w400,
         letterSpacing: -0.25,
       ),
-      displayMedium: GoogleFonts.nunitoSans(
+      displayMedium: TextStyle(
+        fontFamily: appTitleFont,
         fontSize: 45,
         fontWeight: FontWeight.w400,
       ),
-      displaySmall: GoogleFonts.nunitoSans(
+      displaySmall: TextStyle(
+        fontFamily: appTitleFont,
         fontSize: 36,
         fontWeight: FontWeight.w400,
       ),
-      headlineLarge: GoogleFonts.nunitoSans(
+      headlineLarge: TextStyle(
+        fontFamily: headlineFont,
         fontSize: 32,
-        fontWeight: FontWeight.w400,
+        fontWeight: FontWeight.w700, // Using Bold since we have it
       ),
-      headlineMedium: GoogleFonts.nunitoSans(
+      headlineMedium: TextStyle(
+        fontFamily: headlineFont,
         fontSize: 28,
-        fontWeight: FontWeight.w400,
+        fontWeight: FontWeight.w700,
       ),
-      headlineSmall: GoogleFonts.nunitoSans(
+      headlineSmall: TextStyle(
+        fontFamily: headlineFont,
         fontSize: 24,
-        fontWeight: FontWeight.w400,
+        fontWeight: FontWeight.w700,
       ),
-      titleLarge: GoogleFonts.nunitoSans(
+      titleLarge: TextStyle(
+        fontFamily: headlineFont,
         fontSize: 22,
         fontWeight: FontWeight.w500,
       ),
-      titleMedium: GoogleFonts.nunitoSans(
+      titleMedium: TextStyle(
+        fontFamily: headlineFont,
         fontSize: 16,
         fontWeight: FontWeight.w500,
         letterSpacing: 0.15,
       ),
-      titleSmall: GoogleFonts.nunitoSans(
+      titleSmall: TextStyle(
+        fontFamily: headlineFont,
         fontSize: 14,
         fontWeight: FontWeight.w500,
         letterSpacing: 0.1,
       ),
-      labelLarge: GoogleFonts.nunitoSans(
+      labelLarge: TextStyle(
+        fontFamily: headlineFont,
         fontSize: 14,
         fontWeight: FontWeight.w500,
         letterSpacing: 0.1,
       ),
-      labelMedium: GoogleFonts.nunitoSans(
+      labelMedium: TextStyle(
+        fontFamily: headlineFont,
         fontSize: 12,
         fontWeight: FontWeight.w500,
         letterSpacing: 0.5,
       ),
-      labelSmall: GoogleFonts.nunitoSans(
+      labelSmall: TextStyle(
+        fontFamily: headlineFont,
         fontSize: 11,
         fontWeight: FontWeight.w500,
         letterSpacing: 0.5,
       ),
-      bodyLarge: GoogleFonts.nunitoSans(
+      bodyLarge: TextStyle(
+        fontFamily: bodyFont,
         fontSize: 16,
         fontWeight: FontWeight.w400,
         letterSpacing: 0.5,
       ),
-      bodyMedium: GoogleFonts.nunitoSans(
+      bodyMedium: TextStyle(
+        fontFamily: bodyFont,
         fontSize: 14,
         fontWeight: FontWeight.w400,
         letterSpacing: 0.25,
       ),
-      bodySmall: GoogleFonts.nunitoSans(
+      bodySmall: TextStyle(
+        fontFamily: bodyFont,
         fontSize: 12,
         fontWeight: FontWeight.w400,
         letterSpacing: 0.4,

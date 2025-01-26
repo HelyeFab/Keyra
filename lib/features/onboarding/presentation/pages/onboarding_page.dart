@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../auth/presentation/pages/auth_page.dart';
-import '../../../auth/data/repositories/firebase_auth_repository.dart';
-import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../../core/services/preferences_service.dart';
+import '../../../../core/ui_language/translations/ui_translations.dart';
 import '../models/onboarding_data.dart';
 import '../widgets/onboarding_page_widget.dart';
-import '../../../../core/services/preferences_service.dart';
 
 class OnboardingPage extends StatefulWidget {
   final PreferencesService preferencesService;
@@ -29,146 +26,92 @@ class _OnboardingPageState extends State<OnboardingPage> {
     super.dispose();
   }
 
-  void _onPageChanged(int page) {
-    setState(() {
-      _currentPage = page;
-    });
-  }
-
-  void _skipToEnd() {
-    _pageController.animateToPage(
-      onboardingPages.length - 1,
-      duration: const Duration(milliseconds: 400),
-      curve: Curves.easeInOut,
-    );
-  }
-
-  Future<void> _onGetStarted() async {
-    // Mark onboarding as seen
-    await widget.preferencesService.setHasSeenOnboarding();
-    
-    if (!mounted) return;
-
-    // Navigate to auth page with proper providers
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => RepositoryProvider(
-          create: (context) => FirebaseAuthRepository(),
-          child: BlocProvider(
-            create: (context) => AuthBloc(
-              authRepository: context.read<FirebaseAuthRepository>(),
-            ),
-            child: const AuthPage(),
-          ),
-        ),
-      ),
-    );
+  void _onNextPressed() async {
+    if (_currentPage < getOnboardingPages(context).length - 1) {
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else {
+      // Mark onboarding as seen
+      await widget.preferencesService.setHasSeenOnboarding(true);
+      
+      if (!mounted) return;
+      
+      // Navigate to auth page
+      Navigator.pushReplacementNamed(context, '/navigation');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final pages = getOnboardingPages(context);
+
     return Scaffold(
       body: Stack(
         children: [
-          // PageView
           PageView.builder(
             controller: _pageController,
-            onPageChanged: _onPageChanged,
-            itemCount: onboardingPages.length,
+            itemCount: pages.length,
+            onPageChanged: (index) {
+              setState(() {
+                _currentPage = index;
+              });
+            },
             itemBuilder: (context, index) {
-              return OnboardingPageWidget(
-                data: onboardingPages[index],
-              );
+              return OnboardingPageWidget(data: pages[index]);
             },
           ),
-
-          // Skip button
-          if (_currentPage < onboardingPages.length - 1)
-            Positioned(
-              top: MediaQuery.of(context).padding.top + 16,
-              right: 16,
-              child: TextButton(
-                onPressed: _skipToEnd,
-                style: TextButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.surface.withOpacity(0.8),
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                ),
-                child: Text(
-                  'Skip',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary,
-                    fontWeight: FontWeight.bold,
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 100,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                pages.length,
+                (index) => Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  width: 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: _currentPage == index
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context).colorScheme.primary.withOpacity(0.2),
                   ),
                 ),
               ),
             ),
-
-          // Bottom controls (indicators and button)
+          ),
           Positioned(
             left: 0,
             right: 0,
             bottom: 0,
             child: Container(
-              padding: const EdgeInsets.all(32),
+              padding: const EdgeInsets.all(24.0),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Colors.transparent,
-                    Colors.black.withOpacity(0.2),
+                    Theme.of(context).scaffoldBackgroundColor.withOpacity(0),
+                    Theme.of(context).scaffoldBackgroundColor,
                   ],
                 ),
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Page indicators
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(
-                      onboardingPages.length,
-                      (index) => Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 4),
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          height: 8,
-                          width: _currentPage == index ? 24 : 8,
-                          decoration: BoxDecoration(
-                            color: _currentPage == index
-                                ? Theme.of(context).colorScheme.primary
-                                : Theme.of(context).colorScheme.surface,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                        ),
-                      ),
+              child: Center(
+                child: SizedBox(
+                  width: 200, // Fixed width for the button
+                  child: FilledButton(
+                    onPressed: _onNextPressed,
+                    child: Text(
+                      _currentPage == pages.length - 1 
+                          ? UiTranslations.of(context).translate('onboarding_get_started')
+                          : UiTranslations.of(context).translate('next'),
                     ),
                   ),
-                  
-                  // Get Started button
-                  if (_currentPage == onboardingPages.length - 1) ...[
-                    const SizedBox(height: 32),
-                    ElevatedButton(
-                      onPressed: _onGetStarted,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                        minimumSize: const Size(double.infinity, 56),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                      ),
-                      child: const Text(
-                        'Get Started',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ],
+                ),
               ),
             ),
           ),

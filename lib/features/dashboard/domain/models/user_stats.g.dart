@@ -21,6 +21,7 @@ _$UserStatsImpl _$$UserStatsImplFromJson(Map<String, dynamic> json) =>
           (json['currentSessionMinutes'] as num?)?.toInt() ?? 0,
       lastReadDate: DateTimeUtils.fromTimestamp(json['lastReadDate']),
       lastUpdated: DateTimeUtils.fromTimestamp(json['lastUpdated']),
+      lastBookId: json['lastBookId'] as String?,
     );
 
 Map<String, dynamic> _$$UserStatsImplToJson(_$UserStatsImpl instance) =>
@@ -35,4 +36,5 @@ Map<String, dynamic> _$$UserStatsImplToJson(_$UserStatsImpl instance) =>
       'currentSessionMinutes': instance.currentSessionMinutes,
       'lastReadDate': DateTimeUtils.toTimestamp(instance.lastReadDate),
       'lastUpdated': DateTimeUtils.toTimestamp(instance.lastUpdated),
+      'lastBookId': instance.lastBookId,
     };

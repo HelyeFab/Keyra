@@ -1,102 +1,202 @@
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:Keyra/core/services/preferences_service.dart';
-import 'package:Keyra/features/navigation/presentation/pages/navigation_page.dart';
-import 'package:Keyra/features/onboarding/presentation/pages/onboarding_page.dart';
-import 'package:Keyra/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:Keyra/features/auth/data/repositories/firebase_auth_repository.dart';
-import 'package:Keyra/core/theme/app_theme.dart';
-import 'package:Keyra/features/books/data/repositories/firestore_populator.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
+import 'package:Keyra/features/dictionary/data/services/dictionary_service.dart';
+import 'package:Keyra/features/dictionary/data/services/translation_service.dart';
+import 'package:Keyra/features/dictionary/data/services/translation_service_singleton.dart';
+import 'package:Keyra/core/utils/logger.dart';
+import 'features/notifications/services/notification_service.dart';
+import 'core/services/preferences_service.dart';
+import 'core/ui_language/bloc/ui_language_bloc.dart';
+import 'core/ui_language/translations/ui_translations.dart';
+import 'features/auth/presentation/bloc/auth_bloc.dart';
+import 'features/auth/data/repositories/firebase_auth_repository.dart';
+import 'core/theme/app_theme.dart';
+import 'core/theme/bloc/theme_bloc.dart';
+import 'core/presentation/bloc/connectivity_bloc.dart';
+import 'core/presentation/widgets/connectivity_monitor.dart';
+import 'core/presentation/bloc/language_bloc.dart';
+import 'features/subscription/data/repositories/subscription_repository.dart';
+import 'features/subscription/application/subscription_service.dart';
+import 'features/subscription/presentation/bloc/subscription_bloc.dart';
+import 'features/subscription/presentation/bloc/subscription_event.dart';
 import 'firebase_options.dart';
+import 'splash_screen.dart';
+import 'features/navigation/presentation/pages/navigation_page.dart';
+import 'features/books/domain/models/book.dart';
+import 'features/books/domain/models/book_language.dart';
+import 'features/books/domain/models/book_page.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  
-  // Initialize Firebase
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
-  // Wait for Firebase Auth to be ready
-  await FirebaseAuth.instance.authStateChanges().first;
-
-  // Initialize preferences service
-  final preferencesService = await PreferencesService.init();
-
-  // Initialize sample books if needed
+Future<void> initServices() async {
   try {
-    print('Attempting to populate sample books...');
-    final populator = FirestorePopulator();
+    // Initialize Hive
+    await Hive.initFlutter();
+
+    // Register Hive adapters in correct order
+    if (!Hive.isAdapterRegistered(0)) Hive.registerAdapter(BookAdapter());
+    if (!Hive.isAdapterRegistered(1)) {
+      Hive.registerAdapter(BookLanguageAdapter());
+    }
+    if (!Hive.isAdapterRegistered(2)) Hive.registerAdapter(BookPageAdapter());
+
+    // Initialize dictionary service
+    Logger.log('Starting dictionary service initialization...');
+    final dictionaryService = DictionaryService();
     
-    // Try multiple times with increasing delays
-    for (int i = 0; i < 3; i++) {
-      try {
-        final exists = await populator.areSampleBooksPopulated();
-        if (!exists) {
-          print('No sample books found, populating (attempt ${i + 1})...');
-          await populator.populateWithSampleBooks();
-          print('Successfully populated sample books');
-          break;
-        } else {
-          print('Sample books already exist');
-          break;
-        }
-      } catch (e) {
-        print('Error in sample book initialization attempt ${i + 1}: $e');
-        if (i < 2) {
-          // Wait longer between each retry
-          await Future.delayed(Duration(seconds: (i + 1) * 2));
-        } else {
-          rethrow;
-        }
+    try {
+      await dictionaryService.initialize();
+      if (!dictionaryService.isInitialized) {
+        throw Exception('Dictionary service initialize() completed but isInitialized is still false');
       }
+      Logger.log('Dictionary service initialized successfully');
+    } catch (e, stackTrace) {
+      Logger.error(
+        'Failed to initialize dictionary service',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      // Rethrow to ensure we see the error
+      rethrow;
     }
   } catch (e) {
-    print('Error in sample book initialization: $e');
-    // Continue with app initialization even if book population fails
+    rethrow;
   }
-
-  runApp(MyApp(preferencesService: preferencesService));
 }
 
-class MyApp extends StatelessWidget {
-  final PreferencesService preferencesService;
+void main() async {
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
 
-  const MyApp({
-    super.key,
-    required this.preferencesService,
-  });
+    // Load environment variables
+    await dotenv.load(fileName: '.env');
 
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) {
-        final bloc = AuthBloc(
-          authRepository: FirebaseAuthRepository(),
-        );
-        bloc.add(const AuthBlocEvent.startAuthListening());
-        return bloc;
-      },
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Keyra',
-        theme: AppTheme.lightTheme,
-        home: BlocBuilder<AuthBloc, AuthState>(
-          builder: (context, state) {
-            return state.when(
-              initial: () => const Center(child: CircularProgressIndicator()),
-              loading: () => const Center(child: CircularProgressIndicator()),
-              authenticated: (uid) => const NavigationPage(),
-              unauthenticated: () => OnboardingPage(preferencesService: preferencesService),
-              error: (message) => Center(
-                child: Text('Error: $message'),
-              ),
-            );
-          },
+    // Initialize core services
+    await initServices();
+
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+
+    // Initialize preferences service
+    final preferencesService = await PreferencesService.init();
+
+    // Initialize notification service
+    final notificationService = NotificationService();
+    await notificationService.initialize();
+
+    // Initialize Firebase Auth and wait for initial state
+    final auth = FirebaseAuth.instance;
+    await auth.authStateChanges().first;
+
+    // Initialize repositories and services
+    final subscriptionRepository = SubscriptionRepository();
+    final subscriptionService = SubscriptionService(
+      subscriptionRepository: subscriptionRepository,
+    );
+    final authRepository = FirebaseAuthRepository(
+      subscriptionService: subscriptionService,
+    );
+
+    // Initialize UI language bloc
+    final prefs = await SharedPreferences.getInstance();
+    final uiLanguageBloc = UiLanguageBloc(prefs);
+
+    // Initialize language bloc
+    final languageBloc = await LanguageBloc.create();
+
+    // Load saved language or detect system language
+    uiLanguageBloc.add(LoadSavedUiLanguageEvent());
+
+    // Initialize connectivity monitoring
+    final connectivityBloc = ConnectivityBloc();
+    connectivityBloc.add(ConnectivityStartMonitoring());
+
+    runApp(
+      MultiProvider(
+        providers: [
+          Provider<SharedPreferences>.value(value: prefs),
+          Provider<NotificationService>.value(value: notificationService),
+          Provider<TranslationService>(
+            create: (_) => TranslationServiceSingleton.instance,
+            lazy: false,
+          ),
+        ],
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (context) => ThemeBloc(prefs),
+            ),
+            BlocProvider<UiLanguageBloc>.value(value: uiLanguageBloc),
+            BlocProvider<LanguageBloc>.value(value: languageBloc),
+            BlocProvider(
+              create: (context) {
+                final bloc = AuthBloc(
+                  authRepository: authRepository,
+                );
+                bloc.add(const AuthBlocEvent.startAuthListening());
+                return bloc;
+              },
+            ),
+            BlocProvider(
+              create: (context) => SubscriptionBloc(
+                subscriptionRepository: subscriptionRepository,
+              )..add(const SubscriptionEvent.started()),
+            ),
+            BlocProvider<ConnectivityBloc>.value(value: connectivityBloc),
+          ],
+          child: BlocBuilder<UiLanguageBloc, UiLanguageState>(
+            builder: (context, uiLanguageState) {
+              return UiTranslations(
+                currentLanguage: uiLanguageState.languageCode,
+                child: BlocBuilder<ThemeBloc, ThemeState>(
+                  builder: (context, themeState) {
+                    return ConnectivityMonitor(
+                      child: MaterialApp(
+                        debugShowCheckedModeBanner: false,
+                        title: 'Keyra',
+                        theme: AppTheme.lightTheme,
+                        darkTheme: AppTheme.darkTheme,
+                        themeMode: themeState.themeMode,
+                        home: SplashScreen(
+                          isInitialized: true,
+                          isFirstLaunch: preferencesService.isFirstLaunch,
+                          preferencesService: preferencesService,
+                        ),
+                        routes: {
+                          '/navigation': (context) => MultiBlocProvider(
+                                providers: [
+                                  BlocProvider.value(
+                                    value: context.read<AuthBloc>(),
+                                  ),
+                                  BlocProvider.value(
+                                    value: context.read<UiLanguageBloc>(),
+                                  ),
+                                  BlocProvider.value(
+                                    value: context.read<LanguageBloc>(),
+                                  ),
+                                  Provider<TranslationService>.value(
+                                    value: context.read<TranslationService>(),
+                                  ),
+                                ],
+                                child: const NavigationPage(),
+                              ),
+                        },
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
+  } catch (e) {
+    rethrow;
   }
 }

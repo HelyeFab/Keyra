@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:Keyra/core/utils/logger.dart';
 
 class KeyraLogo extends StatelessWidget {
   final double height;
@@ -31,7 +32,7 @@ class KeyraLogo extends StatelessWidget {
           width: height * 0.7,
           fit: BoxFit.contain,
           errorBuilder: (context, error, stackTrace) {
-            debugPrint('KeyraLogo Error: $error');
+            Logger.error('Failed to load Keyra logo', error: error);
             return const SizedBox();
           },
         ),

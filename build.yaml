@@ -1,0 +1,9 @@
+targets:
+  $default:
+    builders:
+      freezed:
+        generate_for:
+          include:
+            - lib/features/*/presentation/bloc/*.dart
+            - lib/features/*/domain/*.dart
+            - lib/features/*/domain/entities/*.dart

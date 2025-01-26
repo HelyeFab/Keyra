@@ -12,45 +12,48 @@ class OnboardingPageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: AppSpacing.paddingXl,
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-      ),
+    return SingleChildScrollView(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Spacer(),
           Container(
-            height: MediaQuery.of(context).size.height * 0.4,
+            height: MediaQuery.of(context).size.height * 0.5,
+            width: double.infinity,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
               image: DecorationImage(
                 image: AssetImage(data.imagePath),
-                fit: BoxFit.contain,
+                fit: BoxFit.cover,
               ),
-              boxShadow: AppSpacing.shadowMd(Theme.of(context).shadowColor),
             ),
-            clipBehavior: Clip.antiAlias,
           ),
-          const Spacer(),
-          Text(
-            data.title,
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.onSurface,
+          Padding(
+            padding: EdgeInsets.fromLTRB(
+              24.0,
+              24.0,
+              24.0,
+              MediaQuery.of(context).padding.bottom + 180,
+            ),
+            child: Column(
+              children: [
+                Text(
+                  data.title,
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                  textAlign: TextAlign.center,
                 ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: AppSpacing.md),
-          Text(
-            data.description,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                const SizedBox(height: AppSpacing.md),
+                Text(
+                  data.description,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                  textAlign: TextAlign.center,
                 ),
-            textAlign: TextAlign.center,
+                const SizedBox(height: AppSpacing.xl),
+              ],
+            ),
           ),
-          const Spacer(),
         ],
       ),
     );

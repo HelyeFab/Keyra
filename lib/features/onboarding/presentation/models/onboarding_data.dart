@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import '../../../../core/ui_language/translations/ui_translations.dart';
+
 class OnboardingData {
   final String title;
   final String description;
@@ -26,20 +29,27 @@ class OnboardingData {
   }
 }
 
-final List<OnboardingData> onboardingPages = [
-  OnboardingData(
-    title: 'Welcome to Keyra Books',
-    description: 'Discover a world of AI-generated stories tailored just for you',
-    imagePath: 'assets/images/onboarding/keyra01.png',
-  ),
-  OnboardingData(
-    title: 'Create Your Own Stories',
-    description: 'Let your imagination run wild with personalized AI-powered storytelling',
-    imagePath: 'assets/images/onboarding/keyra02.png',
-  ),
-  OnboardingData(
-    title: 'Share and Explore',
-    description: 'Join our community of storytellers and explore amazing tales together',
-    imagePath: 'assets/images/onboarding/keyra03.png',
-  ),
-];
+List<OnboardingData> getOnboardingPages(BuildContext context) {
+  return [
+    OnboardingData(
+      title: UiTranslations.of(context).translate('onboarding_welcome'),
+      description: UiTranslations.of(context).translate('onboarding_description'),
+      imagePath: 'assets/images/onboarding/keyra01.png',
+    ),
+    OnboardingData(
+      title: UiTranslations.of(context).translate('onboarding_feature_1_title'),
+      description: UiTranslations.of(context).translate('onboarding_feature_1_desc'),
+      imagePath: 'assets/images/onboarding/keyra02.png',
+    ),
+    OnboardingData(
+      title: UiTranslations.of(context).translate('onboarding_feature_2_title'),
+      description: UiTranslations.of(context).translate('onboarding_feature_2_desc'),
+      imagePath: 'assets/images/onboarding/keyra03.png',
+    ),
+    OnboardingData(
+      title: UiTranslations.of(context).translate('onboarding_feature_3_title'),
+      description: UiTranslations.of(context).translate('onboarding_feature_3_desc'),
+      imagePath: 'assets/images/onboarding/keyra04.png',
+    ),
+  ];
+}

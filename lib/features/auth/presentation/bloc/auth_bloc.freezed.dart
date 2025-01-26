@@ -27,6 +27,7 @@ mixin _$AuthBlocEvent {
     required TResult Function(dynamic user) authStateChanged,
     required TResult Function() appleSignInRequested,
     required TResult Function() startAuthListening,
+    required TResult Function(String email) passwordResetRequested,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -39,6 +40,7 @@ mixin _$AuthBlocEvent {
     TResult? Function(dynamic user)? authStateChanged,
     TResult? Function()? appleSignInRequested,
     TResult? Function()? startAuthListening,
+    TResult? Function(String email)? passwordResetRequested,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -51,6 +53,7 @@ mixin _$AuthBlocEvent {
     TResult Function(dynamic user)? authStateChanged,
     TResult Function()? appleSignInRequested,
     TResult Function()? startAuthListening,
+    TResult Function(String email)? passwordResetRequested,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -64,6 +67,8 @@ mixin _$AuthBlocEvent {
     required TResult Function(AuthStateChanged value) authStateChanged,
     required TResult Function(AppleSignInRequested value) appleSignInRequested,
     required TResult Function(StartAuthListening value) startAuthListening,
+    required TResult Function(PasswordResetRequested value)
+        passwordResetRequested,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -75,6 +80,7 @@ mixin _$AuthBlocEvent {
     TResult? Function(AuthStateChanged value)? authStateChanged,
     TResult? Function(AppleSignInRequested value)? appleSignInRequested,
     TResult? Function(StartAuthListening value)? startAuthListening,
+    TResult? Function(PasswordResetRequested value)? passwordResetRequested,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -86,6 +92,7 @@ mixin _$AuthBlocEvent {
     TResult Function(AuthStateChanged value)? authStateChanged,
     TResult Function(AppleSignInRequested value)? appleSignInRequested,
     TResult Function(StartAuthListening value)? startAuthListening,
+    TResult Function(PasswordResetRequested value)? passwordResetRequested,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -164,6 +171,7 @@ class _$GoogleSignInRequestedImpl implements GoogleSignInRequested {
     required TResult Function(dynamic user) authStateChanged,
     required TResult Function() appleSignInRequested,
     required TResult Function() startAuthListening,
+    required TResult Function(String email) passwordResetRequested,
   }) {
     return googleSignInRequested();
   }
@@ -179,6 +187,7 @@ class _$GoogleSignInRequestedImpl implements GoogleSignInRequested {
     TResult? Function(dynamic user)? authStateChanged,
     TResult? Function()? appleSignInRequested,
     TResult? Function()? startAuthListening,
+    TResult? Function(String email)? passwordResetRequested,
   }) {
     return googleSignInRequested?.call();
   }
@@ -194,6 +203,7 @@ class _$GoogleSignInRequestedImpl implements GoogleSignInRequested {
     TResult Function(dynamic user)? authStateChanged,
     TResult Function()? appleSignInRequested,
     TResult Function()? startAuthListening,
+    TResult Function(String email)? passwordResetRequested,
     required TResult orElse(),
   }) {
     if (googleSignInRequested != null) {
@@ -213,6 +223,8 @@ class _$GoogleSignInRequestedImpl implements GoogleSignInRequested {
     required TResult Function(AuthStateChanged value) authStateChanged,
     required TResult Function(AppleSignInRequested value) appleSignInRequested,
     required TResult Function(StartAuthListening value) startAuthListening,
+    required TResult Function(PasswordResetRequested value)
+        passwordResetRequested,
   }) {
     return googleSignInRequested(this);
   }
@@ -227,6 +239,7 @@ class _$GoogleSignInRequestedImpl implements GoogleSignInRequested {
     TResult? Function(AuthStateChanged value)? authStateChanged,
     TResult? Function(AppleSignInRequested value)? appleSignInRequested,
     TResult? Function(StartAuthListening value)? startAuthListening,
+    TResult? Function(PasswordResetRequested value)? passwordResetRequested,
   }) {
     return googleSignInRequested?.call(this);
   }
@@ -241,6 +254,7 @@ class _$GoogleSignInRequestedImpl implements GoogleSignInRequested {
     TResult Function(AuthStateChanged value)? authStateChanged,
     TResult Function(AppleSignInRequested value)? appleSignInRequested,
     TResult Function(StartAuthListening value)? startAuthListening,
+    TResult Function(PasswordResetRequested value)? passwordResetRequested,
     required TResult orElse(),
   }) {
     if (googleSignInRequested != null) {
@@ -351,6 +365,7 @@ class _$EmailSignUpRequestedImpl implements EmailSignUpRequested {
     required TResult Function(dynamic user) authStateChanged,
     required TResult Function() appleSignInRequested,
     required TResult Function() startAuthListening,
+    required TResult Function(String email) passwordResetRequested,
   }) {
     return emailSignUpRequested(email, password, name);
   }
@@ -366,6 +381,7 @@ class _$EmailSignUpRequestedImpl implements EmailSignUpRequested {
     TResult? Function(dynamic user)? authStateChanged,
     TResult? Function()? appleSignInRequested,
     TResult? Function()? startAuthListening,
+    TResult? Function(String email)? passwordResetRequested,
   }) {
     return emailSignUpRequested?.call(email, password, name);
   }
@@ -381,6 +397,7 @@ class _$EmailSignUpRequestedImpl implements EmailSignUpRequested {
     TResult Function(dynamic user)? authStateChanged,
     TResult Function()? appleSignInRequested,
     TResult Function()? startAuthListening,
+    TResult Function(String email)? passwordResetRequested,
     required TResult orElse(),
   }) {
     if (emailSignUpRequested != null) {
@@ -400,6 +417,8 @@ class _$EmailSignUpRequestedImpl implements EmailSignUpRequested {
     required TResult Function(AuthStateChanged value) authStateChanged,
     required TResult Function(AppleSignInRequested value) appleSignInRequested,
     required TResult Function(StartAuthListening value) startAuthListening,
+    required TResult Function(PasswordResetRequested value)
+        passwordResetRequested,
   }) {
     return emailSignUpRequested(this);
   }
@@ -414,6 +433,7 @@ class _$EmailSignUpRequestedImpl implements EmailSignUpRequested {
     TResult? Function(AuthStateChanged value)? authStateChanged,
     TResult? Function(AppleSignInRequested value)? appleSignInRequested,
     TResult? Function(StartAuthListening value)? startAuthListening,
+    TResult? Function(PasswordResetRequested value)? passwordResetRequested,
   }) {
     return emailSignUpRequested?.call(this);
   }
@@ -428,6 +448,7 @@ class _$EmailSignUpRequestedImpl implements EmailSignUpRequested {
     TResult Function(AuthStateChanged value)? authStateChanged,
     TResult Function(AppleSignInRequested value)? appleSignInRequested,
     TResult Function(StartAuthListening value)? startAuthListening,
+    TResult Function(PasswordResetRequested value)? passwordResetRequested,
     required TResult orElse(),
   }) {
     if (emailSignUpRequested != null) {
@@ -543,6 +564,7 @@ class _$EmailSignInRequestedImpl implements EmailSignInRequested {
     required TResult Function(dynamic user) authStateChanged,
     required TResult Function() appleSignInRequested,
     required TResult Function() startAuthListening,
+    required TResult Function(String email) passwordResetRequested,
   }) {
     return emailSignInRequested(email, password);
   }
@@ -558,6 +580,7 @@ class _$EmailSignInRequestedImpl implements EmailSignInRequested {
     TResult? Function(dynamic user)? authStateChanged,
     TResult? Function()? appleSignInRequested,
     TResult? Function()? startAuthListening,
+    TResult? Function(String email)? passwordResetRequested,
   }) {
     return emailSignInRequested?.call(email, password);
   }
@@ -573,6 +596,7 @@ class _$EmailSignInRequestedImpl implements EmailSignInRequested {
     TResult Function(dynamic user)? authStateChanged,
     TResult Function()? appleSignInRequested,
     TResult Function()? startAuthListening,
+    TResult Function(String email)? passwordResetRequested,
     required TResult orElse(),
   }) {
     if (emailSignInRequested != null) {
@@ -592,6 +616,8 @@ class _$EmailSignInRequestedImpl implements EmailSignInRequested {
     required TResult Function(AuthStateChanged value) authStateChanged,
     required TResult Function(AppleSignInRequested value) appleSignInRequested,
     required TResult Function(StartAuthListening value) startAuthListening,
+    required TResult Function(PasswordResetRequested value)
+        passwordResetRequested,
   }) {
     return emailSignInRequested(this);
   }
@@ -606,6 +632,7 @@ class _$EmailSignInRequestedImpl implements EmailSignInRequested {
     TResult? Function(AuthStateChanged value)? authStateChanged,
     TResult? Function(AppleSignInRequested value)? appleSignInRequested,
     TResult? Function(StartAuthListening value)? startAuthListening,
+    TResult? Function(PasswordResetRequested value)? passwordResetRequested,
   }) {
     return emailSignInRequested?.call(this);
   }
@@ -620,6 +647,7 @@ class _$EmailSignInRequestedImpl implements EmailSignInRequested {
     TResult Function(AuthStateChanged value)? authStateChanged,
     TResult Function(AppleSignInRequested value)? appleSignInRequested,
     TResult Function(StartAuthListening value)? startAuthListening,
+    TResult Function(PasswordResetRequested value)? passwordResetRequested,
     required TResult orElse(),
   }) {
     if (emailSignInRequested != null) {
@@ -694,6 +722,7 @@ class _$SignOutRequestedImpl implements SignOutRequested {
     required TResult Function(dynamic user) authStateChanged,
     required TResult Function() appleSignInRequested,
     required TResult Function() startAuthListening,
+    required TResult Function(String email) passwordResetRequested,
   }) {
     return signOutRequested();
   }
@@ -709,6 +738,7 @@ class _$SignOutRequestedImpl implements SignOutRequested {
     TResult? Function(dynamic user)? authStateChanged,
     TResult? Function()? appleSignInRequested,
     TResult? Function()? startAuthListening,
+    TResult? Function(String email)? passwordResetRequested,
   }) {
     return signOutRequested?.call();
   }
@@ -724,6 +754,7 @@ class _$SignOutRequestedImpl implements SignOutRequested {
     TResult Function(dynamic user)? authStateChanged,
     TResult Function()? appleSignInRequested,
     TResult Function()? startAuthListening,
+    TResult Function(String email)? passwordResetRequested,
     required TResult orElse(),
   }) {
     if (signOutRequested != null) {
@@ -743,6 +774,8 @@ class _$SignOutRequestedImpl implements SignOutRequested {
     required TResult Function(AuthStateChanged value) authStateChanged,
     required TResult Function(AppleSignInRequested value) appleSignInRequested,
     required TResult Function(StartAuthListening value) startAuthListening,
+    required TResult Function(PasswordResetRequested value)
+        passwordResetRequested,
   }) {
     return signOutRequested(this);
   }
@@ -757,6 +790,7 @@ class _$SignOutRequestedImpl implements SignOutRequested {
     TResult? Function(AuthStateChanged value)? authStateChanged,
     TResult? Function(AppleSignInRequested value)? appleSignInRequested,
     TResult? Function(StartAuthListening value)? startAuthListening,
+    TResult? Function(PasswordResetRequested value)? passwordResetRequested,
   }) {
     return signOutRequested?.call(this);
   }
@@ -771,6 +805,7 @@ class _$SignOutRequestedImpl implements SignOutRequested {
     TResult Function(AuthStateChanged value)? authStateChanged,
     TResult Function(AppleSignInRequested value)? appleSignInRequested,
     TResult Function(StartAuthListening value)? startAuthListening,
+    TResult Function(PasswordResetRequested value)? passwordResetRequested,
     required TResult orElse(),
   }) {
     if (signOutRequested != null) {
@@ -863,6 +898,7 @@ class _$AuthStateChangedImpl implements AuthStateChanged {
     required TResult Function(dynamic user) authStateChanged,
     required TResult Function() appleSignInRequested,
     required TResult Function() startAuthListening,
+    required TResult Function(String email) passwordResetRequested,
   }) {
     return authStateChanged(user);
   }
@@ -878,6 +914,7 @@ class _$AuthStateChangedImpl implements AuthStateChanged {
     TResult? Function(dynamic user)? authStateChanged,
     TResult? Function()? appleSignInRequested,
     TResult? Function()? startAuthListening,
+    TResult? Function(String email)? passwordResetRequested,
   }) {
     return authStateChanged?.call(user);
   }
@@ -893,6 +930,7 @@ class _$AuthStateChangedImpl implements AuthStateChanged {
     TResult Function(dynamic user)? authStateChanged,
     TResult Function()? appleSignInRequested,
     TResult Function()? startAuthListening,
+    TResult Function(String email)? passwordResetRequested,
     required TResult orElse(),
   }) {
     if (authStateChanged != null) {
@@ -912,6 +950,8 @@ class _$AuthStateChangedImpl implements AuthStateChanged {
     required TResult Function(AuthStateChanged value) authStateChanged,
     required TResult Function(AppleSignInRequested value) appleSignInRequested,
     required TResult Function(StartAuthListening value) startAuthListening,
+    required TResult Function(PasswordResetRequested value)
+        passwordResetRequested,
   }) {
     return authStateChanged(this);
   }
@@ -926,6 +966,7 @@ class _$AuthStateChangedImpl implements AuthStateChanged {
     TResult? Function(AuthStateChanged value)? authStateChanged,
     TResult? Function(AppleSignInRequested value)? appleSignInRequested,
     TResult? Function(StartAuthListening value)? startAuthListening,
+    TResult? Function(PasswordResetRequested value)? passwordResetRequested,
   }) {
     return authStateChanged?.call(this);
   }
@@ -940,6 +981,7 @@ class _$AuthStateChangedImpl implements AuthStateChanged {
     TResult Function(AuthStateChanged value)? authStateChanged,
     TResult Function(AppleSignInRequested value)? appleSignInRequested,
     TResult Function(StartAuthListening value)? startAuthListening,
+    TResult Function(PasswordResetRequested value)? passwordResetRequested,
     required TResult orElse(),
   }) {
     if (authStateChanged != null) {
@@ -1012,6 +1054,7 @@ class _$AppleSignInRequestedImpl implements AppleSignInRequested {
     required TResult Function(dynamic user) authStateChanged,
     required TResult Function() appleSignInRequested,
     required TResult Function() startAuthListening,
+    required TResult Function(String email) passwordResetRequested,
   }) {
     return appleSignInRequested();
   }
@@ -1027,6 +1070,7 @@ class _$AppleSignInRequestedImpl implements AppleSignInRequested {
     TResult? Function(dynamic user)? authStateChanged,
     TResult? Function()? appleSignInRequested,
     TResult? Function()? startAuthListening,
+    TResult? Function(String email)? passwordResetRequested,
   }) {
     return appleSignInRequested?.call();
   }
@@ -1042,6 +1086,7 @@ class _$AppleSignInRequestedImpl implements AppleSignInRequested {
     TResult Function(dynamic user)? authStateChanged,
     TResult Function()? appleSignInRequested,
     TResult Function()? startAuthListening,
+    TResult Function(String email)? passwordResetRequested,
     required TResult orElse(),
   }) {
     if (appleSignInRequested != null) {
@@ -1061,6 +1106,8 @@ class _$AppleSignInRequestedImpl implements AppleSignInRequested {
     required TResult Function(AuthStateChanged value) authStateChanged,
     required TResult Function(AppleSignInRequested value) appleSignInRequested,
     required TResult Function(StartAuthListening value) startAuthListening,
+    required TResult Function(PasswordResetRequested value)
+        passwordResetRequested,
   }) {
     return appleSignInRequested(this);
   }
@@ -1075,6 +1122,7 @@ class _$AppleSignInRequestedImpl implements AppleSignInRequested {
     TResult? Function(AuthStateChanged value)? authStateChanged,
     TResult? Function(AppleSignInRequested value)? appleSignInRequested,
     TResult? Function(StartAuthListening value)? startAuthListening,
+    TResult? Function(PasswordResetRequested value)? passwordResetRequested,
   }) {
     return appleSignInRequested?.call(this);
   }
@@ -1089,6 +1137,7 @@ class _$AppleSignInRequestedImpl implements AppleSignInRequested {
     TResult Function(AuthStateChanged value)? authStateChanged,
     TResult Function(AppleSignInRequested value)? appleSignInRequested,
     TResult Function(StartAuthListening value)? startAuthListening,
+    TResult Function(PasswordResetRequested value)? passwordResetRequested,
     required TResult orElse(),
   }) {
     if (appleSignInRequested != null) {
@@ -1152,6 +1201,7 @@ class _$StartAuthListeningImpl implements StartAuthListening {
     required TResult Function(dynamic user) authStateChanged,
     required TResult Function() appleSignInRequested,
     required TResult Function() startAuthListening,
+    required TResult Function(String email) passwordResetRequested,
   }) {
     return startAuthListening();
   }
@@ -1167,6 +1217,7 @@ class _$StartAuthListeningImpl implements StartAuthListening {
     TResult? Function(dynamic user)? authStateChanged,
     TResult? Function()? appleSignInRequested,
     TResult? Function()? startAuthListening,
+    TResult? Function(String email)? passwordResetRequested,
   }) {
     return startAuthListening?.call();
   }
@@ -1182,6 +1233,7 @@ class _$StartAuthListeningImpl implements StartAuthListening {
     TResult Function(dynamic user)? authStateChanged,
     TResult Function()? appleSignInRequested,
     TResult Function()? startAuthListening,
+    TResult Function(String email)? passwordResetRequested,
     required TResult orElse(),
   }) {
     if (startAuthListening != null) {
@@ -1201,6 +1253,8 @@ class _$StartAuthListeningImpl implements StartAuthListening {
     required TResult Function(AuthStateChanged value) authStateChanged,
     required TResult Function(AppleSignInRequested value) appleSignInRequested,
     required TResult Function(StartAuthListening value) startAuthListening,
+    required TResult Function(PasswordResetRequested value)
+        passwordResetRequested,
   }) {
     return startAuthListening(this);
   }
@@ -1215,6 +1269,7 @@ class _$StartAuthListeningImpl implements StartAuthListening {
     TResult? Function(AuthStateChanged value)? authStateChanged,
     TResult? Function(AppleSignInRequested value)? appleSignInRequested,
     TResult? Function(StartAuthListening value)? startAuthListening,
+    TResult? Function(PasswordResetRequested value)? passwordResetRequested,
   }) {
     return startAuthListening?.call(this);
   }
@@ -1229,6 +1284,7 @@ class _$StartAuthListeningImpl implements StartAuthListening {
     TResult Function(AuthStateChanged value)? authStateChanged,
     TResult Function(AppleSignInRequested value)? appleSignInRequested,
     TResult Function(StartAuthListening value)? startAuthListening,
+    TResult Function(PasswordResetRequested value)? passwordResetRequested,
     required TResult orElse(),
   }) {
     if (startAuthListening != null) {
@@ -1240,6 +1296,192 @@ class _$StartAuthListeningImpl implements StartAuthListening {
 
 abstract class StartAuthListening implements AuthBlocEvent {
   const factory StartAuthListening() = _$StartAuthListeningImpl;
+}
+
+/// @nodoc
+abstract class _$$PasswordResetRequestedImplCopyWith<$Res> {
+  factory _$$PasswordResetRequestedImplCopyWith(
+          _$PasswordResetRequestedImpl value,
+          $Res Function(_$PasswordResetRequestedImpl) then) =
+      __$$PasswordResetRequestedImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String email});
+}
+
+/// @nodoc
+class __$$PasswordResetRequestedImplCopyWithImpl<$Res>
+    extends _$AuthBlocEventCopyWithImpl<$Res, _$PasswordResetRequestedImpl>
+    implements _$$PasswordResetRequestedImplCopyWith<$Res> {
+  __$$PasswordResetRequestedImplCopyWithImpl(
+      _$PasswordResetRequestedImpl _value,
+      $Res Function(_$PasswordResetRequestedImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of AuthBlocEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? email = null,
+  }) {
+    return _then(_$PasswordResetRequestedImpl(
+      email: null == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$PasswordResetRequestedImpl implements PasswordResetRequested {
+  const _$PasswordResetRequestedImpl({required this.email});
+
+  @override
+  final String email;
+
+  @override
+  String toString() {
+    return 'AuthBlocEvent.passwordResetRequested(email: $email)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PasswordResetRequestedImpl &&
+            (identical(other.email, email) || other.email == email));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, email);
+
+  /// Create a copy of AuthBlocEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PasswordResetRequestedImplCopyWith<_$PasswordResetRequestedImpl>
+      get copyWith => __$$PasswordResetRequestedImplCopyWithImpl<
+          _$PasswordResetRequestedImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() googleSignInRequested,
+    required TResult Function(String email, String password, String name)
+        emailSignUpRequested,
+    required TResult Function(String email, String password)
+        emailSignInRequested,
+    required TResult Function() signOutRequested,
+    required TResult Function(dynamic user) authStateChanged,
+    required TResult Function() appleSignInRequested,
+    required TResult Function() startAuthListening,
+    required TResult Function(String email) passwordResetRequested,
+  }) {
+    return passwordResetRequested(email);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? googleSignInRequested,
+    TResult? Function(String email, String password, String name)?
+        emailSignUpRequested,
+    TResult? Function(String email, String password)? emailSignInRequested,
+    TResult? Function()? signOutRequested,
+    TResult? Function(dynamic user)? authStateChanged,
+    TResult? Function()? appleSignInRequested,
+    TResult? Function()? startAuthListening,
+    TResult? Function(String email)? passwordResetRequested,
+  }) {
+    return passwordResetRequested?.call(email);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? googleSignInRequested,
+    TResult Function(String email, String password, String name)?
+        emailSignUpRequested,
+    TResult Function(String email, String password)? emailSignInRequested,
+    TResult Function()? signOutRequested,
+    TResult Function(dynamic user)? authStateChanged,
+    TResult Function()? appleSignInRequested,
+    TResult Function()? startAuthListening,
+    TResult Function(String email)? passwordResetRequested,
+    required TResult orElse(),
+  }) {
+    if (passwordResetRequested != null) {
+      return passwordResetRequested(email);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(GoogleSignInRequested value)
+        googleSignInRequested,
+    required TResult Function(EmailSignUpRequested value) emailSignUpRequested,
+    required TResult Function(EmailSignInRequested value) emailSignInRequested,
+    required TResult Function(SignOutRequested value) signOutRequested,
+    required TResult Function(AuthStateChanged value) authStateChanged,
+    required TResult Function(AppleSignInRequested value) appleSignInRequested,
+    required TResult Function(StartAuthListening value) startAuthListening,
+    required TResult Function(PasswordResetRequested value)
+        passwordResetRequested,
+  }) {
+    return passwordResetRequested(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(GoogleSignInRequested value)? googleSignInRequested,
+    TResult? Function(EmailSignUpRequested value)? emailSignUpRequested,
+    TResult? Function(EmailSignInRequested value)? emailSignInRequested,
+    TResult? Function(SignOutRequested value)? signOutRequested,
+    TResult? Function(AuthStateChanged value)? authStateChanged,
+    TResult? Function(AppleSignInRequested value)? appleSignInRequested,
+    TResult? Function(StartAuthListening value)? startAuthListening,
+    TResult? Function(PasswordResetRequested value)? passwordResetRequested,
+  }) {
+    return passwordResetRequested?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(GoogleSignInRequested value)? googleSignInRequested,
+    TResult Function(EmailSignUpRequested value)? emailSignUpRequested,
+    TResult Function(EmailSignInRequested value)? emailSignInRequested,
+    TResult Function(SignOutRequested value)? signOutRequested,
+    TResult Function(AuthStateChanged value)? authStateChanged,
+    TResult Function(AppleSignInRequested value)? appleSignInRequested,
+    TResult Function(StartAuthListening value)? startAuthListening,
+    TResult Function(PasswordResetRequested value)? passwordResetRequested,
+    required TResult orElse(),
+  }) {
+    if (passwordResetRequested != null) {
+      return passwordResetRequested(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class PasswordResetRequested implements AuthBlocEvent {
+  const factory PasswordResetRequested({required final String email}) =
+      _$PasswordResetRequestedImpl;
+
+  String get email;
+
+  /// Create a copy of AuthBlocEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$PasswordResetRequestedImplCopyWith<_$PasswordResetRequestedImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc

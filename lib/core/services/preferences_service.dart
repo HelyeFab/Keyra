@@ -1,30 +1,48 @@
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferencesService {
-  static const String _hasSeenOnboardingKey = 'has_seen_onboarding';
-  final FlutterSecureStorage _storage;
+  static const String _isFirstLaunchKey = 'isFirstLaunch';
+  static const String _hasSeenOnboardingKey = 'hasSeenOnboarding';
+  static const String _appLanguageKey = 'appLanguage';
 
-  PreferencesService(this._storage);
+  final SharedPreferences _prefs;
+  String appLanguage;
+  bool hasSeenOnboarding;
+  final bool _isFirstLaunch;
+
+  PreferencesService._({
+    required SharedPreferences prefs,
+    required this.appLanguage,
+    required this.hasSeenOnboarding,
+    required bool isFirstLaunch,
+  }) : _prefs = prefs,
+       _isFirstLaunch = isFirstLaunch;
 
   static Future<PreferencesService> init() async {
-    const storage = FlutterSecureStorage();
-    final service = PreferencesService(storage);
+    final prefs = await SharedPreferences.getInstance();
+    final isFirstLaunch = prefs.getBool(_isFirstLaunchKey) ?? true;
     
-    // Initialize with default value if not set
-    final hasValue = await service._storage.containsKey(key: _hasSeenOnboardingKey);
-    if (!hasValue) {
-      await service._storage.write(key: _hasSeenOnboardingKey, value: 'false');
+    if (isFirstLaunch) {
+      await prefs.setBool(_isFirstLaunchKey, false);
     }
-    
-    return service;
+
+    return PreferencesService._(
+      prefs: prefs,
+      appLanguage: prefs.getString(_appLanguageKey) ?? 'en',
+      hasSeenOnboarding: prefs.getBool(_hasSeenOnboardingKey) ?? false,
+      isFirstLaunch: isFirstLaunch,
+    );
   }
 
-  Future<bool> get hasSeenOnboarding async {
-    final value = await _storage.read(key: _hasSeenOnboardingKey);
-    return value == 'true';
+  Future<void> setHasSeenOnboarding(bool value) async {
+    hasSeenOnboarding = value;
+    await _prefs.setBool(_hasSeenOnboardingKey, value);
   }
 
-  Future<void> setHasSeenOnboarding() async {
-    await _storage.write(key: _hasSeenOnboardingKey, value: 'true');
+  Future<void> setAppLanguage(String value) async {
+    appLanguage = value;
+    await _prefs.setString(_appLanguageKey, value);
   }
+
+  bool get isFirstLaunch => _isFirstLaunch;
 }

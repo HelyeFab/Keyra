@@ -22,6 +22,7 @@ class UserStats with _$UserStats {
     DateTime? lastReadDate,
     @JsonKey(fromJson: DateTimeUtils.fromTimestamp, toJson: DateTimeUtils.toTimestamp)
     DateTime? lastUpdated,
+    String? lastBookId,
   }) = _UserStats;
 
   factory UserStats.fromJson(Map<String, dynamic> json) =>
@@ -35,9 +36,21 @@ class UserStats with _$UserStats {
     return data == null ? const UserStats() : UserStats.fromJson(data);
   }
 
-  Map<String, dynamic> toFirestore() => toJson();
+  Map<String, dynamic> toFirestore() {
+    final json = toJson();
+    // Ensure booksRead is a number
+    if (json['booksRead'] != null) {
+      json['booksRead'] = (json['booksRead'] as num).toInt();
+    }
+    return json;
+  }
 
   const UserStats._();
+
+  @override
+  String toString() {
+    return 'UserStats(booksRead: $booksRead, favoriteBooks: $favoriteBooks, readingStreak: $readingStreak, savedWords: $savedWords)';
+  }
 
   bool isStreakActive() {
     if (lastReadDate == null) return false;

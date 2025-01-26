@@ -1,22 +1,26 @@
+import 'package:hive/hive.dart';
+
+part 'book_language.g.dart';
+
+@HiveType(typeId: 1, adapterName: 'BookLanguageAdapter')
 enum BookLanguage {
+  @HiveField(0)
   english('en', 'English'),
+  @HiveField(1)
   french('fr', 'Français'),
+  @HiveField(2)
   spanish('es', 'Español'),
+  @HiveField(3)
   italian('it', 'Italiano'),
+  @HiveField(4)
   german('de', 'Deutsch'),
+  @HiveField(5)
   japanese('ja', '日本語');
 
   final String code;
   final String displayName;
 
   const BookLanguage(this.code, this.displayName);
-
-  static BookLanguage fromCode(String code) {
-    return BookLanguage.values.firstWhere(
-      (lang) => lang.code == code,
-      orElse: () => BookLanguage.english,
-    );
-  }
 
   String get flagAsset {
     switch (this) {
@@ -33,5 +37,13 @@ enum BookLanguage {
       case BookLanguage.japanese:
         return 'assets/flags/japan.png';
     }
+  }
+
+  static BookLanguage fromCode(String? code) {
+    if (code == null) return BookLanguage.english;
+    return BookLanguage.values.firstWhere(
+      (lang) => lang.code == code,
+      orElse: () => BookLanguage.english,
+    );
   }
 }

@@ -1,33 +1,80 @@
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Helper function to check if user is authenticated
-    function isAuthenticated() {
+    // Helper functions
+    function isSignedIn() {
       return request.auth != null;
     }
+    
+    function isAdmin() {
+      return request.auth != null && request.auth.token.admin == true;
+    }
 
-    // Allow read access to all collections for authenticated users
-    match /users/{userId} {
-      allow read: if isAuthenticated();
-      allow write: if isAuthenticated() && request.auth.uid == userId;
+    // Subscriptions collection
+    match /subscriptions/{subscriptionId} {
+      // Users can read their own subscriptions
+      allow read: if isSignedIn() && 
+        (resource == null || resource.data.userId == request.auth.uid);
       
-      // Add rules for favorites subcollection
-      match /favorites/{bookId} {
-        allow read: if isAuthenticated();
-        allow write: if isAuthenticated() && request.auth.uid == userId;
-      }
+      // Allow users to update their own subscriptions, admins, and Cloud Functions
+      allow create: if 
+        isAdmin() || 
+        request.auth.token.firebase.sign_in_provider == 'custom' ||
+        (isSignedIn() && request.resource.data.userId == request.auth.uid);
+      
+      allow update: if 
+        isAdmin() || 
+        request.auth.token.firebase.sign_in_provider == 'custom' ||
+        (isSignedIn() && (
+          resource == null || 
+          resource.data.userId == request.auth.uid
+        ));
+      
+      // Allow admin and Cloud Functions to delete
+      allow delete: if isAdmin() || request.auth.token.firebase.sign_in_provider == 'custom';
 
-      // Add rules for saved_words subcollection
-      match /saved_words/{wordId} {
-        allow read: if isAuthenticated();
-        allow write: if isAuthenticated() && request.auth.uid == userId;
+      // Allow access to subscription history
+      match /history/{historyId} {
+        allow read: if isSignedIn() && 
+          get(/databases/$(database)/documents/subscriptions/$(subscriptionId)).data.userId == request.auth.uid;
       }
     }
 
-    // Allow read/write access to books collection during development
-    match /books/{document=**} {
-      allow read, write: if true;  // TODO: Restrict this before production
+    // User-specific collections
+    match /users/{userId} {
+      // Allow users to access their own data
+      allow read, write: if isSignedIn() && request.auth.uid == userId;
+
+      // User's saved words
+      match /saved_words/{wordId} {
+        allow read, write: if isSignedIn() && request.auth.uid == userId;
+      }
+
+      // User's books
+      match /books/{bookId} {
+        allow read, write: if isSignedIn() && request.auth.uid == userId;
+      }
+
+      // User's stats
+      match /stats/{statsId} {
+        allow read, write: if isSignedIn() && request.auth.uid == userId;
+      }
+
+      // User's favorites
+      match /favorites/{favoriteId} {
+        allow read, write: if isSignedIn() && request.auth.uid == userId;
+      }
+    }
+
+    // User stats collection (for backward compatibility)
+    match /user_stats/{userId} {
+      allow read, write: if isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Global books collection (read-only for authenticated users)
+    match /books/{bookId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
     }
   }
 }

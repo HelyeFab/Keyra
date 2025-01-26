@@ -16,7 +16,7 @@ void main() async {
     print('Firebase initialized successfully');
     
     // Create BookRepository instance
-    final repository = BookRepository();
+    final repository = await BookRepository.create();
     
     // Get all books
     repository.getAllBooks().listen(

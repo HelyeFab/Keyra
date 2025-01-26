@@ -37,6 +37,7 @@ mixin _$UserStats {
   @JsonKey(
       fromJson: DateTimeUtils.fromTimestamp, toJson: DateTimeUtils.toTimestamp)
   DateTime? get lastUpdated => throw _privateConstructorUsedError;
+  String? get lastBookId => throw _privateConstructorUsedError;
 
   /// Serializes this UserStats to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -73,7 +74,8 @@ abstract class $UserStatsCopyWith<$Res> {
       @JsonKey(
           fromJson: DateTimeUtils.fromTimestamp,
           toJson: DateTimeUtils.toTimestamp)
-      DateTime? lastUpdated});
+      DateTime? lastUpdated,
+      String? lastBookId});
 }
 
 /// @nodoc
@@ -101,6 +103,7 @@ class _$UserStatsCopyWithImpl<$Res, $Val extends UserStats>
     Object? currentSessionMinutes = null,
     Object? lastReadDate = freezed,
     Object? lastUpdated = freezed,
+    Object? lastBookId = freezed,
   }) {
     return _then(_value.copyWith(
       booksRead: null == booksRead
@@ -143,6 +146,10 @@ class _$UserStatsCopyWithImpl<$Res, $Val extends UserStats>
           ? _value.lastUpdated
           : lastUpdated // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      lastBookId: freezed == lastBookId
+          ? _value.lastBookId
+          : lastBookId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -175,7 +182,8 @@ abstract class _$$UserStatsImplCopyWith<$Res>
       @JsonKey(
           fromJson: DateTimeUtils.fromTimestamp,
           toJson: DateTimeUtils.toTimestamp)
-      DateTime? lastUpdated});
+      DateTime? lastUpdated,
+      String? lastBookId});
 }
 
 /// @nodoc
@@ -201,6 +209,7 @@ class __$$UserStatsImplCopyWithImpl<$Res>
     Object? currentSessionMinutes = null,
     Object? lastReadDate = freezed,
     Object? lastUpdated = freezed,
+    Object? lastBookId = freezed,
   }) {
     return _then(_$UserStatsImpl(
       booksRead: null == booksRead
@@ -243,6 +252,10 @@ class __$$UserStatsImplCopyWithImpl<$Res>
           ? _value.lastUpdated
           : lastUpdated // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      lastBookId: freezed == lastBookId
+          ? _value.lastBookId
+          : lastBookId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -270,7 +283,8 @@ class _$UserStatsImpl extends _UserStats {
       @JsonKey(
           fromJson: DateTimeUtils.fromTimestamp,
           toJson: DateTimeUtils.toTimestamp)
-      this.lastUpdated})
+      this.lastUpdated,
+      this.lastBookId})
       : _readDates = readDates,
         super._();
 
@@ -316,11 +330,8 @@ class _$UserStatsImpl extends _UserStats {
   @JsonKey(
       fromJson: DateTimeUtils.fromTimestamp, toJson: DateTimeUtils.toTimestamp)
   final DateTime? lastUpdated;
-
   @override
-  String toString() {
-    return 'UserStats(booksRead: $booksRead, favoriteBooks: $favoriteBooks, readingStreak: $readingStreak, savedWords: $savedWords, readDates: $readDates, sessionStartTime: $sessionStartTime, isReadingActive: $isReadingActive, currentSessionMinutes: $currentSessionMinutes, lastReadDate: $lastReadDate, lastUpdated: $lastUpdated)';
-  }
+  final String? lastBookId;
 
   @override
   bool operator ==(Object other) {
@@ -346,7 +357,9 @@ class _$UserStatsImpl extends _UserStats {
             (identical(other.lastReadDate, lastReadDate) ||
                 other.lastReadDate == lastReadDate) &&
             (identical(other.lastUpdated, lastUpdated) ||
-                other.lastUpdated == lastUpdated));
+                other.lastUpdated == lastUpdated) &&
+            (identical(other.lastBookId, lastBookId) ||
+                other.lastBookId == lastBookId));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -362,7 +375,8 @@ class _$UserStatsImpl extends _UserStats {
       isReadingActive,
       currentSessionMinutes,
       lastReadDate,
-      lastUpdated);
+      lastUpdated,
+      lastBookId);
 
   /// Create a copy of UserStats
   /// with the given fields replaced by the non-null parameter values.
@@ -401,7 +415,8 @@ abstract class _UserStats extends UserStats {
       @JsonKey(
           fromJson: DateTimeUtils.fromTimestamp,
           toJson: DateTimeUtils.toTimestamp)
-      final DateTime? lastUpdated}) = _$UserStatsImpl;
+      final DateTime? lastUpdated,
+      final String? lastBookId}) = _$UserStatsImpl;
   const _UserStats._() : super._();
 
   factory _UserStats.fromJson(Map<String, dynamic> json) =
@@ -434,6 +449,8 @@ abstract class _UserStats extends UserStats {
   @JsonKey(
       fromJson: DateTimeUtils.fromTimestamp, toJson: DateTimeUtils.toTimestamp)
   DateTime? get lastUpdated;
+  @override
+  String? get lastBookId;
 
   /// Create a copy of UserStats
   /// with the given fields replaced by the non-null parameter values.

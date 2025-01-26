@@ -176,30 +176,30 @@ mixin _$DashboardState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(
-            int booksRead, int favoriteBooks, int readingStreak, int savedWords)
-        loaded,
     required TResult Function(String message) error,
+    required TResult Function(int booksRead, int favoriteBooks,
+            int readingStreak, int savedWords, bool isPremium, int? bookLimit)
+        loaded,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(int booksRead, int favoriteBooks, int readingStreak,
-            int savedWords)?
-        loaded,
     TResult? Function(String message)? error,
+    TResult? Function(int booksRead, int favoriteBooks, int readingStreak,
+            int savedWords, bool isPremium, int? bookLimit)?
+        loaded,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(int booksRead, int favoriteBooks, int readingStreak,
-            int savedWords)?
-        loaded,
     TResult Function(String message)? error,
+    TResult Function(int booksRead, int favoriteBooks, int readingStreak,
+            int savedWords, bool isPremium, int? bookLimit)?
+        loaded,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -207,24 +207,24 @@ mixin _$DashboardState {
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
-    required TResult Function(_Loaded value) loaded,
     required TResult Function(_Error value) error,
+    required TResult Function(_Loaded value) loaded,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
-    TResult? Function(_Loaded value)? loaded,
     TResult? Function(_Error value)? error,
+    TResult? Function(_Loaded value)? loaded,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
-    TResult Function(_Loaded value)? loaded,
     TResult Function(_Error value)? error,
+    TResult Function(_Loaded value)? loaded,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -294,10 +294,10 @@ class _$InitialImpl implements _Initial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(
-            int booksRead, int favoriteBooks, int readingStreak, int savedWords)
-        loaded,
     required TResult Function(String message) error,
+    required TResult Function(int booksRead, int favoriteBooks,
+            int readingStreak, int savedWords, bool isPremium, int? bookLimit)
+        loaded,
   }) {
     return initial();
   }
@@ -307,10 +307,10 @@ class _$InitialImpl implements _Initial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(int booksRead, int favoriteBooks, int readingStreak,
-            int savedWords)?
-        loaded,
     TResult? Function(String message)? error,
+    TResult? Function(int booksRead, int favoriteBooks, int readingStreak,
+            int savedWords, bool isPremium, int? bookLimit)?
+        loaded,
   }) {
     return initial?.call();
   }
@@ -320,10 +320,10 @@ class _$InitialImpl implements _Initial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(int booksRead, int favoriteBooks, int readingStreak,
-            int savedWords)?
-        loaded,
     TResult Function(String message)? error,
+    TResult Function(int booksRead, int favoriteBooks, int readingStreak,
+            int savedWords, bool isPremium, int? bookLimit)?
+        loaded,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -337,8 +337,8 @@ class _$InitialImpl implements _Initial {
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
-    required TResult Function(_Loaded value) loaded,
     required TResult Function(_Error value) error,
+    required TResult Function(_Loaded value) loaded,
   }) {
     return initial(this);
   }
@@ -348,8 +348,8 @@ class _$InitialImpl implements _Initial {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
-    TResult? Function(_Loaded value)? loaded,
     TResult? Function(_Error value)? error,
+    TResult? Function(_Loaded value)? loaded,
   }) {
     return initial?.call(this);
   }
@@ -359,8 +359,8 @@ class _$InitialImpl implements _Initial {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
-    TResult Function(_Loaded value)? loaded,
     TResult Function(_Error value)? error,
+    TResult Function(_Loaded value)? loaded,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -417,10 +417,10 @@ class _$LoadingImpl implements _Loading {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(
-            int booksRead, int favoriteBooks, int readingStreak, int savedWords)
-        loaded,
     required TResult Function(String message) error,
+    required TResult Function(int booksRead, int favoriteBooks,
+            int readingStreak, int savedWords, bool isPremium, int? bookLimit)
+        loaded,
   }) {
     return loading();
   }
@@ -430,10 +430,10 @@ class _$LoadingImpl implements _Loading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(int booksRead, int favoriteBooks, int readingStreak,
-            int savedWords)?
-        loaded,
     TResult? Function(String message)? error,
+    TResult? Function(int booksRead, int favoriteBooks, int readingStreak,
+            int savedWords, bool isPremium, int? bookLimit)?
+        loaded,
   }) {
     return loading?.call();
   }
@@ -443,10 +443,10 @@ class _$LoadingImpl implements _Loading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(int booksRead, int favoriteBooks, int readingStreak,
-            int savedWords)?
-        loaded,
     TResult Function(String message)? error,
+    TResult Function(int booksRead, int favoriteBooks, int readingStreak,
+            int savedWords, bool isPremium, int? bookLimit)?
+        loaded,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -460,8 +460,8 @@ class _$LoadingImpl implements _Loading {
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
-    required TResult Function(_Loaded value) loaded,
     required TResult Function(_Error value) error,
+    required TResult Function(_Loaded value) loaded,
   }) {
     return loading(this);
   }
@@ -471,8 +471,8 @@ class _$LoadingImpl implements _Loading {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
-    TResult? Function(_Loaded value)? loaded,
     TResult? Function(_Error value)? error,
+    TResult? Function(_Loaded value)? loaded,
   }) {
     return loading?.call(this);
   }
@@ -482,8 +482,8 @@ class _$LoadingImpl implements _Loading {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
-    TResult Function(_Loaded value)? loaded,
     TResult Function(_Error value)? error,
+    TResult Function(_Loaded value)? loaded,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -495,206 +495,6 @@ class _$LoadingImpl implements _Loading {
 
 abstract class _Loading implements DashboardState {
   const factory _Loading() = _$LoadingImpl;
-}
-
-/// @nodoc
-abstract class _$$LoadedImplCopyWith<$Res> {
-  factory _$$LoadedImplCopyWith(
-          _$LoadedImpl value, $Res Function(_$LoadedImpl) then) =
-      __$$LoadedImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call(
-      {int booksRead, int favoriteBooks, int readingStreak, int savedWords});
-}
-
-/// @nodoc
-class __$$LoadedImplCopyWithImpl<$Res>
-    extends _$DashboardStateCopyWithImpl<$Res, _$LoadedImpl>
-    implements _$$LoadedImplCopyWith<$Res> {
-  __$$LoadedImplCopyWithImpl(
-      _$LoadedImpl _value, $Res Function(_$LoadedImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of DashboardState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? booksRead = null,
-    Object? favoriteBooks = null,
-    Object? readingStreak = null,
-    Object? savedWords = null,
-  }) {
-    return _then(_$LoadedImpl(
-      booksRead: null == booksRead
-          ? _value.booksRead
-          : booksRead // ignore: cast_nullable_to_non_nullable
-              as int,
-      favoriteBooks: null == favoriteBooks
-          ? _value.favoriteBooks
-          : favoriteBooks // ignore: cast_nullable_to_non_nullable
-              as int,
-      readingStreak: null == readingStreak
-          ? _value.readingStreak
-          : readingStreak // ignore: cast_nullable_to_non_nullable
-              as int,
-      savedWords: null == savedWords
-          ? _value.savedWords
-          : savedWords // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$LoadedImpl implements _Loaded {
-  const _$LoadedImpl(
-      {required this.booksRead,
-      required this.favoriteBooks,
-      required this.readingStreak,
-      this.savedWords = 0});
-
-  @override
-  final int booksRead;
-  @override
-  final int favoriteBooks;
-  @override
-  final int readingStreak;
-  @override
-  @JsonKey()
-  final int savedWords;
-
-  @override
-  String toString() {
-    return 'DashboardState.loaded(booksRead: $booksRead, favoriteBooks: $favoriteBooks, readingStreak: $readingStreak, savedWords: $savedWords)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$LoadedImpl &&
-            (identical(other.booksRead, booksRead) ||
-                other.booksRead == booksRead) &&
-            (identical(other.favoriteBooks, favoriteBooks) ||
-                other.favoriteBooks == favoriteBooks) &&
-            (identical(other.readingStreak, readingStreak) ||
-                other.readingStreak == readingStreak) &&
-            (identical(other.savedWords, savedWords) ||
-                other.savedWords == savedWords));
-  }
-
-  @override
-  int get hashCode => Object.hash(
-      runtimeType, booksRead, favoriteBooks, readingStreak, savedWords);
-
-  /// Create a copy of DashboardState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$LoadedImplCopyWith<_$LoadedImpl> get copyWith =>
-      __$$LoadedImplCopyWithImpl<_$LoadedImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() loading,
-    required TResult Function(
-            int booksRead, int favoriteBooks, int readingStreak, int savedWords)
-        loaded,
-    required TResult Function(String message) error,
-  }) {
-    return loaded(booksRead, favoriteBooks, readingStreak, savedWords);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? loading,
-    TResult? Function(int booksRead, int favoriteBooks, int readingStreak,
-            int savedWords)?
-        loaded,
-    TResult? Function(String message)? error,
-  }) {
-    return loaded?.call(booksRead, favoriteBooks, readingStreak, savedWords);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(int booksRead, int favoriteBooks, int readingStreak,
-            int savedWords)?
-        loaded,
-    TResult Function(String message)? error,
-    required TResult orElse(),
-  }) {
-    if (loaded != null) {
-      return loaded(booksRead, favoriteBooks, readingStreak, savedWords);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Loaded value) loaded,
-    required TResult Function(_Error value) error,
-  }) {
-    return loaded(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Loaded value)? loaded,
-    TResult? Function(_Error value)? error,
-  }) {
-    return loaded?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Loaded value)? loaded,
-    TResult Function(_Error value)? error,
-    required TResult orElse(),
-  }) {
-    if (loaded != null) {
-      return loaded(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _Loaded implements DashboardState {
-  const factory _Loaded(
-      {required final int booksRead,
-      required final int favoriteBooks,
-      required final int readingStreak,
-      final int savedWords}) = _$LoadedImpl;
-
-  int get booksRead;
-  int get favoriteBooks;
-  int get readingStreak;
-  int get savedWords;
-
-  /// Create a copy of DashboardState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$LoadedImplCopyWith<_$LoadedImpl> get copyWith =>
-      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -767,10 +567,10 @@ class _$ErrorImpl implements _Error {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(
-            int booksRead, int favoriteBooks, int readingStreak, int savedWords)
-        loaded,
     required TResult Function(String message) error,
+    required TResult Function(int booksRead, int favoriteBooks,
+            int readingStreak, int savedWords, bool isPremium, int? bookLimit)
+        loaded,
   }) {
     return error(message);
   }
@@ -780,10 +580,10 @@ class _$ErrorImpl implements _Error {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(int booksRead, int favoriteBooks, int readingStreak,
-            int savedWords)?
-        loaded,
     TResult? Function(String message)? error,
+    TResult? Function(int booksRead, int favoriteBooks, int readingStreak,
+            int savedWords, bool isPremium, int? bookLimit)?
+        loaded,
   }) {
     return error?.call(message);
   }
@@ -793,10 +593,10 @@ class _$ErrorImpl implements _Error {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(int booksRead, int favoriteBooks, int readingStreak,
-            int savedWords)?
-        loaded,
     TResult Function(String message)? error,
+    TResult Function(int booksRead, int favoriteBooks, int readingStreak,
+            int savedWords, bool isPremium, int? bookLimit)?
+        loaded,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -810,8 +610,8 @@ class _$ErrorImpl implements _Error {
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
-    required TResult Function(_Loaded value) loaded,
     required TResult Function(_Error value) error,
+    required TResult Function(_Loaded value) loaded,
   }) {
     return error(this);
   }
@@ -821,8 +621,8 @@ class _$ErrorImpl implements _Error {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
-    TResult? Function(_Loaded value)? loaded,
     TResult? Function(_Error value)? error,
+    TResult? Function(_Loaded value)? loaded,
   }) {
     return error?.call(this);
   }
@@ -832,8 +632,8 @@ class _$ErrorImpl implements _Error {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
-    TResult Function(_Loaded value)? loaded,
     TResult Function(_Error value)? error,
+    TResult Function(_Loaded value)? loaded,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -852,5 +652,236 @@ abstract class _Error implements DashboardState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$LoadedImplCopyWith<$Res> {
+  factory _$$LoadedImplCopyWith(
+          _$LoadedImpl value, $Res Function(_$LoadedImpl) then) =
+      __$$LoadedImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call(
+      {int booksRead,
+      int favoriteBooks,
+      int readingStreak,
+      int savedWords,
+      bool isPremium,
+      int? bookLimit});
+}
+
+/// @nodoc
+class __$$LoadedImplCopyWithImpl<$Res>
+    extends _$DashboardStateCopyWithImpl<$Res, _$LoadedImpl>
+    implements _$$LoadedImplCopyWith<$Res> {
+  __$$LoadedImplCopyWithImpl(
+      _$LoadedImpl _value, $Res Function(_$LoadedImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of DashboardState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? booksRead = null,
+    Object? favoriteBooks = null,
+    Object? readingStreak = null,
+    Object? savedWords = null,
+    Object? isPremium = null,
+    Object? bookLimit = freezed,
+  }) {
+    return _then(_$LoadedImpl(
+      booksRead: null == booksRead
+          ? _value.booksRead
+          : booksRead // ignore: cast_nullable_to_non_nullable
+              as int,
+      favoriteBooks: null == favoriteBooks
+          ? _value.favoriteBooks
+          : favoriteBooks // ignore: cast_nullable_to_non_nullable
+              as int,
+      readingStreak: null == readingStreak
+          ? _value.readingStreak
+          : readingStreak // ignore: cast_nullable_to_non_nullable
+              as int,
+      savedWords: null == savedWords
+          ? _value.savedWords
+          : savedWords // ignore: cast_nullable_to_non_nullable
+              as int,
+      isPremium: null == isPremium
+          ? _value.isPremium
+          : isPremium // ignore: cast_nullable_to_non_nullable
+              as bool,
+      bookLimit: freezed == bookLimit
+          ? _value.bookLimit
+          : bookLimit // ignore: cast_nullable_to_non_nullable
+              as int?,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$LoadedImpl implements _Loaded {
+  const _$LoadedImpl(
+      {required this.booksRead,
+      required this.favoriteBooks,
+      required this.readingStreak,
+      required this.savedWords,
+      required this.isPremium,
+      required this.bookLimit});
+
+  @override
+  final int booksRead;
+  @override
+  final int favoriteBooks;
+  @override
+  final int readingStreak;
+  @override
+  final int savedWords;
+  @override
+  final bool isPremium;
+  @override
+  final int? bookLimit;
+
+  @override
+  String toString() {
+    return 'DashboardState.loaded(booksRead: $booksRead, favoriteBooks: $favoriteBooks, readingStreak: $readingStreak, savedWords: $savedWords, isPremium: $isPremium, bookLimit: $bookLimit)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$LoadedImpl &&
+            (identical(other.booksRead, booksRead) ||
+                other.booksRead == booksRead) &&
+            (identical(other.favoriteBooks, favoriteBooks) ||
+                other.favoriteBooks == favoriteBooks) &&
+            (identical(other.readingStreak, readingStreak) ||
+                other.readingStreak == readingStreak) &&
+            (identical(other.savedWords, savedWords) ||
+                other.savedWords == savedWords) &&
+            (identical(other.isPremium, isPremium) ||
+                other.isPremium == isPremium) &&
+            (identical(other.bookLimit, bookLimit) ||
+                other.bookLimit == bookLimit));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, booksRead, favoriteBooks,
+      readingStreak, savedWords, isPremium, bookLimit);
+
+  /// Create a copy of DashboardState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$LoadedImplCopyWith<_$LoadedImpl> get copyWith =>
+      __$$LoadedImplCopyWithImpl<_$LoadedImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function(String message) error,
+    required TResult Function(int booksRead, int favoriteBooks,
+            int readingStreak, int savedWords, bool isPremium, int? bookLimit)
+        loaded,
+  }) {
+    return loaded(booksRead, favoriteBooks, readingStreak, savedWords,
+        isPremium, bookLimit);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(String message)? error,
+    TResult? Function(int booksRead, int favoriteBooks, int readingStreak,
+            int savedWords, bool isPremium, int? bookLimit)?
+        loaded,
+  }) {
+    return loaded?.call(booksRead, favoriteBooks, readingStreak, savedWords,
+        isPremium, bookLimit);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function(String message)? error,
+    TResult Function(int booksRead, int favoriteBooks, int readingStreak,
+            int savedWords, bool isPremium, int? bookLimit)?
+        loaded,
+    required TResult orElse(),
+  }) {
+    if (loaded != null) {
+      return loaded(booksRead, favoriteBooks, readingStreak, savedWords,
+          isPremium, bookLimit);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Initial value) initial,
+    required TResult Function(_Loading value) loading,
+    required TResult Function(_Error value) error,
+    required TResult Function(_Loaded value) loaded,
+  }) {
+    return loaded(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Loading value)? loading,
+    TResult? Function(_Error value)? error,
+    TResult? Function(_Loaded value)? loaded,
+  }) {
+    return loaded?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Initial value)? initial,
+    TResult Function(_Loading value)? loading,
+    TResult Function(_Error value)? error,
+    TResult Function(_Loaded value)? loaded,
+    required TResult orElse(),
+  }) {
+    if (loaded != null) {
+      return loaded(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _Loaded implements DashboardState {
+  const factory _Loaded(
+      {required final int booksRead,
+      required final int favoriteBooks,
+      required final int readingStreak,
+      required final int savedWords,
+      required final bool isPremium,
+      required final int? bookLimit}) = _$LoadedImpl;
+
+  int get booksRead;
+  int get favoriteBooks;
+  int get readingStreak;
+  int get savedWords;
+  bool get isPremium;
+  int? get bookLimit;
+
+  /// Create a copy of DashboardState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$LoadedImplCopyWith<_$LoadedImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

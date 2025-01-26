@@ -1,5 +1,64 @@
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
+import '../theme/app_spacing.dart';
+import 'menu_button.dart';
+
+class NavBarClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    final path = Path();
+    final centerX = size.width / 2;
+    const curveWidth = 85.0;
+    const curveHeight = 8.0;
+    const cornerRadius = 10.0;
+    
+    path.moveTo(0, cornerRadius);
+    
+    // Top left corner
+    path.quadraticBezierTo(0, 0, cornerRadius, 0);
+    
+    // Line to start of curve
+    path.lineTo(centerX - curveWidth, 0);
+    
+    // Gentle curve up with smoother transition
+    path.cubicTo(
+      centerX - curveWidth/3, 0,         // First control point
+      centerX - curveWidth/6, -curveHeight,  // Second control point
+      centerX, -curveHeight,              // First end point
+    );
+    
+    path.cubicTo(
+      centerX + curveWidth/6, -curveHeight,  // First control point
+      centerX + curveWidth/3, 0,         // Second control point
+      centerX + curveWidth, 0,           // Final end point
+    );
+    
+    // Line to top right corner
+    path.lineTo(size.width - cornerRadius, 0);
+    
+    // Top right corner
+    path.quadraticBezierTo(size.width, 0, size.width, cornerRadius);
+    
+    // Right side
+    path.lineTo(size.width, size.height - cornerRadius);
+    
+    // Bottom right corner
+    path.quadraticBezierTo(size.width, size.height, size.width - cornerRadius, size.height);
+    
+    // Bottom side
+    path.lineTo(cornerRadius, size.height);
+    
+    // Bottom left corner
+    path.quadraticBezierTo(0, size.height, 0, size.height - cornerRadius);
+    
+    path.close();
+    
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
+}
 
 class KeyraBottomNavBar extends StatelessWidget {
   final int currentIndex;
@@ -11,112 +70,86 @@ class KeyraBottomNavBar extends StatelessWidget {
     required this.onTap,
   });
 
-  Widget _buildNavItem({
-    required BuildContext context,
-    required IconData icon,
-    required String label,
-    required int index,
-  }) {
-    final isSelected = currentIndex == index;
-    final primaryColor = Theme.of(context).colorScheme.primary;
-
-    return GestureDetector(
-      onTap: () => onTap(index),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: isSelected ? primaryColor.withOpacity(0.1) : Colors.transparent,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (icon == HugeIcons.strokeRoundedDashboardBrowsing)
-              HugeIcon(
-                icon: icon,
-                color: isSelected ? primaryColor : Theme.of(context).colorScheme.onSurface,
-                size: 20.0,
-              )
-            else
-              Icon(
-                icon,
-                color: isSelected ? primaryColor : Theme.of(context).colorScheme.onSurface,
-                size: 20,
-              ),
-            const SizedBox(height: 2),
-            Text(
-              label,
-              style: TextStyle(
-                color: isSelected ? primaryColor : Theme.of(context).colorScheme.onSurface,
-                fontSize: 9,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(
-        left: 8,
-        right: 8,
-        bottom: 16,
-      ),
+    final items = [
+      const _NavItem(icon: HugeIcons.strokeRoundedHome13, index: 0),
+      const _NavItem(icon: HugeIcons.strokeRoundedLibrary, index: 1),
+      const _NavItem(icon: HugeIcons.strokeRoundedMortarboard02, index: 2),
+      const _NavItem(icon: HugeIcons.strokeRoundedAnalyticsUp, index: 3),
+      const _NavItem(icon: HugeIcons.strokeRoundedUserList, index: 4, isMenuButton: true),
+    ];
+
+    return ClipPath(
+      clipper: NavBarClipper(),
       child: Container(
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(32),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.08),
-              blurRadius: 16,
-              offset: const Offset(0, 4),
-              spreadRadius: 0,
+          border: Border(
+            top: BorderSide(
+              color: Theme.of(context).colorScheme.outline,
+              width: 1,
             ),
-          ],
+          ),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 12),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _buildNavItem(
-              context: context,
-              icon: HugeIcons.strokeRoundedHome13,
-              label: 'Home',
-              index: 0,
-            ),
-            _buildNavItem(
-              context: context,
-              icon: HugeIcons.strokeRoundedBook02,
-              label: 'Library',
-              index: 1,
-            ),
-            _buildNavItem(
-              context: context,
-              icon: HugeIcons.strokeRoundedIdea01,
-              label: 'Create',
-              index: 2,
-            ),
-            _buildNavItem(
-              context: context,
-              icon: HugeIcons.strokeRoundedDashboardBrowsing,
-              label: 'Dashboard',
-              index: 3,
-            ),
-            _buildNavItem(
-              context: context,
-              icon: HugeIcons.strokeRoundedUserCircle,
-              label: 'Profile',
-              index: 4,
-            ),
-          ],
+          children: items.map((item) => _buildNavItem(item, context)).toList(),
         ),
       ),
     );
   }
+
+  Widget _buildNavItem(_NavItem item, BuildContext context) {
+    if (item.isMenuButton) {
+      final isSelected = item.index == currentIndex;
+      return SizedBox(
+        width: 65,
+        child: Center(
+          child: MenuButton(
+            size: isSelected ? AppSpacing.xl : AppSpacing.lg,
+            isSelected: isSelected,
+            onTap: () => onTap(item.index),
+          ),
+        ),
+      );
+    }
+
+    final isSelected = item.index == currentIndex;
+    return SizedBox(
+      width: 65,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () => onTap(item.index),
+          borderRadius: BorderRadius.circular(8),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Center(
+              child: HugeIcon(
+                icon: item.icon,
+                size: isSelected ? AppSpacing.xl : AppSpacing.lg,
+                color: isSelected
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.onSurface,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _NavItem {
+  final IconData icon;
+  final int index;
+  final bool isMenuButton;
+
+  const _NavItem({
+    required this.icon,
+    required this.index,
+    this.isMenuButton = false,
+  });
 }
