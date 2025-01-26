@@ -11,8 +11,7 @@ import 'package:Keyra/core/theme/color_schemes.dart';
 import 'package:Keyra/features/dashboard/data/repositories/user_stats_repository.dart';
 import 'package:Keyra/features/dictionary/presentation/widgets/word_definition_modal.dart';
 import 'package:Keyra/features/dictionary/data/services/dictionary_service.dart';
-import 'package:japanese_word_tokenizer/japanese_word_tokenizer.dart'
-    show tokenize;
+import 'package:japanese_word_tokenizer/japanese_word_tokenizer.dart' show tokenize;
 import 'package:Keyra/core/widgets/loading_animation.dart';
 import 'package:Keyra/features/books/presentation/bloc/tts_bloc.dart';
 import 'package:Keyra/features/books/data/repositories/book_repository.dart';
@@ -23,6 +22,7 @@ import 'package:Keyra/features/subscription/presentation/widgets/book_limit_dial
 import 'package:Keyra/features/dictionary/presentation/widgets/sentence_translation_modal.dart';
 import 'package:Keyra/features/dictionary/data/services/translation_service.dart';
 import 'package:Keyra/core/ui_language/bloc/ui_language_bloc.dart';
+import 'package:Keyra/core/ui_language/translations/ui_translations.dart';
 
 // Model for word reading
 class WordReading {
@@ -699,21 +699,35 @@ class _BookReaderPageState extends State<BookReaderPage> {
                             final targetLanguage =
                                 uiLanguageBloc.state.languageCode;
 
-                            final translation =
-                                await widget.translationService.translateText(
-                              wordReading.sentenceText!,
-                              widget.language,
-                              targetLanguage: targetLanguage,
-                            );
-
-                            if (context.mounted) {
-                              SentenceTranslationModal.show(
-                                context,
+                            if (widget.language.code != targetLanguage) {
+                              // Only translate and show translation card if languages are different
+                              final translation =
+                                  await widget.translationService.translateText(
                                 wordReading.sentenceText!,
-                                translation,
                                 widget.language,
-                                widget.dictionaryService,
+                                targetLanguage: targetLanguage,
                               );
+
+                              if (context.mounted) {
+                                SentenceTranslationModal.show(
+                                  context,
+                                  wordReading.sentenceText!,
+                                  translation,
+                                  widget.language,
+                                  widget.dictionaryService,
+                                );
+                              }
+                            } else {
+                              // If languages are the same, show only original text without translation section
+                              if (context.mounted) {
+                                SentenceTranslationModal.show(
+                                  context,
+                                  wordReading.sentenceText!,
+                                  UiTranslations.of(context).translate('no_translation_needed'),
+                                  widget.language,
+                                  widget.dictionaryService,
+                                );
+                              }
                             }
                           } catch (e) {
                             debugPrint('Failed to translate sentence: $e');

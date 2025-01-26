@@ -60,12 +60,8 @@ class SentenceTranslationModal extends StatelessWidget {
           Container(
             padding: AppSpacing.paddingMd,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text(
-                  UiTranslations.of(context).translate('translation_modal_title'),
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
                 IconButton(
                   icon: const Icon(Icons.close),
                   onPressed: () => Navigator.of(context).pop(),
@@ -123,28 +119,30 @@ class SentenceTranslationModal extends StatelessWidget {
 
                   const SizedBox(height: AppSpacing.lg),
 
-                  // Translation
-                  Text(
-                    UiTranslations.of(context).translate('translation_modal_translation'),
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: AppColors.sectionTitle,
-                        ),
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                  Container(
-                    width: double.infinity,
-                    padding: AppSpacing.paddingMd,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-                    ),
-                    child: Text(
-                      translation,
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            height: AppSpacing.lineHeightLarge,
+                  // Translation section - only show if translation is not a "no translation needed" message
+                  if (translation != UiTranslations.of(context).translate('no_translation_needed')) ...[
+                    Text(
+                      UiTranslations.of(context).translate('translation_modal_translation'),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: AppColors.sectionTitle,
                           ),
                     ),
-                  ),
+                    const SizedBox(height: AppSpacing.sm),
+                    Container(
+                      width: double.infinity,
+                      padding: AppSpacing.paddingMd,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                      ),
+                      child: Text(
+                        translation,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              height: AppSpacing.lineHeightLarge,
+                            ),
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),
