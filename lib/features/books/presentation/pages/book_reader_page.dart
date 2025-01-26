@@ -489,7 +489,8 @@ class _BookReaderPageState extends State<BookReaderPage> {
   Widget _buildTextContent(BuildContext context, String content) {
     final theme = Theme.of(context);
     
-    if (widget.language.code == 'ja') {
+    // Only use Japanese text processing when furigana is enabled
+    if (widget.language.code == 'ja' && _showFurigana) {
       return FutureBuilder<List<WordReading>>(
         future: _processJapaneseText(content),
         builder: (context, snapshot) {
@@ -675,11 +676,9 @@ class _BookReaderPageState extends State<BookReaderPage> {
       );
     }
 
-    // Regular text display with word processing and translation icons
+    // For Japanese without furigana or other languages
     return FutureBuilder<List<WordReading>>(
-      future: widget.language.code == 'ja'
-          ? _processJapaneseText(content)
-          : _processNonJapaneseText(content),
+      future: _processNonJapaneseText(content),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const LoadingAnimation(size: 50);
@@ -880,9 +879,32 @@ class _BookReaderPageState extends State<BookReaderPage> {
   Future<List<WordReading>> _processNonJapaneseText(String text) async {
     final List<WordReading> results = [];
 
-    // Split text into sentences first
-    final sentences = text.split(RegExp(r'([.!?])\s+'));
+    // For Japanese text, use tokenize
+    if (widget.language.code == 'ja') {
+      final sentences = text.split('。');
+      for (var sentence in sentences) {
+        if (sentence.trim().isEmpty) {
+          results.add(const WordReading("\n", null));
+          continue;
+        }
 
+        final tokens = tokenize(sentence);
+        for (var token in tokens) {
+          results.add(WordReading(token, null));
+        }
+
+        if (sentence.isNotEmpty) {
+          results.add(const WordReading("。", null));
+          results.add(const WordReading(" ", null)); // Space before icon
+          results.add(WordReading("", null, sentence + "。", true)); // Translation icon
+          results.add(const WordReading("\n", null));
+        }
+      }
+      return results;
+    }
+
+    // For non-Japanese text, use the original processing
+    final sentences = text.split(RegExp(r'([.!?])\s+'));
     for (var i = 0; i < sentences.length; i++) {
       var sentence = sentences[i];
       if (i < sentences.length - 1) {
