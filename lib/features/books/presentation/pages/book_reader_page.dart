@@ -799,56 +799,102 @@ class _BookReaderPageState extends State<BookReaderPage> {
       bloc: _ttsBloc,
       builder: (context, state) {
         final currentPage = widget.book.pages[_currentPage];
-        final pageText = currentPage.getText(widget.language);
-        final buttonColor = Colors.white.withOpacity(0.2);
+        final audioPath = currentPage.getAudioPath(widget.language);
+        final text = currentPage.getText(widget.language);
 
-        if (state is TTSPlaying) {
-          return Center(
-            child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: buttonColor,
-              ),
-              child: IconButton(
-                icon: const HugeIcon(
-                  icon: HugeIcons.strokeRoundedPause,
-                  color: Colors.white,
-                  size: 24.0,
+        if (audioPath == null || text.isEmpty) return const SizedBox.shrink();
+
+        final isSlowSpeed = state.speedFactor < 1.0;
+
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Speed control button
+            ClipRRect(
+              borderRadius: BorderRadius.circular(25),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Colors.white.withOpacity(0.15),
+                        Colors.white.withOpacity(0.05),
+                      ],
+                    ),
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.2),
+                      width: 0.5,
+                    ),
+                  ),
+                  child: IconButton(
+                    icon: Icon(
+                      isSlowSpeed ? Icons.slow_motion_video : Icons.speed,
+                      color: Colors.white.withOpacity(0.9),
+                      size: 24.0,
+                    ),
+                    onPressed: () {
+                      context.read<TTSBloc>().add(
+                        TTSSpeedChanged(isSlowSpeed ? 1.0 : 0.7)
+                      );
+                    },
+                    tooltip: isSlowSpeed ? 'Normal speed' : 'Slow speed (70%)',
+                  ),
                 ),
-                iconSize: 48,
-                onPressed: () {
-                  _ttsBloc.add(TTSPauseRequested());
-                },
               ),
             ),
-          );
-        } else {
-          return Center(
-            child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: buttonColor,
-              ),
-              child: IconButton(
-                icon: const HugeIcon(
-                  icon: HugeIcons.strokeRoundedPlay,
-                  color: Colors.white,
-                  size: 24.0,
+            const SizedBox(width: 8),
+            // Play/Pause button
+            ClipRRect(
+              borderRadius: BorderRadius.circular(25),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Colors.white.withOpacity(0.15),
+                        Colors.white.withOpacity(0.05),
+                      ],
+                    ),
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.2),
+                      width: 0.5,
+                    ),
+                  ),
+                  child: IconButton(
+                    icon: Icon(
+                      state is TTSPlaying
+                          ? Icons.pause_rounded
+                          : Icons.play_arrow_rounded,
+                      color: Colors.white.withOpacity(0.9),
+                      size: 24.0,
+                    ),
+                    onPressed: () {
+                      if (state is TTSPlaying) {
+                        context.read<TTSBloc>().add(TTSPauseRequested());
+                      } else if (state is TTSPausedState) {
+                        context.read<TTSBloc>().add(TTSResumeRequested());
+                      } else {
+                        context.read<TTSBloc>().add(
+                          TTSStarted(text: text, language: widget.language),
+                        );
+                      }
+                    },
+                  ),
                 ),
-                iconSize: 48,
-                onPressed: () async {
-                  if (!await ConnectivityUtils.checkConnectivity(context)) {
-                    return;
-                  }
-                  _ttsBloc.add(TTSStarted(
-                    text: pageText,
-                    language: widget.language,
-                  ));
-                },
               ),
             ),
-          );
-        }
+          ],
+        );
       },
     );
   }
