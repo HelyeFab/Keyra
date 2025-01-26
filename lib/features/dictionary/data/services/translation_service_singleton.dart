@@ -10,4 +10,8 @@ class TranslationServiceSingleton {
     );
     return _instance!;
   }
+
+  static set instance(TranslationService service) {
+    _instance = service;
+  }
 }

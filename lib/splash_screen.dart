@@ -5,6 +5,7 @@ import 'core/services/preferences_service.dart';
 import 'core/theme/color_schemes.dart';
 import 'core/theme/text_themes.dart';
 import 'features/onboarding/presentation/pages/onboarding_page.dart';
+import 'package:Keyra/features/dictionary/data/services/dictionary_service.dart';
 
 class BubblePainter extends CustomPainter {
   final Color color;
@@ -221,6 +222,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   Timer? _timer;
+  bool _isDictionaryInitialized = false;
   final List<Map<String, dynamic>> messages = [
     {
       'message': 'Hello',
@@ -268,6 +270,7 @@ class _SplashScreenState extends State<SplashScreen>
     Logger.log('SplashScreen initState - isFirstLaunch: ${widget.isFirstLaunch}');
 
     _animateMessages();
+    _initializeDictionary();
 
     Future.delayed(
       const Duration(seconds: 3),
@@ -275,6 +278,11 @@ class _SplashScreenState extends State<SplashScreen>
         if (mounted) {
           _timer?.cancel();
           Logger.log('Navigating - isFirstLaunch: ${widget.isFirstLaunch}');
+
+          // Wait for dictionary initialization to complete
+          while (!_isDictionaryInitialized) {
+            await Future.delayed(const Duration(milliseconds: 100));
+          }
 
           if (!mounted) return;
 
@@ -322,6 +330,28 @@ class _SplashScreenState extends State<SplashScreen>
     }
 
     startAnimation();
+  }
+
+  Future<void> _initializeDictionary() async {
+    try {
+      Logger.log('Starting dictionary service initialization...');
+      final dictionaryService = DictionaryService();
+      
+      await dictionaryService.initialize();
+      if (!dictionaryService.isInitialized) {
+        throw Exception('Dictionary service initialize() completed but isInitialized is still false');
+      }
+      Logger.log('Dictionary service initialized successfully');
+      _isDictionaryInitialized = true;
+    } catch (e, stackTrace) {
+      Logger.error(
+        'Failed to initialize dictionary service',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      // Rethrow to ensure we see the error
+      rethrow;
+    }
   }
 
   @override

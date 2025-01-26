@@ -630,11 +630,12 @@ class _BookReaderPageState extends State<BookReaderPage> {
                                     height: 1.0,
                                   ),
                                 ),
+                                const SizedBox(height: 6), // Increased gap to 6 pixels
                                 // Kanji text (below)
                                 Text(
                                   wordReading.word,
                                   style: theme.textTheme.bodyLarge?.copyWith(
-                                    fontSize: _baseFontSize * _textScale,
+                                    fontSize: (_baseFontSize * 0.85) * _textScale,
                                     height: 1.0,
                                   ),
                                 ),

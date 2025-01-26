@@ -78,7 +78,9 @@ class ReadingLanguageSelector extends StatelessWidget {
         }
         
         items.addAll(
-          BookLanguage.values.map(
+          BookLanguage.values
+              .where((language) => language != BookLanguage.japaneseFurigana)
+              .map(
             (language) => PopupMenuItem(
               value: LanguageSelection.specific(language),
               child: Row(

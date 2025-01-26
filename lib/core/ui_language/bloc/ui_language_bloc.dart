@@ -29,7 +29,7 @@ class UiLanguageBloc extends Bloc<UiLanguageEvent, UiLanguageState> {
     'de': 'Deutsch',
     'es': 'Español',
     'it': 'Italiano',
-    'ja': '日本語',
+    'ja': 'Japanese',
   };
 
   UiLanguageBloc(this._prefs) : super(const UiLanguageState('en')) {

@@ -44,26 +44,15 @@ Future<void> initServices() async {
     }
     if (!Hive.isAdapterRegistered(2)) Hive.registerAdapter(BookPageAdapter());
 
-    // Initialize dictionary service
-    Logger.log('Starting dictionary service initialization...');
-    final dictionaryService = DictionaryService();
-    
-    try {
-      await dictionaryService.initialize();
-      if (!dictionaryService.isInitialized) {
-        throw Exception('Dictionary service initialize() completed but isInitialized is still false');
-      }
-      Logger.log('Dictionary service initialized successfully');
-    } catch (e, stackTrace) {
-      Logger.error(
-        'Failed to initialize dictionary service',
-        error: e,
-        stackTrace: stackTrace,
-      );
-      // Rethrow to ensure we see the error
-      rethrow;
-    }
-  } catch (e) {
+    // Initialize translation service
+    Logger.log('Starting translation service initialization...');
+    final translationService = TranslationService(
+      apiKey: dotenv.env['GOOGLE_TRANSLATE_API_KEY'] ?? '',
+    );
+    TranslationServiceSingleton.instance = translationService;
+    Logger.log('Translation service initialized successfully');
+  } catch (e, stackTrace) {
+    Logger.error('Failed to initialize services', error: e, stackTrace: stackTrace);
     rethrow;
   }
 }
