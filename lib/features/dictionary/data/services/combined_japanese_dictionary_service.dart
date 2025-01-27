@@ -62,7 +62,7 @@ class CombinedJapaneseDictionaryService {
       final jishoResult = await _jishoService.getJishoData(word);
 
       // Get kanji info if available in JMDict result
-      final kanjiInfo = jmdictResult?['kanjiInfo'];
+      final kanjiInfo = jmdictResult['kanjiInfo'];
 
       return CombinedJapaneseDictionaryResult(
         jmdictResult: jmdictResult,

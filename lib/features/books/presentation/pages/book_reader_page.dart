@@ -868,7 +868,7 @@ class _BookReaderPageState extends State<BookReaderPage> {
         results.add(const WordReading("。", null));
         results.add(const WordReading(" ", null)); // Space before icon
         results.add(WordReading(
-            "", null, currentSentence.toString() + "。", true)); // Translate icon with full stop
+            "", null, "$currentSentence。", true)); // Translate icon with full stop
         results.add(const WordReading("\n", null)); // Line break after sentence
       }
     }
@@ -896,7 +896,7 @@ class _BookReaderPageState extends State<BookReaderPage> {
         if (sentence.isNotEmpty) {
           results.add(const WordReading("。", null));
           results.add(const WordReading(" ", null)); // Space before icon
-          results.add(WordReading("", null, sentence + "。", true)); // Translation icon
+          results.add(WordReading("", null, "$sentence。", true)); // Translation icon
           results.add(const WordReading("\n", null));
         }
       }
@@ -1021,9 +1021,7 @@ class _BookReaderPageState extends State<BookReaderPage> {
                   ),
                   child: IconButton(
                     icon: Icon(
-                      state is TTSPlaying
-                          ? Icons.pause_rounded
-                          : Icons.play_arrow_rounded,
+                      state is TTSPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
                       color: Colors.white.withOpacity(0.9),
                       size: 24.0,
                     ),

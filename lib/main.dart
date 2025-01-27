@@ -6,7 +6,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
-import 'package:Keyra/features/dictionary/data/services/dictionary_service.dart';
 import 'package:Keyra/features/dictionary/data/services/translation_service.dart';
 import 'package:Keyra/features/dictionary/data/services/translation_service_singleton.dart';
 import 'package:Keyra/core/utils/logger.dart';

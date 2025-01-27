@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:Keyra/core/utils/logger.dart';
 import 'package:equatable/equatable.dart';
+import 'dart:async';
 import 'dart:math';
 import 'package:Keyra/core/services/tts_service.dart';
 import 'package:Keyra/features/books/domain/models/book_language.dart';
@@ -103,25 +104,11 @@ class TTSBloc extends Bloc<TTSEvent, TTSState> {
 
     // Listen to audio player state changes
     _ttsService.audioPlayerState.listen((isPlaying) {
-      if (isPlaying) {
-        if (state is! TTSPlaying) {
-          if (state is TTSPausedState) {
-            final pausedState = state as TTSPausedState;
-            emit(TTSPlaying(
-              text: pausedState.text,
-              language: pausedState.language,
-              speedFactor: state.speedFactor,
-            ));
-          } else if (_currentText != null && _currentLanguage != null) {
-            emit(TTSPlaying(
-              text: _currentText!,
-              language: _currentLanguage!,
-              speedFactor: state.speedFactor,
-            ));
-          }
-        }
-      } else if (!isPlaying && state is TTSPlaying) {
-        emit(TTSStoppedState(speedFactor: state.speedFactor));
+      Logger.log('TTSBloc: Audio player state changed: isPlaying=$isPlaying, currentState=${state.runtimeType}');
+      if (!isPlaying && state is TTSPlaying) {
+        // Only transition to stopped if we're currently playing
+        Logger.log('TTSBloc: Detected playback stop while playing, transitioning to stopped state');
+        add(TTSCompleted());
       }
     });
     
@@ -141,21 +128,58 @@ class TTSBloc extends Bloc<TTSEvent, TTSState> {
     _currentText = event.text;
     _currentLanguage = event.language;
     final currentSpeedFactor = state is TTSInitial ? 1.0 : state.speedFactor;
-    emit(TTSPlaying(
-      text: event.text,
-      language: event.language,
-      speedFactor: currentSpeedFactor,
-    ));
-    await _ttsService.speak(event.text, event.language, onComplete: () {
-      add(TTSCompleted());
+
+    // Create a completer to wait for playback to actually start
+    final playbackStarted = Completer<void>();
+    
+    // Listen for the first true state from audioPlayerState
+    final subscription = _ttsService.audioPlayerState.listen((isPlaying) {
+      if (isPlaying && !playbackStarted.isCompleted) {
+        playbackStarted.complete();
+      }
     });
-    Logger.log('TTSBloc: Started TTS playback');
+
+    // Start playback
+    _ttsService.speak(event.text, event.language, onComplete: () {
+      Logger.log('TTSBloc: Received completion callback, current state: ${state.runtimeType}');
+      // Only add completion event if we're still in playing state
+      if (state is TTSPlaying) {
+        Logger.log('TTSBloc: Still in playing state, transitioning to stopped');
+        add(TTSCompleted());
+      } else {
+        Logger.log('TTSBloc: Not in playing state, ignoring completion');
+      }
+    });
+
+    // Wait for playback to actually start before emitting playing state
+    try {
+      await playbackStarted.future.timeout(
+        const Duration(seconds: 5),
+        onTimeout: () {
+          Logger.log('TTSBloc: Timeout waiting for playback to start');
+          throw Exception('Playback start timeout');
+        },
+      );
+      
+      emit(TTSPlaying(
+        text: event.text,
+        language: event.language,
+        speedFactor: currentSpeedFactor,
+      ));
+      Logger.log('TTSBloc: Started TTS playback');
+    } finally {
+      await subscription.cancel();
+    }
   }
 
   Future<void> _onCompleted(TTSCompleted event, Emitter<TTSState> emit) async {
-    Logger.log('TTSBloc: Received TTSCompleted event');
-    emit(TTSStoppedState(speedFactor: state.speedFactor));
-    Logger.log('TTSBloc: Emitted TTSStoppedState state');
+    Logger.log('TTSBloc: Received TTSCompleted event, current state: ${state.runtimeType}');
+    if (state is! TTSStoppedState) {
+      emit(TTSStoppedState(speedFactor: state.speedFactor));
+      Logger.log('TTSBloc: Emitted TTSStoppedState state');
+    } else {
+      Logger.log('TTSBloc: Already in stopped state, ignoring completion');
+    }
   }
 
   Future<void> _onPauseRequested(TTSPauseRequested event, Emitter<TTSState> emit) async {

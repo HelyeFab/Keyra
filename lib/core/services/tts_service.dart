@@ -31,11 +31,6 @@ class TTSService {
   Future<void> init() async {
     try {
       _audioPlayer = AudioPlayer();
-      _audioPlayer!.onPlayerComplete.listen((_) {
-        _audioPlayerStateController.add(false);
-        _isPlaying = false;
-        _onComplete?.call();
-      });
       Logger.log('TTS: Initialized successfully');
     } catch (e) {
       Logger.error('TTS Init Error', error: e);
@@ -49,78 +44,137 @@ class TTSService {
         return;
       }
 
-      // Stop any existing playback
-      await stop();
+      // Stop any existing playback without triggering completion
+      _isPlaying = false;
+      await _audioPlayer?.stop();
+      await _cleanupAudioFile();
+      _audioPlayerStateController.add(false);
 
+      // Set up new playback
       _currentLanguage = language;
       _currentText = text;
       _onComplete = onComplete;
       _isPlaying = true;
+      Logger.log('TTS: Starting new playback');
 
       final languageCode = _getLanguageCode(language);
       Logger.log('TTS: Attempting to speak text in ${language.displayName} ($languageCode) at speed ${_speedFactor}x: ${text.substring(0, min(50, text.length))}...');
 
-      // Split text into sentences and words for more natural pauses
-      final sentences = text.split(RegExp(r'[.!?]+'));
-      
-      for (final sentence in sentences) {
-        if (!_isPlaying) break;
-        if (sentence.trim().isEmpty) continue;
-
-        final url = Uri.parse(
-          'https://translate.google.com/translate_tts'
-          '?ie=UTF-8'
-          '&q=${Uri.encodeComponent(sentence.trim())}'
-          '&tl=$languageCode'
-          '&client=tw-ob'
-          '&ttsspeed=1'
-        ).toString();
-
-        try {
-          // Get temporary directory to store audio file
-          final tempDir = await getTemporaryDirectory();
-          final tempPath = '${tempDir.path}/tts_${DateTime.now().millisecondsSinceEpoch}.mp3';
-          _currentAudioFile = File(tempPath);
-
-          // Download audio file
-          final response = await HttpClient().getUrl(Uri.parse(url));
-          final audioData = await response.close();
-          await _currentAudioFile!.writeAsBytes(await audioData.expand((x) => x).toList());
-
-          // Play the audio file and wait for completion
-          if (_isPlaying) {
-            await _audioPlayer!.play(DeviceFileSource(_currentAudioFile!.path));
-            await _audioPlayer!.setPlaybackRate(_speedFactor);
-            _audioPlayerStateController.add(true);
-
-            // Wait for this sentence to complete before proceeding
-            await _audioPlayer!.onPlayerComplete.first;
-
-            // Clean up the temporary file
-            if (_currentAudioFile != null && await _currentAudioFile!.exists()) {
-              await _currentAudioFile!.delete();
-            }
+      try {
+        // Split text into sentences and words for more natural pauses
+        final sentences = text.split(RegExp(r'[.!?]+'));
+        
+        for (int i = 0; i < sentences.length; i++) {
+          if (!_isPlaying) {
+            Logger.log('TTS: Playback stopped early');
+            _audioPlayerStateController.add(false);
+            return;
           }
-        } catch (e) {
-          Logger.error('TTS Sentence Error', error: e);
-          continue; // Try next sentence if this one fails
+          final sentence = sentences[i];
+          if (sentence.trim().isEmpty) continue;
+
+          final url = Uri.parse(
+            'https://translate.google.com/translate_tts'
+            '?ie=UTF-8'
+            '&q=${Uri.encodeComponent(sentence.trim())}'
+            '&tl=$languageCode'
+            '&client=tw-ob'
+            '&ttsspeed=1'
+          ).toString();
+
+          try {
+            // Get temporary directory to store audio file
+            final tempDir = await getTemporaryDirectory();
+            final tempPath = '${tempDir.path}/tts_${DateTime.now().millisecondsSinceEpoch}.mp3';
+            _currentAudioFile = File(tempPath);
+
+            // Download audio file
+            final response = await HttpClient().getUrl(Uri.parse(url));
+            final audioData = await response.close();
+            await _currentAudioFile!.writeAsBytes(await audioData.expand((x) => x).toList());
+
+            if (_isPlaying) {
+              // Set up completion for this sentence
+              final completer = Completer<void>();
+              StreamSubscription? subscription;
+              bool sentenceCompleted = false;
+              
+              try {
+                // Set up completion listener before playing
+                subscription = _audioPlayer!.onPlayerComplete.listen((_) {
+                  Logger.log('TTS: Sentence ${i + 1}/${sentences.length} completed');
+                  if (!completer.isCompleted) {
+                    sentenceCompleted = true;
+                    completer.complete();
+                  }
+                });
+
+                // Play the sentence
+                await _audioPlayer!.play(DeviceFileSource(_currentAudioFile!.path));
+                await _audioPlayer!.setPlaybackRate(_speedFactor);
+                _audioPlayerStateController.add(true);
+
+                // Wait for sentence to complete with timeout
+                await completer.future.timeout(
+                  const Duration(seconds: 10),
+                  onTimeout: () {
+                    Logger.log('TTS: Sentence completion timeout');
+                    sentenceCompleted = true;
+                    return;
+                  },
+                );
+
+                // Only update state if sentence actually completed and not the last sentence
+                if (sentenceCompleted && i < sentences.length - 1) {
+                  Logger.log('TTS: Transitioning between sentences');
+                  _audioPlayerStateController.add(false);
+                  _audioPlayerStateController.add(true);
+                }
+              } catch (e) {
+                Logger.error('TTS: Error during sentence playback', error: e);
+              } finally {
+                // Always clean up subscription
+                await subscription?.cancel();
+              }
+              
+              // Clean up audio file
+              if (_currentAudioFile != null && await _currentAudioFile!.exists()) {
+                await _currentAudioFile!.delete();
+              }
+
+              // If this was the last sentence, ensure we reset state
+              if (i == sentences.length - 1 && sentenceCompleted) {
+                Logger.log('TTS: Last sentence completed, resetting state');
+                _isPlaying = false;
+                await _audioPlayer?.stop();  // Ensure player is stopped
+                Logger.log('TTS: Completed playback in ${language.displayName}');
+                _audioPlayerStateController.add(false);  // Add false state before callback
+                if (_onComplete != null) {
+                  Logger.log('TTS: Calling completion callback');
+                  _onComplete!.call();
+                }
+                Logger.log('TTS: Reset complete');
+              }
+            }
+          } catch (e) {
+            Logger.error('TTS Sentence Error', error: e);
+            continue;
+          }
         }
+      } catch (e) {
+        Logger.error('TTS Sentence Processing Error', error: e);
+        rethrow;
       }
-
-      // Playback completed normally
-      if (_isPlaying) {
-        _isPlaying = false;
-        _audioPlayerStateController.add(false);
-        _onComplete?.call();
-        Logger.log('TTS: Completed playback in ${language.displayName}');
-      }
-
     } catch (e) {
       Logger.error('TTS Speak Error', error: e);
-      _cleanupAudioFile();
+      // Clean up and reset state on error
+      await _cleanupAudioFile();
       _isPlaying = false;
-      _onComplete?.call();
       _audioPlayerStateController.add(false);
+      if (_onComplete != null) {
+        Logger.log('TTS: Calling completion callback after error');
+        _onComplete!.call();
+      }
     }
   }
 

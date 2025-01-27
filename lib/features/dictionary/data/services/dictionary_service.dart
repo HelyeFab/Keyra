@@ -3,7 +3,6 @@ import 'package:Keyra/core/utils/logger.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:Keyra/core/config/api_keys.dart';
 import 'package:Keyra/features/books/domain/models/book_language.dart';
 import 'package:Keyra/features/dictionary/data/services/non_japanese_dictionary_service.dart';
 import 'package:Keyra/features/dictionary/data/services/japanese_dictionary_service.dart';

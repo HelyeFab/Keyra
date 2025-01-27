@@ -19,7 +19,7 @@ class JapaneseModalContentBuilder {
     // Use a LayoutBuilder to get the available space
     return LayoutBuilder(
       builder: (context, constraints) {
-        final double contentPadding = 16.0;
+        const double contentPadding = 16.0;
         final double jishoSectionOffset = constraints.maxHeight * 0.5;
 
         return Stack(

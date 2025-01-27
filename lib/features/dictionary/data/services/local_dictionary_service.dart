@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:Keyra/core/utils/logger.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:Keyra/core/config/api_keys.dart';
 
 class LocalDictionaryService {
   static final _instance = LocalDictionaryService._internal();
