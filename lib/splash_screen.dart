@@ -6,6 +6,7 @@ import 'core/theme/color_schemes.dart';
 import 'core/theme/text_themes.dart';
 import 'features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:Keyra/features/dictionary/data/services/dictionary_service.dart';
+import 'package:Keyra/core/ui_language/translations/ui_translations.dart';
 
 class BubblePainter extends CustomPainter {
   final Color color;
@@ -223,6 +224,14 @@ class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   Timer? _timer;
   bool _isDictionaryInitialized = false;
+  int _currentLoadingMessageIndex = 0;
+  final List<String> _loadingMessageKeys = [
+    'splash_welcome',
+    'splash_building_bookshelf',
+    'splash_preparing_books',
+    'splash_downloading_dictionaries',
+    'splash_creating_adventure',
+  ];
   final List<Map<String, dynamic>> messages = [
     {
       'message': 'Hello',
@@ -271,12 +280,12 @@ class _SplashScreenState extends State<SplashScreen>
 
     _animateMessages();
     _initializeDictionary();
+    _animateLoadingMessage();
 
     Future.delayed(
       const Duration(seconds: 3),
       () async {
         if (mounted) {
-          _timer?.cancel();
           Logger.log('Navigating - isFirstLaunch: ${widget.isFirstLaunch}');
 
           // Wait for dictionary initialization to complete
@@ -285,6 +294,9 @@ class _SplashScreenState extends State<SplashScreen>
           }
 
           if (!mounted) return;
+
+          // Cancel timer just before navigation
+          _timer?.cancel();
 
           if (!widget.preferencesService.hasSeenOnboarding) {
             // Show onboarding for first time users
@@ -330,6 +342,20 @@ class _SplashScreenState extends State<SplashScreen>
     }
 
     startAnimation();
+  }
+
+  void _animateLoadingMessage() {
+    // Cancel any existing timer
+    _timer?.cancel();
+    
+    // Start a new timer that updates every 2 seconds
+    _timer = Timer.periodic(const Duration(milliseconds: 2000), (timer) {
+      if (mounted) {
+        setState(() {
+          _currentLoadingMessageIndex = (_currentLoadingMessageIndex + 1) % _loadingMessageKeys.length;
+        });
+      }
+    });
   }
 
   Future<void> _initializeDictionary() async {
@@ -466,14 +492,20 @@ class _SplashScreenState extends State<SplashScreen>
                               ),
                             ),
                             SizedBox(height: screenHeight * 0.012),
-                            Text(
-                              'Your journey to mastering languages starts here',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontSize: screenHeight * 0.020,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.white,
+                            AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 500),
+                              child: Text(
+                                UiTranslations.of(context).translate(
+                                  _loadingMessageKeys[_currentLoadingMessageIndex],
+                                ),
+                                key: ValueKey<int>(_currentLoadingMessageIndex),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: screenHeight * 0.020,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ],

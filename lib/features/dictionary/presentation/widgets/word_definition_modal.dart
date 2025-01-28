@@ -150,7 +150,7 @@ class _WordDefinitionModalState extends State<WordDefinitionModal> {
         }
       }
     } catch (e) {
-      debugPrint('Error checking if word is saved: $e');
+      Logger.error('Error checking if word is saved: $e');
     }
   }
 

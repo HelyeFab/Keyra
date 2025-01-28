@@ -32,7 +32,7 @@ class JapaneseModalContentBuilder {
                     // Original content will be pushed up by the SizedBox
                     SizedBox(height: jishoSectionOffset),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: contentPadding),
+                      padding: const EdgeInsets.symmetric(horizontal: contentPadding),
                       child: JishoMeaningsWidget(
                         word: word,
                         theme: theme,

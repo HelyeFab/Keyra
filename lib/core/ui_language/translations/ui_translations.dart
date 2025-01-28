@@ -31,6 +31,13 @@ class UiTranslations extends InheritedWidget {
 
   static const Map<String, Map<String, String>> translations = {
     'en': {
+      // Splash Screen Messages
+      'splash_welcome': 'Your journey to mastering languages starts here',
+      'splash_building_bookshelf': 'Building your personalized bookshelf...',
+      'splash_preparing_books': 'Preparing your limited edition books...',
+      'splash_downloading_dictionaries': 'Downloading language dictionaries...',
+      'splash_creating_adventure': 'Creating your learning adventure...',
+
       // Navigation & Controls
       'skip': 'Skip',
       'next': 'Next',
@@ -261,6 +268,13 @@ class UiTranslations extends InheritedWidget {
       'next_book_available': 'Next book available in: {0}',
     },
     'fr': {
+      // Splash Screen Messages
+      'splash_welcome': 'Votre voyage vers la maîtrise des langues commence ici',
+      'splash_building_bookshelf': 'Construction de votre bibliothèque personnalisée...',
+      'splash_preparing_books': 'Préparation de vos livres en édition limitée...',
+      'splash_downloading_dictionaries': 'Téléchargement des dictionnaires...',
+      'splash_creating_adventure': 'Création de votre aventure linguistique...',
+
       // Navigation & Controls
       'skip': 'Passer',
       'next': 'Suivant',
@@ -473,6 +487,13 @@ class UiTranslations extends InheritedWidget {
       'next_book_available': 'Prochain livre disponible dans : {0}',
     },
     'es': {
+      // Splash Screen Messages
+      'splash_welcome': 'Tu viaje hacia el dominio de los idiomas comienza aquí',
+      'splash_building_bookshelf': 'Construyendo tu biblioteca personalizada...',
+      'splash_preparing_books': 'Preparando tus libros de edición limitada...',
+      'splash_downloading_dictionaries': 'Descargando diccionarios...',
+      'splash_creating_adventure': 'Creando tu aventura de aprendizaje...',
+
       // Navigation & Controls
       'skip': 'Saltar',
       'next': 'Siguiente',
@@ -592,7 +613,7 @@ class UiTranslations extends InheritedWidget {
       'definition': 'Definición',
       'examples': 'Ejemplos',
       'flashcard_error_update': 'Error al actualizar la palabra',
-      'flashcard_study_session': 'Sesión de Estudio',
+      'flashcard_study_session': 'Session de Estudio',
       'flashcard_difficulty_hard': 'Difícil',
       'flashcard_difficulty_good': 'Bien',
       'flashcard_difficulty_easy': 'Fácil',
@@ -639,7 +660,7 @@ class UiTranslations extends InheritedWidget {
       'badge_radiant': 'Radiante',
       'badge_lighthouse': 'Faro',
       'badge_infinite': 'Infinito',
-      'badge_renaissance': 'Renacimiento',
+      'badge_renaissance': 'Renaissance',
       'badge_ultimate': 'Definitivo',
       'requirements': 'Requisitos',
       'books_read_requirement': '{0} libros leídos requeridos',
@@ -683,6 +704,13 @@ class UiTranslations extends InheritedWidget {
       'next_book_available': 'Próximo libro disponible en: {0}',
     },
     'it': {
+      // Splash Screen Messages
+      'splash_welcome': 'Il tuo viaggio verso la padronanza delle lingue inizia qui',
+      'splash_building_bookshelf': 'Costruzione della tua libreria personalizzata...',
+      'splash_preparing_books': 'Preparazione dei tuoi libri in edizione limitata...',
+      'splash_downloading_dictionaries': 'Download dei dizionari...',
+      'splash_creating_adventure': 'Creazione della tua avventura di apprendimento...',
+
       // Navigation & Controls
       'skip': 'Salta',
       'next': 'Avanti',
@@ -896,6 +924,13 @@ class UiTranslations extends InheritedWidget {
       'next_book_available': 'Prossimo libro disponibile tra: {0}',
     },
     'de': {
+      // Splash Screen Messages
+      'splash_welcome': 'Ihre Reise zur Sprachbeherrschung beginnt hier',
+      'splash_building_bookshelf': 'Erstellen Ihres persönlichen Bücherregals...',
+      'splash_preparing_books': 'Vorbereiten Ihrer limitierten Bücher...',
+      'splash_downloading_dictionaries': 'Herunterladen der Wörterbücher...',
+      'splash_creating_adventure': 'Erstellen Ihres Lernerlebnisses...',
+
       // Navigation & Controls
       'skip': 'Überspringen',
       'next': 'Weiter',
@@ -1108,6 +1143,13 @@ class UiTranslations extends InheritedWidget {
       'next_book_available': 'Nächstes Buch verfügbar in: {0}',
     },
     'ja': {
+      // Splash Screen Messages
+      'splash_welcome': '言語習得への旅がここから始まります',
+      'splash_building_bookshelf': 'パーソナライズされた本棚を構築中...',
+      'splash_preparing_books': '限定版の本を準備中...',
+      'splash_downloading_dictionaries': '辞書をダウンロード中...',
+      'splash_creating_adventure': '学習の冒険を作成中...',
+
       // Navigation & Controls
       'skip': 'スキップ',
       'next': '次へ',

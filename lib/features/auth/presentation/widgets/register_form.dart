@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/auth_bloc.dart';
+import 'package:Keyra/core/config/feature_flags.dart';
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({super.key});
@@ -27,12 +28,12 @@ class _RegisterFormState extends State<RegisterForm> {
   void _onRegisterButtonPressed() {
     if (_formKey.currentState?.validate() ?? false) {
       context.read<AuthBloc>().add(
-        AuthBlocEvent.emailSignUpRequested(
-          email: _emailController.text,
-          password: _passwordController.text,
-          name: _nameController.text,
-        ),
-      );
+            AuthBlocEvent.emailSignUpRequested(
+              email: _emailController.text,
+              password: _passwordController.text,
+              name: _nameController.text,
+            ),
+          );
     }
   }
 
@@ -112,7 +113,9 @@ class _RegisterFormState extends State<RegisterForm> {
                   ),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                      _isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
                       color: Colors.grey,
                     ),
                     onPressed: () {
@@ -133,34 +136,33 @@ class _RegisterFormState extends State<RegisterForm> {
                 },
               ),
               const SizedBox(height: 24),
-              SizedBox(
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: state.maybeWhen(
-                    loading: () => null,
-                    orElse: () => _onRegisterButtonPressed,
+              ElevatedButton(
+                onPressed: state.maybeWhen(
+                  loading: () => null,
+                  orElse: () => _onRegisterButtonPressed,
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
                   ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  minimumSize: const Size(double.infinity, 48),
+                ),
+                child: state.maybeWhen(
+                  loading: () => const SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
                   ),
-                  child: state.maybeWhen(
-                    loading: () => const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      ),
-                    ),
-                    orElse: () => const Text(
-                      'Register',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                      ),
+                  orElse: () => const Text(
+                    'Register',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
                     ),
                   ),
                 ),
@@ -193,34 +195,70 @@ class _RegisterFormState extends State<RegisterForm> {
                 ],
               ),
               const SizedBox(height: 16),
-              OutlinedButton(
-                onPressed: () => context.read<AuthBloc>().add(
-                      const AuthBlocEvent.googleSignInRequested(),
+              Column(
+                children: [
+                  OutlinedButton(
+                    onPressed: () => context.read<AuthBloc>().add(
+                          const AuthBlocEvent.googleSignInRequested(),
+                        ),
+                    style: OutlinedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      side: const BorderSide(color: Colors.grey),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
-                style: OutlinedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          'assets/images/login/google.png',
+                          height: 24,
+                        ),
+                        const SizedBox(width: 12),
+                        const Text(
+                          'Continue with Google',
+                          style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  side: const BorderSide(color: Colors.grey),
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/images/login/google.png',
-                      height: 24,
-                    ),
-                    const SizedBox(width: 12),
-                    const Text(
-                      'Continue with Google',
-                      style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 16,
+                  const SizedBox(height: 12),
+                  if (FeatureFlags.isAppleSignInEnabled)
+                    OutlinedButton(
+                      onPressed: () => context.read<AuthBloc>().add(
+                            const AuthBlocEvent.appleSignInRequested(),
+                          ),
+                      style: OutlinedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        side: const BorderSide(color: Colors.grey),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.apple,
+                            color: Colors.black87,
+                            size: 28,
+                          ),
+                          SizedBox(width: 12),
+                          Text(
+                            'Continue with Apple',
+                            style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                ],
               ),
               const SizedBox(height: 16),
               Row(

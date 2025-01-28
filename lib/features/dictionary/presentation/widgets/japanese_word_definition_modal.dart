@@ -91,8 +91,7 @@ class _JapaneseWordDefinitionModalState
 
       if (!mounted) return;
       await _checkIfWordIsSaved().catchError((e) {
-        debugPrint('Error checking saved status: $e');
-        return null;
+        Logger.error('Error checking saved status: $e');
       });
       
       if (!mounted) return;
@@ -137,7 +136,7 @@ class _JapaneseWordDefinitionModalState
         }
       }
     } catch (e) {
-      debugPrint('Error checking if word is saved: $e');
+      Logger.error('Error checking if word is saved: $e');
     }
   }
 
@@ -183,7 +182,7 @@ class _JapaneseWordDefinitionModalState
         });
       }
     } catch (e) {
-      debugPrint('Error toggling word save state: $e');
+      Logger.error('Error toggling word save state: $e');
       if (mounted) {
         final errorMessage = e.toString().contains('already saved')
             ? UiTranslations.of(context).translate('word_already_saved')

@@ -7,7 +7,7 @@ import 'package:Keyra/features/books/domain/models/book.dart';
 import 'package:Keyra/features/books/domain/models/book_page.dart';
 import 'package:Keyra/features/books/domain/models/book_language.dart';
 import 'package:Keyra/core/theme/app_spacing.dart';
-import 'package:Keyra/core/theme/color_schemes.dart';
+import 'package:Keyra/core/utils/logger.dart';
 import 'package:Keyra/features/dashboard/data/repositories/user_stats_repository.dart';
 import 'package:Keyra/features/dictionary/presentation/widgets/word_definition_modal.dart';
 import 'package:Keyra/features/dictionary/data/services/dictionary_service.dart';
@@ -110,7 +110,7 @@ class _BookReaderPageState extends State<BookReaderPage> {
       // If we haven't reached the limit, start reading
       await _startReadingSession();
     } catch (e) {
-      debugPrint('Error checking subscription: $e');
+      Logger.error('Error checking subscription: $e');
     }
   }
 
@@ -129,21 +129,15 @@ class _BookReaderPageState extends State<BookReaderPage> {
         lastReadAt: DateTime.now(),
         currentLanguage: widget.language,
       );
-      debugPrint('BookReaderPage: Language code: ${widget.language.code}');
-
-      debugPrint('BookReaderPage: Starting reading session');
-      debugPrint('BookReaderPage: Current page: $_currentPage');
-      debugPrint('BookReaderPage: Language: ${widget.language.code}');
 
       try {
         await widget.bookRepository.updateBook(updatedBook);
-        debugPrint('BookReaderPage: Reading session started successfully');
       } catch (e) {
-        debugPrint('BookReaderPage: Error starting reading session: $e');
+        Logger.error('Error starting reading session: $e');
         rethrow;
       }
     } catch (e) {
-      debugPrint('Error starting reading session: $e');
+      Logger.error('Error starting reading session: $e');
     }
   }
 
@@ -154,7 +148,7 @@ class _BookReaderPageState extends State<BookReaderPage> {
       }
       await widget.userStatsRepository.endReadingSession();
     } catch (e) {
-      debugPrint('Error ending reading session: $e');
+      Logger.error('Error ending reading session: $e');
     }
   }
 
@@ -177,22 +171,15 @@ class _BookReaderPageState extends State<BookReaderPage> {
         lastReadAt: DateTime.now(),
         currentLanguage: widget.language,
       );
-      debugPrint('BookReaderPage: Language code: ${widget.language.code}');
-
-      debugPrint('BookReaderPage: Updating progress');
-      debugPrint('BookReaderPage: Current page: $page');
-      debugPrint('BookReaderPage: Total pages: ${widget.book.pages.length}');
-      debugPrint('BookReaderPage: Language: ${widget.language.code}');
 
       try {
         await widget.bookRepository.updateBook(updatedBook);
-        debugPrint('BookReaderPage: Progress updated successfully');
       } catch (e) {
-        debugPrint('BookReaderPage: Error updating progress: $e');
+        Logger.error('Error updating book progress: $e');
         rethrow;
       }
     } catch (e) {
-      debugPrint('Error updating book progress: $e');
+      Logger.error('Error updating book progress: $e');
     }
   }
 
@@ -270,10 +257,6 @@ class _BookReaderPageState extends State<BookReaderPage> {
         ? page.getText('ja_furigana')
         : text;
 
-    // Debug print to check text switching
-    print('Language: ${widget.language.code}, ShowFurigana: $_showFurigana');
-    print('Display Text: $displayText');
-
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
       child: Stack(
@@ -316,7 +299,7 @@ class _BookReaderPageState extends State<BookReaderPage> {
                         cacheWidth: 1080,
                         cacheHeight: 1080,
                         errorBuilder: (context, error, stackTrace) {
-                          debugPrint('Error loading image: $error');
+                          Logger.error('Error loading image: $error');
                           return Container(
                             color: Theme.of(context).colorScheme.surfaceContainerHighest,
                             child: const Center(
@@ -567,7 +550,7 @@ class _BookReaderPageState extends State<BookReaderPage> {
                               }
                             }
                           } catch (e) {
-                            debugPrint('Failed to translate sentence: $e');
+                            Logger.error('Failed to translate sentence: $e');
                           }
                         },
                         child: Container(
@@ -594,7 +577,7 @@ class _BookReaderPageState extends State<BookReaderPage> {
                     WidgetSpan(
                       child: GestureDetector(
                         onTap: () async {
-                          debugPrint('Tapped word: ${wordReading.word}');
+                          Logger.error('Tapped word: ${wordReading.word}');
                           if (!await ConnectivityUtils.checkConnectivity(context)) {
                             return;
                           }
@@ -760,7 +743,7 @@ class _BookReaderPageState extends State<BookReaderPage> {
                               }
                             }
                           } catch (e) {
-                            debugPrint('Failed to translate sentence: $e');
+                            Logger.error('Failed to translate sentence: $e');
                           }
                         }
                       },
@@ -786,7 +769,7 @@ class _BookReaderPageState extends State<BookReaderPage> {
                     text: wordReading.word,
                     recognizer: TapGestureRecognizer()
                       ..onTap = () async {
-                        debugPrint('Tapped word: ${wordReading.word}');
+                        Logger.error('Tapped word: ${wordReading.word}');
                         if (!await ConnectivityUtils.checkConnectivity(
                             context)) {
                           return;
@@ -1027,7 +1010,7 @@ class _BookReaderPageState extends State<BookReaderPage> {
                     ),
                     onPressed: () {
                       if (state is TTSPlaying) {
-                        context.read<TTSBloc>().add(TTSPauseRequested());
+                        context.read<TTSBloc>().add(TTSStopRequested());
                       } else if (state is TTSPausedState) {
                         context.read<TTSBloc>().add(TTSResumeRequested());
                       } else {
