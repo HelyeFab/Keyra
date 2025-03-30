@@ -84,11 +84,14 @@ class _HomePageState extends State<HomePage> {
           setState(() {
             _isLoadingInProgress = false;
           });
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content: Text(UiTranslations.of(context)
-                    .translate('home_error_load_books'))),
-          );
+          // Don't show error toast for permission errors
+          if (!error.toString().contains('PERMISSION_DENIED')) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                  content: Text(UiTranslations.of(context)
+                      .translate('home_error_load_books'))),
+            );
+          }
         }
       },
     );
@@ -123,38 +126,14 @@ class _HomePageState extends State<HomePage> {
         return;
       }
 
-      final populator = FirestorePopulator();
-      final exists = await populator.areSampleBooksPopulated();
-      if (!exists) {
-        await populator.populateWithSampleBooks();
-      } else {}
-
+      // Skip sample book population - just load existing books
       _bookRepository?.getRecentBooks().listen(
         (loadedBooks) {
-          if (loadedBooks.isEmpty) {
-            populator.populateWithSampleBooks().then((_) {
-              if (mounted) {
-                _loadBooks();
-              }
-            }).catchError((error) {
-              if (mounted) {
-                setState(() {
-                  _isLoadingRecent = false;
-                });
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      content: Text(UiTranslations.of(context)
-                          .translate('home_error_load_books'))),
-                );
-              }
+          if (mounted) {
+            setState(() {
+              _recentBooks = loadedBooks;
+              _isLoadingRecent = false;
             });
-          } else {
-            if (mounted) {
-              setState(() {
-                _recentBooks = loadedBooks;
-                _isLoadingRecent = false;
-              });
-            }
           }
         },
         onError: (error) {
@@ -162,11 +141,14 @@ class _HomePageState extends State<HomePage> {
             setState(() {
               _isLoadingRecent = false;
             });
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                  content: Text(UiTranslations.of(context)
-                      .translate('home_error_load_books'))),
-            );
+            // Don't show error toast for permission errors
+            if (!error.toString().contains('PERMISSION_DENIED')) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                    content: Text(UiTranslations.of(context)
+                        .translate('home_error_load_books'))),
+              );
+            }
           }
         },
       );
@@ -175,11 +157,14 @@ class _HomePageState extends State<HomePage> {
         setState(() {
           _isLoadingRecent = false;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text(UiTranslations.of(context)
-                  .translate('home_error_load_books'))),
-        );
+        // Don't show error toast for permission errors
+        if (!e.toString().contains('PERMISSION_DENIED')) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content: Text(UiTranslations.of(context)
+                    .translate('home_error_load_books'))),
+          );
+        }
       }
     }
   }
@@ -212,11 +197,14 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         _recentBooks[index] = book;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text(
-                UiTranslations.of(context).translate('home_error_favorite'))),
-      );
+      // Don't show error toast for permission errors
+      if (!e.toString().contains('PERMISSION_DENIED')) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(
+                  UiTranslations.of(context).translate('home_error_favorite'))),
+        );
+      }
     }
   }
 
